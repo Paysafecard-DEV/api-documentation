@@ -28,55 +28,30 @@ demand of the customer. SafetyPay Payout is only available in the following coun
 
 TODO: high level image
 
-1. Customer creates a payout request on merchant’s checkout
+- Step 1: Customer creates a payout request on merchant’s checkout
 
-User must accept SafetyPay’s T&C and Privacy Policies.
-Merchant must mention in its Terms & Conditions (T&C) that Payouts are executed by SafetyPay
-
-2. Merchant validates and completes the request and forwards it to paysafecard
-
-Following are mandatory and optional attributes that merchant must capture and provide within the Payout request.  
-
-3. Paysafecard performs AML screening and sends the request to the partner bank
-
-Paysafecard and SafetyPay executes a screening using an international AML blacklists. This means every transaction request will be screened and blocked if the beneficiary is present on the blacklist.
-
-4. Partner bank validates the payee and executes a payout
-
-Only transactions with a match between the beneficiary specified by the merchant and the bank account owner will be processed. This means that the customer won’t be able to make a payout to a third party’s bank account.
-
-5. paysafecard notifies the Merchant of the payout result
-
-Paysafecard notifies the merchant about the result of the payout operation via API.
-
-
-
-
-- Step 1: Customer payout request and validation
+    On the website of the business partner (merchant), the customer requests a payout.
     
-        1. On the website of the business partner (merchant), the customer requests a payout.
+    User must accept SafetyPay’s T&C and Privacy Policies.
     
-        1.1 The payout request is validated with paysafecard system in real-time (no money is transferred).
-    
-        1.1.1 paysafecard validates the request (can the payout take place, does the customer exist etc..)
-    
-        1.1.1.1 the merchant puts the payout request in the back office queue, to be approved manually later.
-    
-        1.1.1.2 The customer is informed that the request is accepted and the payout is pending (or is refused because the validation failed).
-    
-![Payout Flow1](https://www.paysafecard.com/fileadmin/api/images/paysafecard_service_payout_en_Steps-01.jpg)    
+    Merchant must mention in its Terms & Conditions (T&C) that Payouts are executed by SafetyPay
 
-- Step 2: Payout capture by the Business Partner
-    
-        2. The back office employee at the business partner manually approves the payout request from the queue.
-    
-        2.1 The employee confirms the payout (or rejects it).
-    
-        2.1.1 the business partner captures the payout.
-    
-        2.1.1.1 paysafecard transfers the money to the customer my paysafecard account.
-        
-![Payout Flow1](https://www.paysafecard.com/fileadmin/api/images/paysafecard_service_payout_en_Steps-02.jpg)
+- Step 2: Merchant validates and completes the request and forwards it to paysafecard
+
+    The business partner provides thecustomer’s personal details to paysafecard during the payout call.
+
+- Step 3: Paysafecard performs AML screening and sends the request to the partner bank
+
+    Paysafecard and SafetyPay executes a screening using an international AML blacklists. This means every transaction request will be screened and blocked if the beneficiary is present on the blacklist.
+
+- Step 4: Partner bank validates the payee and executes a payout
+
+    Only transactions with a match between the beneficiary specified by the merchant and the bank account owner will be processed. This means that the customer won’t be able to make a payout to a third party’s bank account.
+    SafetyPay transfers the money to the customer my paysafecard account.
+
+- Step 5: paysafecard notifies the Merchant of the payout result
+
+    Paysafecard notifies the merchant about the result of the payout operation via API.
 
 
 # Exchange of customer data
