@@ -127,42 +127,44 @@ Offers the possibility to classify sub-merchants. Agreement with paysafecard nee
     * 1000.00
   * Invalid example: 
     * 1,000.00 
-
 + currency – disposition currency   
   * max. length: 3 characters, all uppercase  
   * ISO Currency Code   
-  * example: EUR
-  
-+ customerIdType – used method for identification of the my paysafecard account 
-  * Fixed value: EMAIL or CUSTOMERID
-+ customerId – related value to customerIdType
-  * Max. length: 90 characters
-  * The my paysafecard e-mail address or account ID of the customer
-+ merchantclientID - a unique end customer identifier (the unique ID of the end customer as registered at the merchant’s database)
-  * [MCID](#MCID)
-  * max. length: 50 characters
-  * example: hashed values, Random customer Identifier
-  * after a successful Payout, every additional Payout request requires the same merchantclientID and my paysafecard combination
-
-+ ValidationOnly – Validate the payout without transferring the funds 
+  * example: MXN
++ countryCode - ISO 3166-1 alpha-2 country code 
+  * example: MX, PE, BR
++ payoutInstrument - always "SAFETYPAY"
++ validationOnly – Validate the payout without transferring the funds 
   * value true: Test payout request for validity
   * value false: Execute payout
 + utcOffset – the difference in hours and minutes from Coordinated Universal Time (UTC)
   * Example: -03:00
-+ firstName – (subelement of CustomerDetailsBasic): the first name of the customer example: John
-  * max. length. 40 characters
-+ lastName – (subelement of CustomerDetailsBasic): the last name of the customer customer example: Do
-  * max. length. 40 characters
++ notificationUrl (OPTIONAL) - An url, where we will send a notification request after the payout has been finalized (either successfully or unsuccessfully)
++ purpose - The purpose of the payout. Can be one of the following: PAYMENT, PAYROLL, INVOICE
+
++ firstName – (subelement of CustomerDetailsBasic): the first name of the customer
+  * max. length: 60 characters
+  * example: John
++ middleName – (subelement of CustomerDetailsBasic) (OPTIONAL): the middle name of the customer
+  * max. length: 60 characters
+  * example: William
++ lastName – (subelement of CustomerDetailsBasic): the last name of the customer customer
+  * max. length: 60 characters
+  * example: Doe
 + dateOfBirth – (sub-element of CustomerDetailsBasic): the date of birth of the payout customer in YYYY-MM-DD format
   * example: 1979-12-20
-+ subId – Mandatory parameter for PSP’s (payment service providers), to distinguish multiple websites
-  * So-called “reporting criteria” to classify transactions
-  * Max. length: 8 characters (case sensitive)
-  * Agreement with paysafecard needed Example : webshop1
-+ comment – Reason for the payout request
-  * Max. length: 90 characters
-  * Only the following is allowed A-Z, a-z, 0-9 as well as ' . , - / \ : ? ! ( ) + & _ (space)
-  * example: payout winnings
++ phoneNumber - (sub-element of CustomerDetailsBasic) (OPTIONAL): the phone number of the payout customer
+  * max. length: 20 characters
++ email - (sub-element of CustomerDetailsBasic) (OPTIONAL): valid email adress of the payout customer
+  * max. length 255 characters
+  * example: john.wdoe@gmail.com
+
++ bankAccount - contains sub-elements:
+    * type - Type of the customer's bank account (example: CLABE)
+    * number - Bank account number (max length: 50 characters)
++ idDocument - contains sub-elements:
+    * type - Type of customer's ID document (example: RFC)
+    * number - Customer's ID document number (max length: 50 characters)
 + resultCode – type of error
   * 0 indicates that no error occurred
   * 1 indicates that there is a problem with the submitted data (e.g., wrong credentials, transaction has expired, etc.)
@@ -196,8 +198,7 @@ Offers the possibility to classify sub-merchants. Agreement with paysafecard nee
 
 Payout API allows you to:
 - validate a payout
-- capture a payout in two ways
-- retrieve payouts by id
+- capture a pre-validated payout
 - retrieve payout limits by currency
 
 ## Validating a payout
@@ -205,38 +206,50 @@ Payout API allows you to:
  + Request:
 ```
 <urn:payout>
-         <urn:username>USER</urn:username>
-         <urn:password>PASSWORD</urn:password>
-         <urn:ptid>matthias123623se</urn:ptid>
-         <urn:utcOffset>+03:00</urn:utcOffset>
-         <urn:amount>10.00</urn:amount>
-         <urn:currency>EUR</urn:currency>
-         <urn:customerIdType>EMAIL</urn:customerIdType>
-         <urn:customerId>psc.test+mypins_yCvrSzwjlEFULVKGVkvD@paysafecard.com</urn:customerId>
-         <urn:merchantClientId>customer12</urn:merchantClientId>
-         <urn:validationOnly>true</urn:validationOnly>
-         <urn:customerDetailsBasic>
-            <urn:firstName>broJgMuzErVuJLQjJJBIsMvfal</urn:firstName>
-            <urn:lastName>DQunWSfgpAcNRUvCwEhsPwPHQJ</urn:lastName>
-            <urn:dateOfBirth>1991-01-22</urn:dateOfBirth>
-         </urn:customerDetailsBasic>
-         <urn:comment>payout winnings</urn:comment>
-      </urn:payout>
+    <urn:username>USER</urn:username>
+    <urn:password>PASSWORD</urn:password>
+    <urn:ptid>abcd12345678efgh</urn:ptid>
+    <urn:amount>1234.56</urn:amount>
+    <urn:currency>MXN</urn:currency>
+    <urn:validationOnly>true</urn:validationOnly>
+    <urn:utcOffset>+09:00</urn:utcOffset>
+    <urn:customerDetailsBasic>
+        <urn:firstName>John</urn:firstName>
+        <urn:lastName>Doe</urn:lastName>
+        <urn:dateOfBirth>1999-12-31</urn:dateOfBirth>
+        <urn:middleName>William</urn:middleName>
+        <urn:phoneNumber>+527729871234</urn:phoneNumber>
+        <urn:email>joh.wdoe@customer.com</urn:email>
+    </urn:customerDetailsBasic>
+    <urn:payoutInstrument>SAFETYPAY</urn:payoutInstrument>
+    <urn:countryCode>MX</urn:countryCode>
+    <urn:bankAccount>
+        <urn:type>CLABE</urn:type>
+        <urn:number>012345678910111216</urn:number>
+    </urn:bankAccount>
+    <urn:idDocument>
+        <urn:type>RFC</urn:type>
+        <urn:number>XAXX010101000</urn:number>
+    </urn:idDocument>
+    <urn:notificationUrl>https://www.merchantsite.com/transaction/abcd12345678efgh/notification</urn:notificationUrl>
+    <urn:description>description</urn:description>
+    <urn:purpose>PAYMENT</urn:purpose>
+</urn:payout>
 ```
 
  + Response:
 ```
-<ns1:PayoutReturn>
-                <ns1:ptid>matthias1231623se</ns1:ptid>
-                <ns1:requestedCurrency>EUR</ns1:requestedCurrency>
-                <ns1:requestedAmount>10.0</ns1:requestedAmount>
-                <ns1:payedInCurrency>EUR</ns1:payedInCurrency>
-                <ns1:payedAmount>10.0</ns1:payedAmount>
-                <ns1:validationOnly>true</ns1:validationOnly>
-                <ns1:resultCode>0</ns1:resultCode>
-                <ns1:errorCode>0</ns1:errorCode>
-                <ns1:errorCodeDescription></ns1:errorCodeDescription>
-</ns1:PayoutReturn>
+<ns1:payoutResponse>
+    <ns1:PayoutReturn>
+        <ns1:ptid>abcd12345678efgh</ns1:ptid>
+        <ns1:requestedCurrency>MXN</ns1:requestedCurrency>
+        <ns1:requestedAmount>1234.56</ns1:requestedAmount>
+        <ns1:validationOnly>true</ns1:validationOnly>
+        <ns1:resultCode>0</ns1:resultCode>
+        <ns1:errorCode>0</ns1:errorCode>
+        <ns1:errorCodeDescription></ns1:errorCodeDescription>
+    </ns1:PayoutReturn>
+</ns1:payoutResponse>
 ```
 
 ## Capturing a pre validated payout 
@@ -244,40 +257,50 @@ Payout API allows you to:
  + Request:
 ```
 <urn:payout>
-         <urn:username>USER</urn:username>
-         <urn:password>PASSWORD</urn:password>
-         <urn:ptid>matthias123623se</urn:ptid>
-         <urn:utcOffset>+03:00</urn:utcOffset>
-         <urn:amount>10.00</urn:amount>
-         <urn:currency>EUR</urn:currency>
-         <urn:customerIdType>EMAIL</urn:customerIdType>
-         <urn:customerId>psc.test+mypins_yCvrSzwjlEFULVKGVkvD@paysafecard.com</urn:customerId>
-         <urn:merchantClientId>customer12</urn:merchantClientId>
-         <urn:validationOnly>false</urn:validationOnly>
-         <urn:customerDetailsBasic>
-            <urn:firstName>broJgMuzErVuJLQjJJBIsMvfal</urn:firstName>
-            <urn:lastName>DQunWSfgpAcNRUvCwEhsPwPHQJ</urn:lastName>
-            <urn:dateOfBirth>1991-01-22</urn:dateOfBirth>
-         </urn:customerDetailsBasic>
-         <urn:comment>payout winnings</urn:comment>
-      </urn:payout>
+    <urn:username>USER</urn:username>
+    <urn:password>PASSWORD</urn:password>
+    <urn:ptid>abcd12345678efgh</urn:ptid>
+    <urn:amount>1234.56</urn:amount>
+    <urn:currency>MXN</urn:currency>
+    <urn:validationOnly>false</urn:validationOnly>
+    <urn:utcOffset>+09:00</urn:utcOffset>
+    <urn:customerDetailsBasic>
+        <urn:firstName>John</urn:firstName>
+        <urn:lastName>Doe</urn:lastName>
+        <urn:dateOfBirth>1999-12-31</urn:dateOfBirth>
+        <urn:middleName>William</urn:middleName>
+        <urn:phoneNumber>+527729871234</urn:phoneNumber>
+        <urn:email>joh.wdoe@customer.com</urn:email>
+    </urn:customerDetailsBasic>
+    <urn:payoutInstrument>SAFETYPAY</urn:payoutInstrument>
+    <urn:countryCode>MX</urn:countryCode>
+    <urn:bankAccount>
+        <urn:type>CLABE</urn:type>
+        <urn:number>012345678910111216</urn:number>
+    </urn:bankAccount>
+    <urn:idDocument>
+        <urn:type>RFC</urn:type>
+        <urn:number>XAXX010101000</urn:number>
+    </urn:idDocument>
+    <urn:notificationUrl>https://www.merchantsite.com/transaction/abcd12345678efgh/notification</urn:notificationUrl>
+    <urn:description>description</urn:description>
+    <urn:purpose>PAYMENT</urn:purpose>
+</urn:payout>
 ```
 
  + Response:
 ```
 <ns1:payoutResponse>
-            <ns1:PayoutReturn>
-                <ns1:ptid>matthias1231623se</ns1:ptid>
-                <ns1:requestedCurrency>EUR</ns1:requestedCurrency>
-                <ns1:requestedAmount>10.0</ns1:requestedAmount>
-                <ns1:payedInCurrency>EUR</ns1:payedInCurrency>
-                <ns1:payedAmount>10.0</ns1:payedAmount>
-                <ns1:validationOnly>false</ns1:validationOnly>
-                <ns1:resultCode>0</ns1:resultCode>
-                <ns1:errorCode>0</ns1:errorCode>
-                <ns1:errorCodeDescription></ns1:errorCodeDescription>
-            </ns1:PayoutReturn>
-        </ns1:payoutResponse>
+    <ns1:PayoutReturn>
+        <ns1:ptid>abcd12345678efgh</ns1:ptid>
+        <ns1:requestedCurrency>MXN</ns1:requestedCurrency>
+        <ns1:requestedAmount>1234.56</ns1:requestedAmount>
+        <ns1:validationOnly>false</ns1:validationOnly>
+        <ns1:resultCode>0</ns1:resultCode>
+        <ns1:errorCode>0</ns1:errorCode>
+        <ns1:errorCodeDescription></ns1:errorCodeDescription>
+    </ns1:PayoutReturn>
+</ns1:payoutResponse>
 ```
 
 ## Capturing a payout without validation 
@@ -285,40 +308,103 @@ Payout API allows you to:
  + Request:
 ```
 <urn:payout>
-         <urn:username>USER</urn:username>
-         <urn:password>PASSWORD</urn:password>
-         <urn:ptid>matthias123623se</urn:ptid>
-         <urn:utcOffset>+03:00</urn:utcOffset>
-         <urn:amount>10.00</urn:amount>
-         <urn:currency>EUR</urn:currency>
-         <urn:customerIdType>EMAIL</urn:customerIdType>
-         <urn:customerId>psc.test+mypins_yCvrSzwjlEFULVKGVkvD@paysafecard.com</urn:customerId>
-         <urn:merchantClientId>customer12</urn:merchantClientId>
-         <urn:validationOnly>false</urn:validationOnly>
-         <urn:customerDetailsBasic>
-            <urn:firstName>broJgMuzErVuJLQjJJBIsMvfal</urn:firstName>
-            <urn:lastName>DQunWSfgpAcNRUvCwEhsPwPHQJ</urn:lastName>
-            <urn:dateOfBirth>1991-01-22</urn:dateOfBirth>
-         </urn:customerDetailsBasic>
-         <urn:comment>payout winnings</urn:comment>
-      </urn:payout>
+    <urn:username>USER</urn:username>
+    <urn:password>PASSWORD</urn:password>
+    <urn:ptid>abcd12345678efgh</urn:ptid>
+    <urn:amount>1234.56</urn:amount>
+    <urn:currency>MXN</urn:currency>
+    <urn:validationOnly>false</urn:validationOnly>
+    <urn:utcOffset>+09:00</urn:utcOffset>
+    <urn:customerDetailsBasic>
+        <urn:firstName>John</urn:firstName>
+        <urn:lastName>Doe</urn:lastName>
+        <urn:dateOfBirth>1999-12-31</urn:dateOfBirth>
+        <urn:middleName>William</urn:middleName>
+        <urn:phoneNumber>+527729871234</urn:phoneNumber>
+        <urn:email>joh.wdoe@customer.com</urn:email>
+    </urn:customerDetailsBasic>
+    <urn:payoutInstrument>SAFETYPAY</urn:payoutInstrument>
+    <urn:countryCode>MX</urn:countryCode>
+    <urn:bankAccount>
+        <urn:type>CLABE</urn:type>
+        <urn:number>012345678910111216</urn:number>
+    </urn:bankAccount>
+    <urn:idDocument>
+        <urn:type>RFC</urn:type>
+        <urn:number>XAXX010101000</urn:number>
+    </urn:idDocument>
+    <urn:notificationUrl>https://www.merchantsite.com/transaction/abcd12345678efgh/notification</urn:notificationUrl>
+    <urn:description>description</urn:description>
+    <urn:purpose>PAYMENT</urn:purpose>
+</urn:payout>
 ```
 
  + Response:
 ```
 <ns1:payoutResponse>
-            <ns1:PayoutReturn>
-                <ns1:ptid>matthias1231623se</ns1:ptid>
-                <ns1:requestedCurrency>EUR</ns1:requestedCurrency>
-                <ns1:requestedAmount>10.0</ns1:requestedAmount>
-                <ns1:payedInCurrency>EUR</ns1:payedInCurrency>
-                <ns1:payedAmount>10.0</ns1:payedAmount>
-                <ns1:validationOnly>false</ns1:validationOnly>
-                <ns1:resultCode>0</ns1:resultCode>
-                <ns1:errorCode>0</ns1:errorCode>
-                <ns1:errorCodeDescription></ns1:errorCodeDescription>
-            </ns1:PayoutReturn>
-        </ns1:payoutResponse>
+    <ns1:PayoutReturn>
+        <ns1:ptid>abcd12345678efgh</ns1:ptid>
+        <ns1:requestedCurrency>MXN</ns1:requestedCurrency>
+        <ns1:requestedAmount>1234.56</ns1:requestedAmount>
+        <ns1:validationOnly>false</ns1:validationOnly>
+        <ns1:resultCode>0</ns1:resultCode>
+        <ns1:errorCode>0</ns1:errorCode>
+        <ns1:errorCodeDescription></ns1:errorCodeDescription>
+    </ns1:PayoutReturn>
+</ns1:payoutResponse>
+```
+
+## Payout notification
+The payout notification is used to notify the business partner independently of the result of the payout processing.  In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the payout notification is resubmitted at a regular interval until one of the following criteria is fulfilled:
+
++ The payout notification is successfully delivered (i.e. HTTP 200 response from the server).
++ The maximum number of retry attempts has been reached (currently configured at 5 retries).
++ The payout notification will be sent from either of the below IP addresses:
+
+* 3.127.106.50
+* 3.126.164.128
+* 3.127.123.143
+* 176.34.172.250
+* 54.228.173.185
+
+```
+{
+  "timestamp": 1601916702012,
+  "eventType": "PAYOUT_STATUS_CHANGE",
+  "version": "1",
+  "data": {
+      "object": "payout",
+      "id": "string",
+      "payout_instrument": "SAFETYPAY",
+      "created": 0,
+      "updated": 0,
+      "currency": "string",
+      "amount": 0,
+      "country_code": "string",
+      "customer": {
+        "id": "string",
+        "email": "string",
+        "psc_id": "string",
+        "date_of_birth": "string",
+        "first_name": "string",
+        "middle_name": "string",
+        "last_name": "string",
+        "phone_number": "string"
+      },
+      "bank_account": {
+        "type": "CLABE",
+        "number": "string"
+      },
+      "id_document": {
+        "type": "RFC",
+        "number": "string"
+      },
+      "notification_url": "string",
+      "description": "string",
+      "purpose": "PAYMENT",
+      "status": "SUCCESS"
+      }
+}
 ```
 
 <a name="retrieve_limits"></a>
@@ -340,34 +426,34 @@ Used to retrieve limits information for a specific `currency`. All associated MI
  + Response: 
 ```
 <ns1:getPayoutStateResponse>
-            <ns1:getPayoutStateReturn>
-                <ns1:resultCode>0</ns1:resultCode>
-                <ns1:errorCode>0</ns1:errorCode>
-                <ns1:errorCodeDescription></ns1:errorCodeDescription>
-                <ns1:payoutState>
-                    <ns1:mid>9000000008</ns1:mid>
-                    <ns1:currency>PYG</ns1:currency>
-                    <ns1:totalPayoutAmount>0.0</ns1:totalPayoutAmount>
-                    <ns1:totalPaymentAmount>0.0</ns1:totalPaymentAmount>
-                    <ns1:creditLine>10000.0</ns1:creditLine>
-                    <ns1:totalPayoutBalance>10000.0</ns1:totalPayoutBalance>
-                    <ns1:dailyPayoutLimit>10000.0</ns1:dailyPayoutLimit>
-                    <ns1:dailyPayoutAmount>0.0</ns1:dailyPayoutAmount>
-                    <ns1:dailyPayoutBalance>10000.0</ns1:dailyPayoutBalance>
-                </ns1:payoutState>
-                <ns1:payoutState>
-                    <ns1:mid>9000000007</ns1:mid>
-                    <ns1:currency>EUR</ns1:currency>
-                    <ns1:totalPayoutAmount>30.0</ns1:totalPayoutAmount>
-                    <ns1:totalPaymentAmount>2.2</ns1:totalPaymentAmount>
-                    <ns1:creditLine>10000.0</ns1:creditLine>
-                    <ns1:totalPayoutBalance>9972.2</ns1:totalPayoutBalance>
-                    <ns1:dailyPayoutLimit>10000.0</ns1:dailyPayoutLimit>
-                    <ns1:dailyPayoutAmount>10.0</ns1:dailyPayoutAmount>
-                    <ns1:dailyPayoutBalance>9990.0</ns1:dailyPayoutBalance>
-                </ns1:payoutState>
-            </ns1:getPayoutStateReturn>
-        </ns1:getPayoutStateResponse>
+    <ns1:getPayoutStateReturn>
+        <ns1:resultCode>0</ns1:resultCode>
+        <ns1:errorCode>0</ns1:errorCode>
+        <ns1:errorCodeDescription></ns1:errorCodeDescription>
+        <ns1:payoutState>
+            <ns1:mid>9000000008</ns1:mid>
+            <ns1:currency>PYG</ns1:currency>
+            <ns1:totalPayoutAmount>0.0</ns1:totalPayoutAmount>
+            <ns1:totalPaymentAmount>0.0</ns1:totalPaymentAmount>
+            <ns1:creditLine>10000.0</ns1:creditLine>
+            <ns1:totalPayoutBalance>10000.0</ns1:totalPayoutBalance>
+            <ns1:dailyPayoutLimit>10000.0</ns1:dailyPayoutLimit>
+            <ns1:dailyPayoutAmount>0.0</ns1:dailyPayoutAmount>
+            <ns1:dailyPayoutBalance>10000.0</ns1:dailyPayoutBalance>
+        </ns1:payoutState>
+        <ns1:payoutState>
+            <ns1:mid>9000000007</ns1:mid>
+            <ns1:currency>MXN</ns1:currency>
+            <ns1:totalPayoutAmount>30.0</ns1:totalPayoutAmount>
+            <ns1:totalPaymentAmount>2.2</ns1:totalPaymentAmount>
+            <ns1:creditLine>10000.0</ns1:creditLine>
+            <ns1:totalPayoutBalance>9972.2</ns1:totalPayoutBalance>
+            <ns1:dailyPayoutLimit>10000.0</ns1:dailyPayoutLimit>
+            <ns1:dailyPayoutAmount>10.0</ns1:dailyPayoutAmount>
+            <ns1:dailyPayoutBalance>9990.0</ns1:dailyPayoutBalance>
+        </ns1:payoutState>
+    </ns1:getPayoutStateReturn>
+</ns1:getPayoutStateResponse>
 ```
 
 # Group Payout Error Codes
