@@ -23,14 +23,14 @@ To initiate the process of creating a SafetyPay payouts, the business partner mu
 
 
 
-1. Customer creates a payout request on merchant’s checkout
+1. Customer creates a payout request on business partner’s checkout
 
 
 2. Business partner validates and completes the request and forwards it to paysafecard
 
     The business partner provides the customer’s personal details as well as other information like payout amount and beneficiary account information to paysafecard during the payout call.
 
-3. Paysafecard and SafetyPay performs validations and send the request to SafetyPay
+3. Paysafecard and SafetyPay performs validations and send the request to the Partner bank
 
     Paysafecard performs validation of the available balance of the business partner's account. SafetyPay executes an AML screening using an international AML blacklists. This means every transaction request will be screened and blocked if the beneficiary is present on the blacklist. If all validations are succesfull, the payout request is send to the partner bank
 
