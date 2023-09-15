@@ -171,10 +171,10 @@ Offers the possibility to classify sub-merchants. Agreement with paysafecard nee
   * example: john.wdoe@gmail.com
 
 + bankAccount - contains sub-elements:
-    * type - Type of the customer's bank account (example: CLABE)
+    * type - Type of the customer's bank account (example: CLABE) See section "Code books" for more information.
     * number - Bank account number (max length: 50 characters)
 + idDocument - contains sub-elements:
-    * type - Type of customer's ID document (example: RFC)
+    * type - Type of customer's ID document (example: RFC). See section "Code books" for more information.
     * number - Customer's ID document number (max length: 50 characters)
 + resultCode – type of error
   * 0 indicates that no error occurred
@@ -404,6 +404,7 @@ The payout notification is used to notify the business partner independently of 
 * 176.34.172.250
 * 54.228.173.185
 
+Example payload:
 ```
 {
   "timestamp": 1601916702012,
@@ -497,14 +498,6 @@ Used to retrieve limits information for a specific `currency`. All associated MI
 
 |Code                                    |Number (optional)  |HTTP Status      |Description          |
 |---                                     |---                |---              |---                  |
-|`Customer balance exceeded`             |3167               |400              |By executing this payout, the customer's account balance would be exceeded. |
-|`Top-up limit exceeded`                |3170               |400              |By executing this payout, the customer's account top up limit would be exceeded.|
-|`Customer yearly payout limit exceeded`|3194               |400              | The customer already performed payouts leading to his yearly payout limit being reached. No more payouts will be possible for this customer account until the limit resets.|
-|`Customer account details do not match`          |3195               |400              |The provided customer details by the business partner do not match with the customer's details of their my paysafecard account. We only allow payouts if details of business partner request and that of the my paysafecard account match.|
-|`my paysafecard account not found by provided credentials`               |3162               |400              |We could not find a customer matching the provided customerId.|
-|`There is already the maximum number of pay-out merchant clients assigned to this account`|3198               |400              | The MCID does not match with the previously used MCID for that my paysafecard account. We only allow 1:1 relationships for MCID:my paysafecard account. Please refer to this [Section](#MCID2) to find out more.|
-|`There is already the maximum number of pay-out accounts assigned to this merchantClient`  |3197               |400              | The my paysafecard account does not match with the previously used my paysafecard account for that MCID. We only allow 1:1 relationships for MCID:my paysafecard account. Please refer to this [Section](#MCID2) to find out more.|
-|`payout rejected - account registration not completed`       |3168               |400              |The customer did not complete their registration yet and is not eligible to receive a payout.|
 |`Missing mandatory parameter`                     |3150               |400              |Self explanatory - I.E:"Missing mandatory parameter CustomerIdentifier" if the parameter "CustomerIdentfier" is missing in the payout request|
 |`Merchant not allowed to perform this action`       |3161               |400              |The merchant account has not been activated for the usage of payouts. Please contact your account manager or the integration team to inquire about the status of payout activation for your account.|
 |`Duplicate payout request`              |3164               |400              |Transaction already exists. We only allow unique values for payout requests.|
