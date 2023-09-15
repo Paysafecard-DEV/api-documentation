@@ -3,7 +3,8 @@ HOST: https://soatest.paysafecard.com/psc/services/PscService
 
 # paysafecard SafetyPay Payouts integration
 
-This documentation explains how to start creating SafetyPay Payouts. It is an add-on to the classic paysafecard integration:
+This documentation explains how to start creating SafetyPay Payouts. SafetyPay Payout allows the transfer of funds to bank account holders in selected LATAM countries. The Payout is executed by the business partner at the 
+demand of the customer.  This documentation is an add-on to the classic paysafecard integration:
 
 **REST API**:
 
@@ -18,43 +19,39 @@ https://www.paysafecard.com/fileadmin/api/paysafecardsopg.html
 
 ## Group Where to start?
 To initiate the process of creating a SafetyPay payouts, the business partner must contact the account manager directly or at sales@paysafecard.com. Once the business process is finished, the feature will be activated from paysafecard side. The feature will be activated per MID (Merchant ID).There are also some technical integration changes necessary, which will be described in detail here.
-
 ## Group Payout Process
 
-SafetyPay Payout allows the transfer of funds to bank account holders in selected LATAM countries. SafetyPay Payout is executed by the business partner at the 
-demand of the customer. SafetyPay Payout is only available in the following countries: Peru, Mexico, Brazil.
 
 
-![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/Safetypay_payouts_flow.png)
+1. Customer creates a payout request on merchant’s checkout
 
-- Step 1: Customer creates a payout request on merchant’s checkout
 
-    On the website of the business partner (merchant), the customer requests a payout.
-    
-    User must accept SafetyPay’s T&C and Privacy Policies.
-    
-    Merchant must mention in its Terms & Conditions (T&C) that Payouts are executed by SafetyPay
+2. Business partner validates and completes the request and forwards it to paysafecard
 
-- Step 2: Merchant validates and completes the request and forwards it to paysafecard
+    The business partner provides the customer’s personal details as well as other information like payout amount and beneficiary account information to paysafecard during the payout call.
 
-    The business partner provides thecustomer’s personal details to paysafecard during the payout call.
+3. Paysafecard and SafetyPay performs validations and send the request to SafetyPay
 
-- Step 3: Paysafecard performs AML screening and sends the request to the partner bank
+    Paysafecard performs validation of the available balance of the business partner's account. SafetyPay executes an AML screening using an international AML blacklists. This means every transaction request will be screened and blocked if the beneficiary is present on the blacklist. If all validations are succesfull, the payout request is send to the partner bank
 
-    Paysafecard and SafetyPay executes a screening using an international AML blacklists. This means every transaction request will be screened and blocked if the beneficiary is present on the blacklist.
+4. Partner bank validates the payee and executes a payout
 
-- Step 4: Partner bank validates the payee and executes a payout
+    Partner bank compares the personal information provided by the business partner with the records owned by the bank.   If the information does not match, the payout transaction is rejected. 
 
-    Only transactions with a match between the beneficiary specified by the merchant and the bank account owner will be processed. This means that the customer won’t be able to make a payout to a third party’s bank account.
-    SafetyPay transfers the money to the customer my paysafecard account.
-
-- Step 5: paysafecard notifies the Merchant of the payout result
+5. paysafecard notifies the Merchant of the payout result
 
     Paysafecard notifies the merchant about the result of the payout operation via API.
 
 
+# Country specific requirements
+
+<b>Mexico</b>
+
+1. User must accept SafetyPay’s T&C and Privacy Policies.
+2. Merchant must mention in its Terms & Conditions (T&C) that Payouts are executed by SafetyPay
+
 # Exchange of customer data
-    - For each payout request the business partner needs to provide the following customer’s personal details to paysafecard during the payout call. TODO paysafecard automatically validates the provided data against the registered my paysafecard account data.
+    - For each payout request the business partner needs to provide the following customer’s personal details to paysafecard during the payout call. 
         
         The payout will be refused if the data does not match.
     
@@ -70,7 +67,6 @@ demand of the customer. SafetyPay Payout is only available in the following coun
 - All payout transactions need to be paid by the business partner. The total monthly payout amount is automatically deducted (netted) from the monthly payment amount.
 - The total amount of payout money may exceed the total amount of payment money up to a certain level.
 - Detailed information on this level can be retrieved with the function [getPayoutState](#retrieve_limits).
-        
         
 
 ## Reporting Criteria
