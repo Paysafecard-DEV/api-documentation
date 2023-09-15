@@ -87,7 +87,21 @@ Offers the possibility to classify sub-merchants. Agreement with paysafecard nee
 *Please note: When integrating as a <b>Payment Service Provider</b> payments will be processed on behalf of merchants. In this case this <b>parameter is mandatory</b>. The parameter has to be included in all paysafecard Payment, Payout and Refund requests for <b>Payment Service Providers</b>.*
 
 
-# Country specific requirements
+# Country specific requirements and limitations
+
+<b>Amount validation</b>
+
+|Country|Field Name|Min/Max|Amount|Currency|
+|-------|-------|-------|-------|-------|
+|MEX|payout_amount|Min|10.00|MXN|
+|MEX|payout_amount|Max|50000.00|MXN|
+|BRA|payout_amount|Min|5.00|BRL|
+|BRA|payout_amount|Max|400.00|BRL|
+|PER|payout_amount|Min|5.00|PEN|
+|PER|payout_amount|Max|500.00|PEN|
+|PER|payout_amount|Min|1.00|USD|
+|PER|payout_amount|Max|150.00|USD|
+
 
 <b>Mexico</b>
 
