@@ -513,8 +513,8 @@ Used to retrieve limits information for a specific `currency`. All associated MI
 |`Merchant limit reached`                |3166               |400              |Merchants payout limit reached. You can inquire the current limits of your account using the [getPayoutState](#retrieve_limits) call. |
 |`Payout id collides with existing disposition id`                   |3169               |400              |We do not allow the payout ID to be the same as a previously used payment ID. Please use unique identifiers always.|
 |`Payout amount is below minimum payout amount of the merchant`           |3171               |400              |Self explanatory|
-|`Customer not active`                     |3193               |400              |The customer's my paysafecard account is not active and therefore not eligible to receive payouts.|
 |`Payout blocked due to security reasons`                        |3199               |400              |Self explanatory|
+|`Invalid combination of parameters`                        |3299               |400              |Invalid combination of country, currency, bank account type or ID document type|
 
 Other errors can be communicated to the customer as “general technical error”. In general when one of these 
 errors occur the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
