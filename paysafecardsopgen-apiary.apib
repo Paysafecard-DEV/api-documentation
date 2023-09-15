@@ -401,7 +401,9 @@ Upon successful execution of this request, the status of the SafetyPay Payout tr
 ```
 
 ## Payout notification
-The payout notification is used to notify the business partner independently of the result of the payout processing.  In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the payout notification is resubmitted at a regular interval until one of the following criteria is fulfilled:
+The payout notification is used to notify the business partner independently of the result of the payout processing. Possible values of the STATUS attribute are SUCCESS or FAILED. 
+
+In case of technical errors (e.g. socket timeout), or application errors (e.g. HTTP 500 response), the payout notification is resubmitted at a regular interval until one of the following criteria is fulfilled:
 
 + The payout notification is successfully delivered (i.e. HTTP 200 response from the server).
 + The maximum number of retry attempts has been reached (currently configured at 5 retries).
