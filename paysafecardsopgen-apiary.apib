@@ -509,15 +509,15 @@ Used to retrieve limits information for a specific `currency`. All associated MI
 
 |Code                                    |Number (optional)  |HTTP Status      |Description          |
 |---                                     |---                |---              |---                  |
-|`Missing mandatory parameter`                     |3150               |400              |Self explanatory - I.E:"Missing mandatory parameter CustomerIdentifier" if the parameter "CustomerIdentfier" is missing in the payout request|
-|`Merchant not allowed to perform this action`       |3161               |400              |The merchant account has not been activated for the usage of payouts. Please contact your account manager or the integration team to inquire about the status of payout activation for your account.|
-|`Duplicate payout request`              |3164               |400              |Transaction already exists. We only allow unique values for payout requests.|
-|`Invalid amount`                        |3165               |400              |Invalid amount.|
-|`Merchant limit reached`                |3166               |400              |Merchants payout limit reached. You can inquire the current limits of your account using the [getPayoutState](#retrieve_limits) call. |
-|`Payout id collides with existing disposition id`                   |3169               |400              |We do not allow the payout ID to be the same as a previously used payment ID. Please use unique identifiers always.|
-|`Payout amount is below minimum payout amount of the merchant`           |3171               |400              |Self explanatory|
-|`Payout blocked due to security reasons`                        |3199               |400              |Self explanatory|
-|`Invalid combination of parameters`                        |3299               |400              |Invalid combination of country, currency, bank account type or ID document type|
+|`Missing_mandatory_parameter`                     |3150               |400              |Self explanatory - I.E:"Missing mandatory parameter CustomerIdentifier" if the parameter "CustomerIdentfier" is missing in the payout request|
+|`Merchant_not_allowed_to_perform_this_action`       |3161               |400              |The merchant account has not been activated for the usage of payouts. Please contact your account manager or the integration team to inquire about the status of payout activation for your account.|
+|`Duplicate_payout_request`              |3164               |400              |Transaction already exists. We only allow unique values for payout requests.|
+|`Invalid_amount`                        |3165               |400              |Invalid amount.|
+|`Merchant_limit_reached`                |3166               |400              |Merchants payout limit reached. You can inquire the current limits of your account using the [getPayoutState](#retrieve_limits) call. |
+|`Payout_id_collides_with_existing_disposition_id`                   |3169               |400              |We do not allow the payout ID to be the same as a previously used payment ID. Please use unique identifiers always.|
+|`Payout_amount_is_below_minimum_payout_amount_of_the_merchant`           |3171               |400              |Self explanatory|
+|`Payout_blocked_due_to_security_reasons`                        |3199               |400              |Self explanatory|
+|`Invalid_combination_of_parameters`                        |3299               |400              |Invalid combination of country, currency, bank account type or ID document type|
 
 Other errors can be communicated to the customer as “general technical error”. In general when one of these 
 errors occur the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
