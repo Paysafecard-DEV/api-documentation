@@ -65,11 +65,12 @@ Every request to the API is authenticated using an API key.
 - Your API key may only be used from your backend systems.
 - **Please note:** Your API key must be kept secured - never expose the API key to anybody!
 
-Below is an example of how the API key is supposed to be set.
+Below is an example of how the API key is supposed to be set (please note that the example cannot be used for requests).
 
 ```
-Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+Authorization: Basic cHNjXzYydXdPYkJnRkxn000XeXZwSlMtNE9weXRtUS1XN3Y=
 ```
+
 ## Test Environment and Endpoints
 Every new business partner needs to first integrate the Paysafecash API on the test environment.
 Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
@@ -505,11 +506,8 @@ In case of technical errors (e.g. socket timeout) or application errors, the web
 
 | IP addresses  |
 |---|
-|  3.127.106.50 |
-|3.126.164.128 |
-|3.127.123.143 |
-|176.34.172.250 |
-|54.228.173.185 |
+| 18.197.120.90 <br> 18.158.237.76 <br> 3.64.155.76 <br> 3.76.4.148 <br> 176.34.172.250 <br>54.228.173.185 <br>52.48.213.182 <br>18.200.202.144 <br>3.126.98.61 <br> 52.58.9.62 <br> 3.127.11.57 <br>99.80.199.184 |
+
 
 # Group Additional webhook notification for money handover
 If requested, Paysafe can activate an additional webhook notification which is sent as soon as the customer paid at the store.
@@ -655,6 +653,15 @@ The additional parameters include the document ID, document type, document date 
 - If the KYC data is invalid, we will return the error code 10028 ("invalid_request_parameter")
 - If the customer reached their limit, we will return the error code 33005 ("merchant_client_limit_reached")
 
+# Group KYB reliance
+KYB reliance is a special version of KYC reliance where instead of verifying a customer, you are verifying the business.
+
+To use this feature, all parameters from the KYC reliance solution are mandatory, and you will have to supply an additional parameter - the merchant category code `mcc`.
+
+The `mcc` parameter needs to be in the list below, otherwise the transaction will be declined. Please contact us if you have any questions regarding the mcc codes.
+
+- For example the `mcc` 7995 is used for "Gambling Transactions Betting (Sportsbook, fantasy, social gaming; when regulated and not covered by other MCCs)"
+
 # Group Refund Information
 The refund feature provides the business partners the possibility to fully or partially refund a previously paid transaction back into the
 customer‘s my paysafecard account.
@@ -791,6 +798,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
     + `tax_id` : `1NTEST01SGxo9HZ` - KYC reliance: mandatory if available
     + `place_of_birth` : `Versaille` - KYC reliance: optional
     + `ip_address` : `127.0.0.1` - KYC reliance: optional
+    + `mcc`: `7995` - KYB reliance: mandatory
 
 ## PaymentResponse (TypedObject)
 + id: pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR - The unique id of this payment
