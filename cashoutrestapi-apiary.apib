@@ -68,11 +68,12 @@ Every request to the paysafecard API is authenticated using an API key.
 - Your API key may only be used from your backend systems.
 - **Please note:** Your API key must be kept secured - never expose the API key to anybody!
 
-Below is an example of how the API key is supposed to be set.
+Below is an example of how the API key is supposed to be set (please note that the example cannot be used for requests).
 
 ```
-Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+Authorization: Basic cHNjXzYydXdPYkJnRkxn000XeXZwSlMtNE9weXRtUS1XN3Y=
 ```
+
 ## Test Environment and Endpoints
 Every new business partner needs to first integrate the API in the test environment.
 Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
@@ -453,6 +454,8 @@ GET cashouts/{id}/barcodes
 |`feature_disabled`                                                         |3172               |400            |Feature not active disabled|
 |`max_amount_exceeded`                                                      |4003               |403            |Max amount exceeded|
 |`reporting_criteria_action_not_allowed`                                    |33000              |400            |Reporting Criteria not allowed to perform this Action|
+|`missing_mandatory_parameter`                                              |3150               |400            |(KYC reliance) A mandatory parameter is missing.|
+|`action_not_allowed`                                                       |3161               |400            |(KYC reliance) Customer data did not pass sanction check.|
 
 
 Other errors can be communicated to the customer as “general technical error”. 
@@ -487,6 +490,12 @@ Authorization: Signature keyId="1",algorithm="rsa-sha256",signature="OFPVO1uqac0
 |`Signature keyId`          |The signature key version id. It has always the value "1" except if communicated otherwise by the paysafecard integration team.    |
 |`algorithm`                |The algorithm used for the signature. A Paysafecash webhook notification will always be signed with "rsa-sha256".|
 |`signature`                |The signature of the webhook notification.|
+
+
+| IP addresses  |
+|---|
+|  18.197.120.90 <br>18.158.237.76 <br>3.64.155.76 <br>3.76.4.148 <br>176.34.172.250 <br>54.228.173.185 <br>52.48.213.182 <br>18.200.202.144 <br>3.126.98.61 <br>52.58.9.62 <br>3.127.11.57 <br>99.80.199.184|
+
 
 <br><br>
 HTTP body
@@ -546,6 +555,28 @@ There is also the possibility to set this timeout per transaction. The timeout c
 
 The allowed span for this parameter is between 1 and 1440 minutes. If no specific setting is used, the default setting of 24 hours is taken.
 
+# Group Customer Data Takeover
+To make the user experience as flawless as possible, a new feature is introduced.
+
+Using the "Customer Data Takeover" feature, the business partner sends customer data (full name, DoB, etc.) to paysafecard in the `initiate cashout` call, so the registration form in the barcode application is prefilled. 
+
+**Important**: paysafecard does not store this data. It is solely used to make the customer registration easier. The data is only accessible if the transaction is in an open status and it is dropped afterwards.
+
++ If a middle name is to be sent during the data exchange, the business partner must combine the customer middle name with the `first_name` parameter.
+
++ It is crucial that the international calling code of the phone number and the country is matching. Otherwise, the number is dropped and not prefilled in the registration form.
+
+# Group KYC reliance
+If you have already verified the customer, we can process this KYC data via API request to make necessary checks on our end during the transaction creation.
+
+To use this feature, the Customer Data Takeover parameters (see above) and additional KYC reliance parameters are mandatory - please see the `initiate cashout` API call for details. These parameters need to be send in the "customer_takeover_data" -> "document" object.
+
+The additional parameters include the document ID, document type, document date of issuance and expiry, document issuing authority and tax ID.
+
+- If the checks on our end fail, we will return the error code 3161 ("action_not_allowed").
+- Since the Customer Data Takeover is mandatory for this feature, we will return the error code 3150 ("missing_mandatory_parameter") in case one of the parameters is missing.
+- If the KYC data is invalid, we will return the error code 10028 ("invalid_request_parameter")
+
 # Group Transaction id Format
 <a name="transaction_id"></a> The transaction `id` can take two different formats, depending if the `Correlation-ID` was used or not.
 
@@ -582,7 +613,28 @@ A Paysafecash POS cashout barcode consists of:
     + `id`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - It´s value uniquely identifies the end customer and it is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
 + `expiration_time_minutes`: 5 (optional) - The time frame the customer is given to go to a payment point and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
 + `webhook_url`: https://notification.com/ (optional)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
++ `customer_takeover_data` (object)
+    + `first_name`: `Max` 
+    + `last_name`: `Mustermann`
+    + `date_of_birth`: `1990-12-31`
+    + `address1`: `Musterstrasse 2`
+    + `postcode`: 1234
+    + `city`: `Vienna`
+    + `country_iso2`: `AT`
+    + `phone_number`: `+43676123456789`
+    + `email`: `example@test.at`
+    + `document` (object) - KYC reliance: mandatory
+        + `id_number` : `8010369012345` - KYC reliance: mandatory
+        + `type` : `PASSPORT` - KYC reliance: mandatory
+        + `issuing_authority` : `Passport Service Paris` - KYC reliance: mandatory if available
+        + `date_of_issuance` : `2010-12-31` - KYC reliance: mandatory if available
+        + `date_of_expiry` : `2030-12-31` - KYC reliance: mandatory
+    + `kyc_level` : `FULL` - KYC reliance: mandatory
+    + `tax_id` : `1NTEST01SGxo9HZ` - KYC reliance: mandatory if available
+    + `place_of_birth` : `Versaille` - KYC reliance: optional
+    + `ip_address` : `127.0.0.1` - KYC reliance: optional
 
+    
 ## BarcodeRequest (TypedObject)
 + currency: EUR (required) - The currency ISO code in which the barcode should be generated on. (ISO-4217)
 + country: DE (required) - The target country ISO code the barcode should be generated for. (ISO 3166-1)
