@@ -250,8 +250,7 @@ The payment notification is used to notify the business partner that the custome
 
 | IP addresses  |
 |---|
-|  3.127.106.50 <br>3.126.164.128 <br>3.127.123.143 <br>176.34.172.250 <br>54.228.173.185 |
-
+|  18.197.120.90 <br>18.158.237.76 <br>3.64.155.76 <br>3.76.4.148 <br>3.127.123.143 <br>176.34.172.250 <br>54.228.173.185 <br>52.48.213.182 <br>18.200.202.144 |
 
 Example:
 
@@ -566,35 +565,6 @@ If an error code appears that is not listed here, please contact integration@pay
 |`General error`                                                            |3017               |400            |[It is mandatory to send an MCID.](#MCID)|
 |`General error`                                                            |3019               |400            |[MCID contains invalid values.](#MCID)|
 
-
-#Group Customer Data Takeover
-There is the possibility that the business partner sends the customer data (full name, DoB, full list of parameters below) to paysafecard, so the registration form is prefilled. 
-
-This has the purpose to make the registration of the customer easier. If the business partner wants to use that feature, it has to be pointed out clearly to the customer that the data is shared with paysafecard.
-
-The customer data exchange happens at the transaction creation.
-+ Customer has to be informed of the data exchange
-+ Makes it easier for the customer to register at paysafecard
-+ Business partner sends the data in the transaction creation
-
-**Parameters**
-|Parameter     | Type|
-|---|---|
-|first_name    |string, e.g. "Max"|
-|last_name     |string, e.g. "Mustermann"|
-|date_of_birth |date format pattern "yyyy-MM-dd", e.g. "1990-12-31"|
-|address1      |string, e.g. "Musterstrasse 2"|
-|postcode      |string, e.g. "1234"|
-|city          |string, e.g. "Vienna"|
-|country_iso2  |string, e.g. "AT"|
-|phone_number  |string including international calling code, e.g. +4471001234567891, can be sent as +44... or 0044..., e.g."+43676123456789"|
-|email         |string, e.g. "example@test.at"|
-
-**Important**: paysafecard does not store this data. It is solely used to make the registration easier. The data is only accessible as long as the transaction is in an open status and is dropped afterwards.
-
-+ If a middle name is to be sent during the data exchange, the business partner must combine the customer middle name with the `first_name` parameter.
-
-+ It is crucial that the international calling code of the phone number and the country is matching. Otherwise, the number is dropped and not prefilled to the registration form.
 
 # Group Gift Card Integration
 paysafecard has expanded its portfolio of cash-based payment methods in the United States, adding the acceptance of popular retail gift cards such as CVS/pharmacy and Dollar General, as well as oBucks cards
