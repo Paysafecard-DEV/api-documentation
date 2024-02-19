@@ -211,7 +211,7 @@ This section describes all parameters details of the [*request rc*](#request_rc)
 | `features`                    | string    | optional   | PAYOUT                   | The RC feature. <br></br> Max. 2 features per product. <br></br> The possible values are: "PAYOUT" (only if the product is "PAYSAFECARD) and "REFUND" (only if the product is "PAYSAFECARD" or "PAYSAFECASH").
 | `callback_url`                | string    | mandatory  | https://notification.com | The callback url to be used by paysafecard to inform about the RC status. <br></br> Max. 1000 characters. <br></br> Must be a valid url including protocol (see example).
 
-## Response Parameters details
+## POST Response Parameters details
 | Parameter                     | Type      | Example                          | Description                          |
 | ---                           | ---       | ---                              | ---                                  |
 | `submerchants`                | array     | -                                | The RC array containing all the RC response details.
@@ -220,6 +220,13 @@ This section describes all parameters details of the [*request rc*](#request_rc)
 | `mids`                        | string    | "1000000007", "1000000008"       | The mids (merchant ids) to which an RC was activated for.
 | `request_id`                  | string    | psc_subid_IO7DMI148X183oCcHlS7   | Request reference. 
 | `reason_text`                  | string    | "Missing information on domain."   | Reason for a pending/declined RC. In case of "pending", please [contact us](#rc_status) with the necessary information to proceed with the onboarding.
+
+## GET Response Parameters details
+| Parameter                     | Type      | Example                          | Description                          |
+| ---                           | ---       | ---                              | ---                                  |
+| `id`                          | string    | rc01                             | The id of the RC requested.
+| `status`                      | string    | received                         | The status of the RC requested. <br></br> List of all possible values and description [here](#rc_status). 
+
 
 # Group RC Request API Error Codes
 This section describes all the relevant API error codes.
