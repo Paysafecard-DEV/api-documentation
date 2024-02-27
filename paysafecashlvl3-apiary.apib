@@ -65,11 +65,12 @@ Every request to the API is authenticated using an API key.
 - Your API key may only be used from your backend systems.
 - **Please note:** Your API key must be kept secured - never expose the API key to anybody!
 
-Below is an example of how the API key is supposed to be set.
+Below is an example of how the API key is supposed to be set (please note that the example cannot be used for requests).
 
 ```
-Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+Authorization: Basic cHNjXzYydXdPYkJnRkxn000XeXZwSlMtNE9weXRtUS1XN3Y=
 ```
+
 ## Test Environment and Endpoints
 Every new business partner needs to first integrate the Paysafecash API on the test environment.
 Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
@@ -411,7 +412,70 @@ In case of technical errors (e.g. socket timeout) or application errors, the web
 
 | IP addresses  |
 |---|
-|  3.127.106.50 <br>3.126.164.128 <br>3.127.123.143 <br>176.34.172.250 <br>54.228.173.185 |
+|  18.197.120.90 <br>18.158.237.76 <br>3.64.155.76 <br>3.76.4.148 <br>3.127.123.143 <br>176.34.172.250 <br>54.228.173.185 <br>52.48.213.182 <br>18.200.202.144 |
+
+
+# Group Additional webhook notification for money handover
+If requested, Paysafe can activate an additional webhook notification which is sent as soon as the customer paid at the store.
+
+This webhook notification uses the `eventType` "MONEY_HANDOVER".
+
+<b>Important</b>: this is not yet a confirmation that the transaction was successful, but you can update the transaction status to "processing" or "pending" on your end.
+
+We expect you to credit the customer only when you receive the webhook notification with the event type "PAYMENT_CAPTURED".
+
+- This notification uses the same IP addresses as the normal webhook notification.
+- It uses the same type of verification - see the chapter below.
+- This notification needs to be enabled on our side, so you need to request it from paysafecard.
+- The notification will be sent between 0-30 seconds after the customer paid.
+- It will be sent to the same URL as the normal webhook notification - the one specified in the payment request.
+- The transaction status will <b>NOT</b> be updated, so you cannot confirm this with a `retrievePayment` request.
+- In case the notification fails to get delivered, we attempt up to 5 retries.
+    - This means you could receive a "MONEY_HANDOVER" notification after the transaction was already successful. In these cases, please confirm the transaction status with a `retrievePayment`.
+<!-- - It does not make any retry attempts in case the initial notification fails. -->
+
+
+HTTP body
+```http
+    {
+      "timestamp": 1686560013991,
+      "eventType": "MONEY_HANDOVER",
+      "version": "2",
+      "data": {
+        "mid": "1000000433",
+        "mtid": "mdirectload_1686560012113_hq13zzbV7z_EUR"
+      }
+    }
+```
+# Group Additional webhook notification for money returned at POS
+
+If requested, Paysafe can also activate one more additional webhook notification which is sent as soon as a successful payment is cancelled at the point of sale and the funds are returned.
+
+This webhook notification uses the `eventType` "MONEY_RETURNED".
+
+<b>Important</b>: this is a confirmation that the funds have been returned to the customer at the point of sale and any credit you have done on your side needs to be reversed. The transaction status needs to be updated to "cancelled" on your end.
+
+- This notification uses the same IP addresses as the normal webhook notification.
+- It uses the same type of verification - see the chapter below.
+- This notification needs to be enabled on our side, so you need to request it from paysafecard.
+- The notification will be sent between 0-360 seconds after the customer received the funds back.
+- It will be sent to the same URL as the normal webhook notification - the one specified in the payment request.
+- The transaction status will <b>NOT</b> be updated, so you cannot confirm this with a `retrievePayment` request.
+- In case the notification fails to get delivered, we attempt up to 5 retries.
+This means you could receive a "MONEY_RETURNED" notification after receiving a "MONEY_HANDOVER" one or a "PAYMENT_CAPTURED" one. This will indicate an incomplete payment and the partner will need to treat the payment as unsuccessful.
+<!-- - It does not make any retry attempts in case the initial notification fails. -->
+
+HTTP body
+```http
+    {
+      "timestamp": 1706199208146,
+      "eventType": "MONEY_RETURNED",
+      "version": "2",
+      "data":
+
+{         "mid": "1000000545",         "mtid": "pay_1000000545_iSL7n3nsLl8t396SJQTAvcjD3rKoIti9_EUR"       }
+    }
+```
 
 # Group How to verifiy the webhook notification
 The webhook notification is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
