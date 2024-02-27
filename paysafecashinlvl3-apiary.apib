@@ -506,7 +506,7 @@ In case of technical errors (e.g. socket timeout) or application errors, the web
 
 | IP addresses  |
 |---|
-| 18.197.120.90 <br> 18.158.237.76 <br> 3.64.155.76 <br> 3.76.4.148 <br> 176.34.172.250 <br>54.228.173.185 <br>52.48.213.182 <br>18.200.202.144 <br>3.126.98.61 <br> 52.58.9.62 <br> 3.127.11.57 <br>99.80.199.184 |
+|  18.197.120.90 <br>18.158.237.76 <br>3.64.155.76 <br>3.76.4.148 <br>3.127.123.143 <br>176.34.172.250 <br>54.228.173.185 <br>52.48.213.182 <br>18.200.202.144 |
 
 
 # Group Additional webhook notification for money handover
@@ -539,6 +539,35 @@ HTTP body
         "mid": "1000000433",
         "mtid": "mdirectload_1686560012113_hq13zzbV7z_EUR"
       }
+    }
+```
+# Group Additional webhook notification for money returned at POS
+
+If requested, Paysafe can also activate one more additional webhook notification which is sent as soon as a successful payment is cancelled at the point of sale and the funds are returned.
+
+This webhook notification uses the `eventType` "MONEY_RETURNED".
+
+<b>Important</b>: this is a confirmation that the funds have been returned to the customer at the point of sale and any credit you have done on your side needs to be reversed. The transaction status needs to be updated to "cancelled" on your end.
+
+- This notification uses the same IP addresses as the normal webhook notification.
+- It uses the same type of verification - see the chapter below.
+- This notification needs to be enabled on our side, so you need to request it from paysafecard.
+- The notification will be sent between 0-360 seconds after the customer received the funds back.
+- It will be sent to the same URL as the normal webhook notification - the one specified in the payment request.
+- The transaction status will <b>NOT</b> be updated, so you cannot confirm this with a `retrievePayment` request.
+- In case the notification fails to get delivered, we attempt up to 5 retries.
+This means you could receive a "MONEY_RETURNED" notification after receiving a "MONEY_HANDOVER" one or a "PAYMENT_CAPTURED" one. This will indicate an incomplete payment and the partner will need to treat the payment as unsuccessful.
+<!-- - It does not make any retry attempts in case the initial notification fails. -->
+
+HTTP body
+```http
+    {
+      "timestamp": 1706199208146,
+      "eventType": "MONEY_RETURNED",
+      "version": "2",
+      "data":
+
+{         "mid": "1000000545",         "mtid": "pay_1000000545_iSL7n3nsLl8t396SJQTAvcjD3rKoIti9_EUR"       }
     }
 ```
 
@@ -653,6 +682,30 @@ The additional parameters include the document ID, document type, document date 
 - If the KYC data is invalid, we will return the error code 10028 ("invalid_request_parameter")
 - If the customer reached their limit, we will return the error code 33005 ("merchant_client_limit_reached")
 
+Customer data takeover & KYC reliance parameters:
+| Parameter | Required | Example |
+| --- | --- | --- |
+| first_name | Mandatory | Max |
+| last_name | Mandatory | Mustermann |
+| date_of_birth | Mandatory | 1990-12-31 |
+| address1 | Mandatory | Musterstrasse 2 |
+| postcode | Mandatory | 1234 |
+| city | Mandatory | Vienna |
+| country_iso2 | Mandatory | AT |
+| phone_number | Mandatory | +43676123456789 |
+| email | Mandatory | example@test.at |
+| document: id_number | Mandatory | 8010369012345 |
+| document: type | Mandatory | PASSPORT |
+| document: issuing_authority | Mandatory if available | Passport Service Paris |
+| document: date_of_issauance | Mandatory if available | 2010-12-31 |
+| document: date_of_expiry | Mandatory | 2030-12-31 |
+| tax_id | Mandatory only in Italy | 1NTEST01SGxo9HZ |
+| place_of_birth | Optional | Versaille |
+| kyc_level | Mandatory | FULL |
+| ip_address | Optional | 127.0.0.1 |
+| mcc | KYB reliance: mandatory | 7995 |
+
+
 # Group KYB reliance
 KYB reliance is a special version of KYC reliance where instead of verifying a customer, you are verifying the business.
 
@@ -660,7 +713,7 @@ To use this feature, all parameters from the KYC reliance solution are mandatory
 
 The `mcc` parameter needs to be in the list below, otherwise the transaction will be declined. Please contact us if you have any questions regarding the mcc codes.
 
-- For example the `mcc` 7995 is used for "Gambling Transactions Betting (Sportsbook, fantasy, social gaming; when regulated and not covered by other MCCs)"
+- For example: the `mcc` 7995 is used for "Gambling Transactions Betting (Sportsbook, fantasy, social gaming; when regulated and not covered by other MCCs)"
 
 # Group Refund Information
 The refund feature provides the business partners the possibility to fully or partially refund a previously paid transaction back into the
