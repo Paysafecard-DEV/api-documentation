@@ -1,0 +1,515 @@
+FORMAT: 1A
+HOST: https://apitest.paysafecard.com/v1
+
+# Customer Data Exchange
+
+Customer data exchange feature enables the merchants to retrieve data of the customer’s ‘my paysafecard’ account. 
+This data can be only returned if the transaction is completed with an account. For account-less  payments, no account details can be provided. 
+
+# Process overview
+
+The customer details are only provided after the completion of the internal feature onboarding process. This process must be started by your account manager. 
+The steps of this process are:
+
+- Signing the contractual addendum
+- Integration on the test system
+- User acceptance test on the test system conducted by the paysafecard team
+    - Testing the different use cases 
+    - Testing the customer data change process
+    - Testing the customer error messages
+- Provide paysafecard with the comparison logic
+    - This helps our customer care to guide the customer in case of a data mismatch
+- Switch to the productive system
+    - After the testing was successful, paysafecard will enable the feature on production 
+
+# Data exchange fields
+
+The following parameter can be requested and returned:
+
+|Parameter name|Format|Descriptions|Example value|
+|-|-|-|-|
+|paysafecard customer id|String|Returns the 12-digits long paysafecard customer ID. This ID identifies the customer uniquely. |401258316218|
+|First name|String|Returns the first name of the customer. In case the customer has a second first name, it will be provided in the same field, separated by a space. |Max Michael|
+|Last name|String|Last name of the customer.|Mustermann|
+|Account created|Date|Returns the time stamp of the customer account creation. yyyy-MM-dd|1999-01-01|
+|Email|String|The email address of the customer|max.mustermann@hotmail.com|
+
+# Character normalization
+
+Following industry standards, the data provided will NOT be normalized before it is returned in the responses. The character normalization is to be done by the business partner.
+
+# Technical integration flow
+
+- Transaction created (REST: initiated) & redirected to the payment panel
+- Customer completes the transaction with a ‘my paysafecard account’
+- The customer details are returned to the business partner with the following options
+    - GetSerialNumbers (SOAP)
+    - RetrievPaymentDetails and in all responses (REST)
+    - Payment notification (SOAP & REST)
+- The business partner compares the data 
+    - If the data matches, the transaction can be completed.
+        - Completing the transaction is done with ExecuteDebit (REST: Capture Payment)
+    - If the data does not match, the transaction must be actively declined.
+        - Cancelling a transaction is done with ExecuteDebit with the amount of 0 (REST: Delete request)
+- The customer sees a result message based on the result of the comparison This message must be shown on the okURL (REST: success_url). 
+- The status can be requested via GetSerialNumbers (State: O & Amount: 0.00 - SOAP) or retrievPaymentDetails (State: CANCELLED_MERCHANT)
+    - If the data are matching, the customer sees a success message. 
+    - If the data are not matching, the customer must see an error message.
+
+# Group Technical requests and responses
+
+The technical integration is different for the SOAP/XML API and REST/JSON API. 
+REST API: https://www.paysafecard.com/en/business/support/downloads/
+SOAP API: https://www.paysafecard.com/en/business/support/downloads-soap/
+
+##  Group SOAP API integration
+
+If you are integrated via the SOAP API, the parameters are returned within the getSerialNumbers request in XML format. 
+
+This procedure has two steps:
+- Requesting the parameter in createDisposition
+- Receiving the values in getSerialNumbers
+In case the parameters are not requested in createDisposition, customer data will not be provided. 
+The account creation date cannot be retrieved in the getSerialNumbers request.
+
+### Requesting the customer data in createDisposition
+
+The customer details must be listed in the createDisposition request as follows:
+
+```
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:pscservice">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:createDisposition>
+         <urn:username>user_soap</urn:username>
+         <urn:password>pw_soap</urn:password>
+         <urn:mtid>mtid123</urn:mtid>
+         <urn:amount>1.00</urn:amount>
+         <urn:currency>EUR</urn:currency>
+         <urn:merchantclientid>customer1</urn:merchantclientid>
+         <urn:okUrl>https://www.paysafecard.com/okURL</urn:okUrl>
+         <urn:nokUrl>https://www.paysafecard.com/nokURL</urn:nokUrl>
+         <urn:pnUrl>https://www.paysafecard.com/pnURL</urn:pnUrl>
+         
+         <urn:customerDetail>CUSTOMER_ID</urn:customerDetail>
+         <urn:customerDetail>FIRST_NAME</urn:customerDetail>
+         <urn:customerDetail>LAST_NAME</urn:customerDetail>
+         <urn:customerDetail>DATE_OF_BIRTH</urn:customerDetail>
+         <urn:customerDetail>E_MAIL</urn:customerDetail>
+
+      </urn:createDisposition>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+```
+
+### Receiving the values in getSerialNumbers
+
+After specifying the customer details in getSerialNumbers request. 
+
+```
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:pscservice">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:getSerialNumbers>
+         <urn:username>user_soap</urn:username>
+         <urn:password>pw_soap</urn:password>
+         <urn:mtid>mtid123</urn:mtid>
+         <urn:currency>EUR</urn:currency>
+
+         <urn:customerDetail>CUSTOMER_ID</urn:customerDetail>
+         <urn:customerDetail>FIRST_NAME</urn:customerDetail>
+         <urn:customerDetail>LAST_NAME</urn:customerDetail>
+         <urn:customerDetail>DATE_OF_BIRTH</urn:customerDetail>
+         
+      </urn:getSerialNumbers>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+The details can be received in the getSerialNumbers response:
+
+```
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="urn:pscservice">
+    <soap:Body>
+        <ns1:getSerialNumbersResponse>
+            <ns1:getSerialNumbersReturn>
+            <urn:username>user_soap</urn:username>
+             <urn:password>pw_soap</urn:password>
+             <urn:mtid>mtid123</urn:mtid>
+             <urn:amount>1.00</urn:amount>
+             <urn:currency>EUR</urn:currency>
+                <urn:dispositionState>S</urn:dispositionState>
+                <urn:serialNumbers>1422263038;0.01</urn:serialNumbers>
+                <urn:customerDetails>
+                    <urn::firstName>Max Michael</urn:firstName>
+                    <urn:lastName>Musterman</urn:lastName>
+                    <urn:email>max.mustermann@hotmail.com</urn:email>
+                    <urn:customerId>999995740212</urn:customerId>
+                    <urn:dateOfBirth>1990-09-28</urn:dateOfBirth>
+                <urn:customerDetails>
+                <urn:paymentInstrument>paysafecard</urn:paymentInstrument>
+                <urn:paymentInstrumentSubtype>account</urn:paymentInstrumentSubtype>
+            </urn:getSerialNumbersReturn>
+        </urn:getSerialNumbersResponse>
+    </soap:Body>
+</soap:Envelope>
+```
+
+### Declining a transaction with a 0-Debit
+
+If the data does not match, the transaction must be declined. Declining a transaction can be done with the ExecuteDebit request. It is Important that the amount in this request is set to 0.
+
+```
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:pscservice">
+    <SOAP-ENV:Header/>
+    <SOAP-ENV:Body>
+        <urn:executeDebit>
+            <urn:username>user_soap</urn:username>
+            <urn:password>pw_soap</urn:password>
+                <urn:mtid>mtid123</urn:mtid>
+                <urn:subId></urn:subId>
+
+                <urn:amount>0</urn:amount>
+
+            <urn:currency>EUR</urn:currency>
+            <urn:close>1</urn:close>
+        </urn:executeDebit>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+```
+
+# Group REST API integration
+
+If you are integrated via the REST API, the parameters are always returned once the feature is activated. 
+
+## REST retrieve payment details with customer details [/payments/{id}]
+
+You can see the details being listed as a response to checking the payment's status.
+
+### Retrieveving payment details [GET]
+
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+               
+
++ Response 200 (application/json)
+
+        {
+            "object": "PAYMENT",
+         "id": "pay_9000001500_qeRvehXkvbvlLwW0AeNHrGgDUneTDN9w_EUR",
+         "created": 1731500433288,
+            "updated": 1731500457992,
+            "currency": "EUR",
+            "status": "AUTHORIZED",
+            "type": "PAYSAFECARD",
+            "redirect": {
+                "success_url": "https://www.guinbox.com/notes/uC5lKyzh74x",
+                "failure_url": "https://www.guinbox.com/notes/FP8gU99Wj7u",
+                "auth_url": "https://customer.test.at.paysafecard.com/psccustomer/GetCustomerPanelServlet?mid=9000001500&mtid=pay_9000001500_qeRvehXkvbvlLwW0AeNHrGgDUneTDN9w_EUR&amount=10.00&currency=EUR"
+            },
+            "customer": {
+                "id": "customer_id23",
+                "ip": "87.120.141.75",
+                "email": "YMkzHuorpC@BuJrVnKNGP.KkU",
+                "psc_id": 736489412559,
+                "first_name": "Test",
+                "last_name": "pTNlTgLyVaGYpefhSGEgPuMGiw",
+                "date_of_birth": "1994-11-13",
+                "account_created": "2024-11-13 10:11:06"
+            },
+            "amount": 10.00,
+            "notification_url": "https://webhook.site/d086817f-ce64-401b-ba01-36cceef77fe1",
+            "card_details": [
+             {
+                  "serial": "1422158779",
+                 "currency": "EUR",
+                  "amount": 10.00,
+                  "type": "00002",
+                  "country": "AT"
+             }
+         ],
+         "payment_instrument": "paysafecard",
+         "payment_instrument_subtype": "account"
+        }
+
+## REST payment capture response body with customer details [/payments/{id}/capture]
+
+Another example of the details being returned can be found below in the response to the payment capture.
+
+### Capture [POST]
+
++ Parameters
+    + id: pay_1000000007_k3JfFMcpLPXGMk1mOdkbmRARdr5kKQeI_EUR (required) - Id from the initiate payment call.
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+
++ Response 200 (application/json)
+
+            {
+            "object":"PAYMENT",
+            "id":"pay_1000000007_k3JfFMcpLPXGMk1mOdkbmRARdr5kKQeI_EUR",
+            "created":1430205127021,
+            "updated":1430206011382,
+            "currency": "EUR",
+            "status":"SUCCESS",
+            "type":"PAYSAFECARD",
+            "redirect": {
+                "success_url": "https://www.guinbox.com/notes/uC5lKyzh74x",
+                "failure_url": "https://www.guinbox.com/notes/FP8gU99Wj7u"
+            },
+            "customer":{
+                "id":"customer_id2",
+                "ip": "123.123.123.123",
+                "email": "max.mustermann@hotmail.com",
+                "psc_id": 172853330915,
+                "first_name": ""Max Michael",
+                "last_name": "Musterman",
+                "date_of_birth": "1990-09-28",
+                "account_created": "2020-09-28 22:05:51"
+                },
+            "notification_url":"http://ok.com",
+            "card_details":[{
+                "serial":"1453591278",
+                "currency":"EUR",
+                "amount":0.01,
+                "type":"00002",
+                "country":"AT"}]
+            }
+## Declining a transaction with a DELETE request [/v1/payments/{id}]
+
+If the data does not match, the transaction must be declined. Declining a transaction in REST can be done with sending a DELETE request. 
+After declining the transaction, the status is: CANCELED_MERCHANT.
+
+### Delete [DELETE]
+
++ Parameters
+    + id: pay_1000000007_k3JfFMcpLPXGMk1mOdkbmRARdr5kKQeI_EUR (required) - Id from the initiate payment call.
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX0R4dThqSnI1LVdPYXhLWnpjOXdyMUtNLXd1Y3dZMXg=
+
++ Response 200 (application/json)
+
+            {
+            "object":"PAYMENT",
+            "id":"pay_1000000007_k3JfFMcpLPXGMk1mOdkbmRARdr5kKQeI_EUR",
+            "created":1430205127021,
+            "updated":1430206011382,
+            "currency": "EUR",
+            "status":"SUCCESS",
+            "type":"PAYSAFECARD",
+            "redirect": {
+                "success_url": "https://www.guinbox.com/notes/uC5lKyzh74x",
+                "failure_url": "https://www.guinbox.com/notes/FP8gU99Wj7u"
+            },
+            "customer":{
+                "id":"customer_id2",
+                "ip": "123.123.123.123",
+                "email": "max.mustermann@hotmail.com",
+                "psc_id": 172853330915,
+                "first_name": ""Max Michael",
+                "last_name": "Musterman",
+                "date_of_birth": "1990-09-28",
+                "account_created": "2020-09-28 22:05:51"
+                },
+            "notification_url":"http://ok.com",
+            "card_details":[{
+                "serial":"1453591278",
+                "currency":"EUR",
+                "amount":0.01,
+                "type":"00002",
+                "country":"AT"}]
+            }
+
+
+# Group Error Handling
+
+It is crucial that the customer is able to resolve the issue by themselves. Therefore, please integrate a clear error message in case the transaction gets declined. 
+
+## Error message for the customer
+
+|Case|Error Message|
+|-|-|
+|First name does not match|“Your transaction got declined. The reason is that during the data comparison with paysafecard, the first name was not matching. The first name must match in both systems.First name at paysafecard: Max. First name to compare: Maximillian. Please change your first name here and retry the payment.“|
+|Last Name does not match|“Your transaction got declined. The reason is that during the data comparison with paysafecard, the last name was not matching. The last name must match in both systems. Last name at paysafecard: Mustermann. Last name to compare: Must. Please change your last name here and retry the payment.“|
+|Date of birth does not match|“Your transaction got declined. The reason is that during the data comparison with paysafecard, your data or birth was not matching. The date of birth must match in both systems. Date of birth at paysafecard: 1988-01-01. Date of birth to compare: 1988-07-23. Please change your date of birth here and retry the payment.“|
+
+## Process of changing customer details
+
+It is Important that the customers are able to change their personal details in order to resolve the data mismatch. 
+Therefore, please provide us with a short process of “how to change the customer details”. This question will be part of the UAT. 
+Ideally the customer receives further instructions on how to change the data with the error messages. 
+
+# Group Data comparison
+
+## Data Mismatch tolerance
+
+Please consider implementing a tolerance logic to match very similar names. 
+Our recommendation is to implement the “Levenshtein distance” with a threshold of 90%
+
+### Data comparison examples
+
+Please consider testing the following test cases during the integration:
+
+- First name and last name
+
+Customer may include their middle name as part of their first name.
+The first name and last name can contain special characters.
+
+|Case|Example|
+|-|-|
+|ss => ß|Max Mussterman => Max Mußterman|
+|Middle name|Johannes Kerner => Johannes B. Kerner|
+|à è ò|Johannes Bàuer => Johannes Bauer|
+
+- Date of birth
+
+The format of the Date of Birth may be different from the way paysafecard stores it.
+paysafecard always provides the date of birth in this format: YYYY-MM-DD
+Example: 2002-09-23
+
+
+# Data Structures
+
+## TypedObject (object)
++ type: PAYSAFECARD (required, fixed) - Type of the product, must be set to PAYSAFECARD.
+
+## PaymentRequest (TypedObject)
++ amount: 0.01 (number, required) - Payment amount, precision must be 2 digits after the colon.
++ currency: EUR (required) - ISO 4217 - 3 letter ISO currency code.
++ redirect (object) 
+    + `success_url`: https://notification.com/{payment_id} (required) - URLs to redirect after successful or failed authorization. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
+    + `failure_url`: https://notification.com/{payment_id} (required) - URLs to redirect after customer clicked on cancel. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
++ `notification_url`: https://notification.com/{payment_id} (required)- Notification URL we will contact after the authorization has been successfully completed. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
++ customer (object) 
+    + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
+    + min_age: 18 (optional) - Valid for my paysafecard payments. For additional information about my paysafecard, please see the section "my paysafecard". Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered my paysafecard account to make the payment. 
+    + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification. 
+    + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
++ submerchant_id: 1 (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. max. 8 digits in alpha numeric code
++ shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
+
+## PaymentResponse (TypedObject)
++ id: pay_1000000007_k3JfFMcpLPXGMk1mOdkbmRARdr5kKQeI_EUR - The unique id of this payment
++ created: 1430317131908 (number)
++ updated: 1430317131908 (number)
++ amount: 0.01 (number)
++ currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
++ status: SUCCESS
++ redirect (Redirect)
++ `notification_url`: https://notification.com/{payment_id} (required)- Notification URL we will contact after the authorization has been successfully completed. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
++ customer (CustomerResponseFull)
++ card_details (array[CardDetails])
+
+## CardDetails (object)
++ serial: 1453591278
++ currency: EUR
++ amount: 0.01
++ type: 00002
++ country: AT 
+
+## CustomerResponseFull (object)
++ id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (string) - The customer Id provided.
++ ip: 81.20.128.34 (string) - The customer IP address.
++ psc_id: 779456189809 (number) The customer paysafecard identifier.
++ first_name: SuAeRHtjkNJSoraWHZAERgaRdA (string) - Test The customer first name. 
++ Last_name: VgObhlCPEXNexGsXqSuIWhzDtt (string) - The customer last name.
++ date_of_birth: 1986-06-28 (string) - The customer date of birth.
++ account_created: 2001-01-22 (string) - The customer my paysafecard account creation date.
+
+## PayoutCustomer (object) - In general
++ id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation
++ email: psc.mypins+9000001500_xZteDVTw@gmail.com (required) - the customer identifier
++ psc_id: 779456189809 (number, optional) - my paysafecard account ID
++ date_of_birth: `1986-06-28` (required)
++ first_name: SuAeRHtjkNJSoraWHZAERgaRdA (required)
++ last_name: VgObhlCPEXNexGsXqSuIWhzDtt (required)
+
+## Redirect (object)
++ `success_url`: https://ok.com/{payment_id}
++ `failure_url`: https://nok.com/{payment_id}
+
+## PayoutRequest (TypedObject)
++ amount: 0.01 (number, required) - Payout amount, precision must be 2 digits after the colon.
+`10.00`
++ currency: EUR (string, required) - ISO 4217 (3 letter ISO currency code).
++ customer (PayoutCustomer)
++ comment: 'Winnings Pay Out' (string, optional)
+
+## PayoutValidationRequest (PayoutRequest)
++ capture: false (boolean) - To perform a validation only, set it to false
+
+## PayoutCaptureRequest (PayoutRequest)
++ capture: true (boolean) - To perform the capture, set it to true
+
+## PayoutResponse (object)
++ object: payout (string) - Type of object, always payout
++ id: out_9000001500_2838fhsd6dashsdkfsd_EUR (string) - The payout ID
++ created: 1430137532383 (number) - Unix timestamp of the creation date
++ updated: 1430137532383 (number) - Unix timestamp when the object was updated
++ currency: EUR (string) - ISO currency code
++ amount: 10.00 (number) - Payout amount
++ customer (object)
+    + id: kfoLkCq3RBIJiJF6sJWBeYA4tnfsCms2
+    + email: valid@email.com
+
+## PayoutGetValidatedResponse (PayoutResponse)
++ status: VALIDATION_SUCCESSFUL
+
+## PayoutConvertedCustomerAmounts (PayoutResponse)
++ customer_currency: EUR
++ customer_amount: 5.00 (number)
+
+## PayoutValidationResponse (PayoutConvertedCustomerAmounts)
++ status: VALIDATION_SUCCESSFUL
+
+## PayoutCaptureResponse (PayoutConvertedCustomerAmounts)
++ status: SUCCESS
+
+## PayoutLimitResponse (object)
++ currency: EUR - ISO 4217 (3 letter ISO currency code)
++ mid: 1000003517
++ credit_line: 0 (number)
++ daily_payout_amount: 27.47 (number)
++ daily_payout_balance: 999972.53 (number)
++ daily_payout_limit: 1000000 (number)
++ total_payment_amount: 47.92 (number)
++ total_payout_amount: 297.12 (number)
++ total_payout_balance: `-249.20` (number)
+
+## RefundRequest (TypedObject)
++ amount: 0.01 (number, required)
++ currency: EUR (required)
++ customer (object, required)
+    + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) 
+    + email: psc.mypins+9000001500_xZteDVTw@gmail.com (required)
++ comment: Non-Wagered Funds (string, optional)
+
+## RefundValidationRequest (RefundRequest)
++ capture: false (boolean, required)
+
+## RefundCaptureRequest (RefundRequest)
++ capture: true (boolean, required)
+
+## RefundResponse (object)
++ object: refund - Type of object, always refund
++ id: ref_1000000007_2838fhsd6dashsdkfsd_EUR
++ created: 1430137532383 (number)
++ updated: 1430137532383 (number)
++ currency: EUR
++ amount: 10.00
++ customer (object)
+    + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation
+    + email: valid@email.com
++ status : SUCCESS
