@@ -1,11 +1,11 @@
 FORMAT: 1A
 HOST: https://apitest.paysafecard.com/v1
 
-# paysafecard SafetyPay integration
+# PaysafeCard SafetyPay integration
 
 This documentation explains how to start accepting <a href="https://www.safetypay.com/en/">SafetyPay</a> payments. 
 
-It is an add-on to the classic paysafecard integration:
+It is an add-on to the classic PaysafeCard integration:
 
 
 **REST API**: 
@@ -19,7 +19,7 @@ https://www.paysafecard.com/fileadmin/api/paysafecardsopg.html
 
 ## Where to start?
 To initiate the process of accepting SafetyPay, the business partner must contact the account manager directly or at [*sales@paysafecard.com*]().
-Once the business process is finished, the feature will be activated from paysafecard side. The feature will be activated per MID (Merchant ID).
+Once the business process is finished, the feature will be activated from PaysafeCard side. The feature will be activated per MID (Merchant ID).
 
 There are also some technical integration changes necessary, which will be described in detail [here](#technical_changes).
 
@@ -30,7 +30,8 @@ There are alternative payment flows to integrate SafetyPay into your payment eco
 # Technical changes
 <a name="technical_changes"></a>
 
-1. The logo must be changed accordingly at the checkout page 
+1. The logo must be changed accordingly at the checkout page
+    * Logos for the banks can be found here: https://www.paysafecard.com/fileadmin/api/images/Banks_logo.zip
 
 2. Transactions must stay open for 48 hours before you can consider them incomplete
 
@@ -41,35 +42,35 @@ There are alternative payment flows to integrate SafetyPay into your payment eco
 4. (Optional) Integrating the payment notification payload in JSON 
     * The [JSON payment notification](#payment_notification) enables the business partner to distinguish which payment instrument subtype was used for the transaction.
 
-# Payment Process  with intermediary paysafecard redirection
+# Payment Process  with intermediary PaysafeCard redirection
 
-## SafetyPay payment option on the paysafecard Payment Panel
+## SafetyPay payment option on the PaysafeCard Payment Panel
 
 ### [Customer Flow](#customer_flows)
-1. The customer selects paysafecard/SafetyPay as the preferred payment method at the business partner checkout page
+1. The customer selects PaysafeCard/SafetyPay as the preferred payment method at the business partner checkout page
 2. The businesss partner initiates the payment with the correct amount, currency and other necessary parameters
-3. The customer is redirected to the paysafecard hosted payment panel
-4. The customer sees paysafecard and SafetyPay payment option on the payment panel
+3. The customer is redirected to the PaysafeCard hosted payment panel
+4. The customer sees PaysafeCard and SafetyPay payment option on the payment panel
 5. The customer selects SafetyPay and is redirected to the SafetyPay payment page
 6. The customer is presented with 2 options to complete their payment: Cash or Online
     * "online" - Flow:
     5. The customer completes the payment with one of the presented online Payment Methods
-    6. paysafecard sends a notification to the notification URL once the payment is complete
+    6. PaysafeCard sends a notification to the notification URL once the payment is complete
     7. The business partner captures the payment
     8. The customer may return to the success_url/okURL provided during the payment request. This is optional.
     * "cash" - Flow: 
     5. The customer receives a SafetyPay operation ID and pays for it at a point of collection
-    6. paysafecard sends a notification to the notification URL once the payment is complete
+    6. PaysafeCard sends a notification to the notification URL once the payment is complete
     7. The business partner captures the payment
 
-## Cash payment - with paysafecard redirection
+## Cash payment - with PaysafeCard redirection
 [Cash Payment process - REST](#cash_payment_REST_PP)<br>
 [Cash Payment process - SOAP](#cash_payment_SOAP_PP)
 ![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/Diagram_SafetyPay_CASH_PP.jpg)
 
 
 
-## Online Payment - with paysafecard redirection
+## Online Payment - with PaysafeCard redirection
 [Online Payment process - REST](#online_payment_REST_PP)<br>
 [Online Payment process - SOAP](#cash_payment_SOAP_PP)
 ![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/Diagram_SafetyPay_ONLINE_PP.jpg)
@@ -86,12 +87,12 @@ There are alternative payment flows to integrate SafetyPay into your payment eco
 4. The customer is presented with the selected option to complete their payment depening on the "payment_instrument_subtype" set during the request: Cash or Online
     * "online" - Flow:
     5. The customer completes the payment with one of the presented online Payment Methods
-    6. paysafecard sends a notification to the notification URL once the payment is complete
+    6. PaysafeCard sends a notification to the notification URL once the payment is complete
     7. The business partner captures the payment
     8. The customer may return to the success_url/okURL provided during the payment request. This is optional.
     * "cash" - Flow: 
     5. The customer receives a SafetyPay operation ID and pays for it at a point of collection
-    6. paysafecard sends a notification to the notification URL once the payment is complete
+    6. PaysafeCard sends a notification to the notification URL once the payment is complete
     7. The business partner captures the payment
 
 ## Cash payment with immediate redirection to SafetyPay
@@ -152,7 +153,7 @@ More on the parameters you can find here:
 [Initiating a SafetyPay Payment - SOPG](#customerTakeoverData_SOPG)
 # SafetyPay Payouts integration
 This documentation explains how to start creating SafetyPay Payouts. SafetyPay Payout allows the transfer of funds to bank account holders in Peru, Mexico and Brazil. The Payout is executed by the business partner at the 
-demand of the customer.  This documentation is an add-on to the classic paysafecard integration:
+demand of the customer.  This documentation is an add-on to the classic PaysafeCard integration:
 **REST API**:
 
 https://www.paysafecard.com/en/business/downloads/
@@ -162,27 +163,27 @@ https://www.paysafecard.com/en/business/downloads/
 https://www.paysafecard.com/en/business/downloads/
 https://www.paysafecard.com/fileadmin/api/paysafecardsopg.html
 ## Where to start with SafetyPay payouts?
-To initiate the process of creating a SafetyPay payouts, the business partner must contact the account manager directly or at sales@paysafecard.com. Once the business process is finished, the feature will be activated from paysafecard side. The feature will be activated per MID (Merchant ID).There are also some technical integration changes necessary, which will be described in detail here.
+To initiate the process of creating a SafetyPay payouts, the business partner must contact the account manager directly or at sales@paysafecard.com. Once the business process is finished, the feature will be activated from PaysafeCard side. The feature will be activated per MID (Merchant ID).There are also some technical integration changes necessary, which will be described in detail here.
 
 ## Payout Process
 1. Customer creates a payout request on business partner’s checkout
 
 
-2. Business partner validates and completes the request and forwards it to paysafecard
+2. Business partner validates and completes the request and forwards it to PaysafeCard
 
-    The business partner provides the customer’s personal details as well as other information like payout amount and beneficiary account information to paysafecard during the payout call.
+    The business partner provides the customer’s personal details as well as other information like payout amount and beneficiary account information to PaysafeCard during the payout call.
 
-3. Paysafecard and SafetyPay performs validations and send the request to the Partner bank
+3. PaysafeCard and SafetyPay performs validations and send the request to the Partner bank
 
-    Paysafecard performs validation of the available balance of the business partner's account. SafetyPay executes an AML screening using an international AML blacklists. This means every transaction request will be screened and blocked if the beneficiary is present on the blacklist. If all validations are succesfull, the payout request is send to the partner bank
+    PaysafeCard performs validation of the available balance of the business partner's account. SafetyPay executes an AML screening using an international AML blacklists. This means every transaction request will be screened and blocked if the beneficiary is present on the blacklist. If all validations are succesfull, the payout request is send to the partner bank
 
 4. Partner bank validates the payee and executes a payout
 
     Partner bank compares the personal information provided by the business partner with the records owned by the bank.   If the information does not match, the payout transaction is rejected. 
 
-5. paysafecard notifies the Merchant of the payout result
+5. PaysafeCard notifies the Merchant of the payout result
 
-    Paysafecard notifies the merchant about the result of the payout operation via API.
+    PaysafeCard notifies the merchant about the result of the payout operation via API.
 
 ## Exchange of customer data
 Following are mandatory and optional attributes that merchant must capture and provide within the Payout request.
@@ -201,7 +202,6 @@ Following are mandatory and optional attributes that merchant must capture and p
 |Disbursement Amount + Currency|Mandatory|Mandatory|Mandatory|
 |Mobile|Optional|N/A|N/A|
 |Email|Optional|Optional|Optional|
-|Reference Code (generated by merchant)|Mandatory|Mandatory|Mandatory|
 |Country|Mandatory|Mandatory|Mandatory|
 |IP address|Optional|Optional|Optional|
 
@@ -218,14 +218,14 @@ Following are mandatory and optional attributes that merchant must capture and p
         
 
 ## Reporting Criteria
-Offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. 
+Offers the possibility to classify sub-merchants. Agreement with PaysafeCard needed - not agreed values lead to a failed payment. 
 <br>Reporting Criterias add an additional layer to an MID and allow for a logical separation of brands and merchants on our side. 
 
 | Parameter        | Description                                                                                                                     | Format                          |
 |------------------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
-| `subId` | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of RCs must be agreed with paysafecard. | Up to 8 alphanumeric characters | 
+| `subId` | The Reporting Criteria (or submerchant Id) is used to classify sub-merchants. The setup of RCs must be agreed with PaysafeCard. | Up to 8 alphanumeric characters | 
 
-*Please note: When integrating as a <b>Payment Service Provider</b> payments will be processed on behalf of merchants. In this case this <b>parameter is mandatory</b>. The parameter has to be included in all paysafecard Payment, Payout and Refund requests for <b>Payment Service Providers</b>.*
+*Please note: When integrating as a <b>Payment Service Provider</b> payments will be processed on behalf of merchants. In this case this <b>parameter is mandatory</b>. The parameter has to be included in all PaysafeCard Payment, Payout and Refund requests for <b>Payment Service Providers</b>.*
 
 
 ## Country specific requirements and limitations
@@ -250,7 +250,7 @@ Offers the possibility to classify sub-merchants. Agreement with paysafecard nee
 ## Payout implementation
 - Prerequisites
 
-    - SOPG Username and Password/API Key for request authentication provided by paysafecard. User will have functions for payment and refund available.
+    - SOPG Username and Password/API Key for request authentication provided by PaysafeCard. User will have functions for payment and refund available.
     - Authorization of the payment server IP address in the production environment (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
     - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to Content-Type: application/xml
     - Character encoding needs to be in UTF-8.
@@ -573,7 +573,7 @@ A JSON version of the payment notification with all the possible parameters, inc
 | `payment_id`                  | String                     | The sub-merchant id. Also knows as reporting criteria. 
 | `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: paysafecard or safetypay
 | `payment_instrument_subtype`  | String                     | The type of payment option. <br><br> Possible values: cash, online
-| `bank_id`                     | String                     | The type bank used for SafetyPay <br><br> Possible values: See [*here*](https://www.paysafecard.com/fileadmin/api/paysafecardsafetypay.html#/reference/bank-ids) <br>*Contact paysafecard if you want this paramater*
+| `bank_id`                     | String                     | The type bank used for SafetyPay <br><br> Possible values: See [*here*](https://www.paysafecard.com/fileadmin/api/paysafecardsafetypay.html#/reference/bank-ids) <br>*Contact PaysafeCard if you want this paramater*
 | `card_details`                | Array                      | Contains the details of the card used for the transaction (up to 10 iterations - max. number of cards that can be used in a single transaction) with the card information.
 | `serial`                      | String                     | The serial number that identifies the card.
 | `currency`                    | String                     | The currency code of the card in ISO 4217 3-digit format.
@@ -584,43 +584,43 @@ A JSON version of the payment notification with all the possible parameters, inc
 
 # Group Payment processes
 <a name="cash_payment_REST_PP"></a>
-## Cash Payment process - REST - intermediary paysafecard redirection
-1. The customer selects the payment method at the business partner checkout page: paysafecard and/or SafetyPay
+## Cash Payment process - REST - intermediary PaysafeCard redirection
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard and/or SafetyPay
 
 1. [Initiate Payment](#initiate_payment): Send POST request `initiate Payment` 
     * 2.1. If the response gives back http20x, the business partner redirects the customer to the payment panel
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer
         * Inititate Payment error message: "*Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support.*"
 
-1. Redirection to the payment panel `auth_url`: The customer reaches the paysafecard payment panel
+1. Redirection to the payment panel `auth_url`: The customer reaches the PaysafeCard payment panel
     * 3.1. The customer selects SafetyPay Cash Payment
     * 3.2. The customer is redirected to the SafetyPay hosted payment page
     
 1. The customer receives a operation ID code
     * 4.1. The customer has to go to a Point of Collection and complete their payment
     
-1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), paysafecard sends a notification to the `notification_url`
+1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), PaysafeCard sends a notification to the `notification_url`
 
 1. `notification_url` handling: Right after the payment notification delivery, the business partner performs the GET request `Retrieve payment details` to check the status of the transaction
     * 6.1. If the GET request `retrieve payment details` returns the status "AUTHORIZED", immediately perform the POST request `capture Payment` 
         * 6.2. If the response to `capture payment` is http20X and the status returned is "SUCCESS", the business partner makes a user account top up accordingly or deliver the goods
 
 <a name="online_payment_REST_PP"></a>
-## Online Payment process - REST - intermediary paysafecard redirection
-1. The customer selects the payment method at the business partner checkout page: paysafecard and/or SafetyPay
+## Online Payment process - REST - intermediary PaysafeCard redirection
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard and/or SafetyPay
 
 1. [Initiate Payment](#initiate_payment): Send POST request `initiate Payment` 
     * 2.1. If the response gives back http20x, the business partner redirects the customer to the payment panel
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer
         * Inititate Payment error message: "*Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support.*"
 
-1. Redirection to the payment panel `auth_url`: The customer reaches the paysafecard payment panel
+1. Redirection to the payment panel `auth_url`: The customer reaches the PaysafeCard payment panel
     * 3.1. The customer selects SafetyPay Online Payment
     * 3.2. The customer is redirected to the SafetyPay hosted payment page
     
 1. The customer continues with their preferred choice of online payment methods and completes the payment
     
-1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), paysafecard sends a notification to the `notification_url`
+1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), PaysafeCard sends a notification to the `notification_url`
 
 1. `notification_url` handling: Right after the payment notification delivery, the business partner performs the GET request `Retrieve payment details` to check the status of the transaction
     * 6.1. If the GET request `retrieve payment details` returns the status "AUTHORIZED", immediately perform the POST request `capture Payment` 
@@ -643,7 +643,7 @@ A JSON version of the payment notification with all the possible parameters, inc
 1. The customer receives a operation ID code
     * 4.1. The customer has to go to a Point of Collection and complete their payment
     
-1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), paysafecard sends a notification to the `notification_url`
+1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), PaysafeCard sends a notification to the `notification_url`
 
 1. `notification_url` handling: Right after the payment notification delivery, the business partner performs the GET request `Retrieve payment details` to check the status of the transaction
     * 6.1. If the GET request `retrieve payment details` returns the status "AUTHORIZED", immediately perform the POST request `capture Payment` 
@@ -651,7 +651,7 @@ A JSON version of the payment notification with all the possible parameters, inc
 
 <a name="online_payment_REST_noPP"></a>
 ## Online Payment process - REST - immediate SafetyPay redirection
-1. The customer selects the payment method at the business partner checkout page: paysafecard and/or SafetyPay
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard and/or SafetyPay
 
 1. [Initiate Payment](#initiate_payment): Send POST request `initiate Payment` with "payment_instrument" & "payment_instrument_subtype" parameters set:[Initiating a SafetyPay Payment - REST](#restrictions_REST)
     * 2.1. If the response gives back http20x, the business partner redirects the customer to the payment panel
@@ -662,7 +662,7 @@ A JSON version of the payment notification with all the possible parameters, inc
     
 1. The customer continues with their preferred choice of online payment methods and completes the payment
     
-1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), paysafecard sends a notification to the `notification_url`
+1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), PaysafeCard sends a notification to the `notification_url`
 
 1. `notification_url` handling: Right after the payment notification delivery, the business partner performs the GET request `Retrieve payment details` to check the status of the transaction
     * 6.1. If the GET request `retrieve payment details` returns the status "AUTHORIZED", immediately perform the POST request `capture Payment` 
@@ -671,8 +671,8 @@ A JSON version of the payment notification with all the possible parameters, inc
 1. `success_url` handling: The customer may return to the `success_url`. This step is optional. 
 
 <a name="cash_payment_SOAP_PP"></a>
-## Cash Payment process - SOAP - intermediary paysafecard redirection
-1. The customer selects the payment method at the business partner checkout page: paysafecard or SafetyPay
+## Cash Payment process - SOAP - intermediary PaysafeCard redirection
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard or SafetyPay
 
 1. [create Disposition](#createDisposition): the business partner makes the SOAP request `createDisposition` 
     * 2.1. If the result and error code is `0`, the business partner redirects the customer to the payment panel
@@ -680,22 +680,22 @@ A JSON version of the payment notification with all the possible parameters, inc
 
         *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
 
-1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel
+1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the PaysafeCard payment panel
     * 3.1. The customer selects SafetyPay Cash Payment
     * 3.2. The customer is redirected to the SafetyPay hosted payment page
     
 1. The customer receives a operation ID code
     * 4.1. The customer has to go to a Point of Collection to complete the payment
   
-1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), paysafecard sends a notification to the `pn_url`
+1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), PaysafeCard sends a notification to the `pn_url`
 
 1. `pnUrl` handling: Right after the payment notification delivery, the business partner performs the request `getSerialNumbers` to check the status of the transaction
     * 6.1. If `getSerialNumbers`returns the status "S", immediately perform the `executeDebit` request
         * 6.2. If the response to `executeDebit` is result and error code is `0`, the business partner makes a user account top up accordingly or deliver the goods
 
 <a name="online_payment_SOAP_PP"></a>
-## Online Payment process - SOAP - intermediary paysafecard redirection
-1. The customer selects the payment method at the business partner checkout page: paysafecard or SafetyPay
+## Online Payment process - SOAP - intermediary PaysafeCard redirection
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard or SafetyPay
 
 1. [create Disposition](#createDisposition): the business partner makes the SOAP request `createDisposition` 
     * 2.1. If the result and error code is `0`, the business partner redirects the customer to the payment panel
@@ -703,13 +703,13 @@ A JSON version of the payment notification with all the possible parameters, inc
 
         *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
 
-1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel
+1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the PaysafeCard payment panel
     * 3.1. The customer selects SafetyPay Online Payment
     * 3.2. The customer is redirected to the SafetyPay hosted payment page
     
 1. The customer continues with their preferred choice of online payment methods and completes the payment
 
-1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), paysafecard sends a notification to the `pn_url`
+1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), PaysafeCard sends a notification to the `pn_url`
 
 1. `pnUrl` handling: Right after the payment notification delivery, the business partner performs the request `getSerialNumbers` to check the status of the transaction
     * 6.1. If `getSerialNumbers`returns the status "S", immediately perform the `executeDebit` request
@@ -720,7 +720,7 @@ A JSON version of the payment notification with all the possible parameters, inc
 
 <a name="cash_payment_SOAP_noPP"></a>
 ## Cash Payment process - SOAP - immediate SafetyPay redirection
-1. The customer selects the payment method at the business partner checkout page: paysafecard or SafetyPay
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard or SafetyPay
 
 1. [create Disposition](#createDisposition): the business partner makes the SOAP request `createDisposition` 
     * 2.1. If the result and error code is `0`, the business partner redirects the customer to the payment panel
@@ -733,7 +733,7 @@ A JSON version of the payment notification with all the possible parameters, inc
 1. The customer receives a operation ID code
     * 4.1. The customer has to go to a Point of Collection or pay for the operation ID code with one of the available payment options
   
-1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), paysafecard sends a notification to the `pn_url`
+1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), PaysafeCard sends a notification to the `pn_url`
 
 1. `pnUrl` handling: Right after the payment notification delivery, the business partner performs the request `getSerialNumbers` to check the status of the transaction
     * 6.1. If `getSerialNumbers`returns the status "S", immediately perform the `executeDebit` request
@@ -741,7 +741,7 @@ A JSON version of the payment notification with all the possible parameters, inc
 
 <a name="online_payment_SOAP_noPP"></a>
 ## Online Payment process - SOAP - immediate SafetyPay redirection
-1. The customer selects the payment method at the business partner checkout page: paysafecard or SafetyPay
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard or SafetyPay
 
 1. [create Disposition](#createDisposition): the business partner makes the SOAP request `createDisposition` 
     * 2.1. If the result and error code is `0`, the business partner redirects the customer to the payment panel
@@ -753,7 +753,7 @@ A JSON version of the payment notification with all the possible parameters, inc
     
 1. The customer continues with their preferred choice of online payment methods and completes the payment
 
-1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), paysafecard sends a notification to the `pn_url`
+1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), PaysafeCard sends a notification to the `pn_url`
 
 1. `pnUrl` handling: Right after the payment notification delivery, the business partner performs the request `getSerialNumbers` to check the status of the transaction
     * 6.1. If `getSerialNumbers`returns the status "S", immediately perform the `executeDebit` request
@@ -796,9 +796,9 @@ Payout API allows you to:
 
 ### Description of Parameters
 + username – business partner account username 
-  * provided by paysafecard for the authentication.
+  * provided by PaysafeCard for the authentication.
 + password – business partner account password  
-  * provided by paysafecard for the authentication 
+  * provided by PaysafeCard for the authentication 
 + ptid – transaction id, unique identifier for each disposition.  
   * must be unique, also if the transaction failed
   * must be different from mtid used during payment
@@ -811,7 +811,7 @@ Payout API allows you to:
   * value must be left empty if nothing else is agreed.  
   * so-called ‘reporting criteria’, offers the possibility to classify transactions  
   * max. length: 8 characters (case sensitive)  
-  * agreement with paysafecard needed  
+  * agreement with PaysafeCard needed  
   * example: shop1 
 + amount – payout amount  
   * requested amount is not allowed to exceed 2500.00 EUR (or equivalent in a different transaction currency) in value  
@@ -837,7 +837,7 @@ Payout API allows you to:
   * value false: Execute payout
 + utcOffset – the difference in hours and minutes from Coordinated Universal Time (UTC)
   * Example: -03:00
-+ notificationUrl (OPTIONAL) - An url, where paysafecard will send a notification request after the payout has been finalized (either successfully or unsuccessfully)
++ notificationUrl (OPTIONAL) - An url, where PaysafeCard will send a notification request after the payout has been finalized (either successfully or unsuccessfully)
 
 + firstName (subelement of CustomerDetailsBasic): the first name of the customer
   * max. length: 60 characters
@@ -884,11 +884,11 @@ Payout API allows you to:
   * Double value Example: 50000,00
  + totalPaymentAmount – The total amount of payments that were executed on this MID within the current billing cycle in the currency of the MID
   * Double value Example : 300000,00
- + creditLine – An extra payout credit line provided by paysafecard to support payout in case an MID is out of balance in the currency of the MID
+ + creditLine – An extra payout credit line provided by PaysafeCard to support payout in case an MID is out of balance in the currency of the MID
   * Double value Example 5000,00
  + totalpayoutBalance – The total amount that can still be paid out this billing cycle (in MID currency) Double value
   * 10000,00
- + dailypayoutLimit – the maximum amount of money that can be paid out on this MID for the current day (24 hour), in the currency of the MID (only if configured by paysafecard)
+ + dailypayoutLimit – the maximum amount of money that can be paid out on this MID for the current day (24 hour), in the currency of the MID (only if configured by PaysafeCard)
   * Double value if configured Example : 0,00
  + dailypayoutAmount – the total amount that has been paid out on this MID today (in MID currency) MID Double value
   * Example : 5000,00
@@ -1111,13 +1111,13 @@ Used to retrieve limits information for a specific `currency`. All associated MI
 ### Validating a payout [/payouts]
 | Parameter                     | Type [validation]    | Required | Example            | Description                          |
 | ---                           | ---     | ---      | ---                | ---                                  |
-| `type`                        | string<br/>[PAYSAFECARD]  | required | paysafecard        | Must be set to PAYSAFECARD|
+| `type`                        | string<br/>[PAYSAFECARD]  | required | PaysafeCard        | Must be set to PAYSAFECARD|
 | `payout_instrument` | string<br/>[SAFETYPAY] | required | safetypay | Must be set to SAFETYPAY
 | `capture`               | boolean<br/>[true,false] | required | true or false |Defines whether to validate (false) or conduct a payout (true) |
 | `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon|
 | `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
 | `customer[id]`           | string<br/> [max. length: 60] | required| uniquecustomerid | Unique id of the customer in your system |
-| `customer[email]`           | string<br/> [valid email address] | required if `[psc_id]` not provided| valid@email.com                            | Needs to be the email that the customer used to register for myPaysafecard |
+| `customer[email]`           | string<br/> [valid email address] | required if `[psc_id]` not provided| valid@email.com                            | Needs to be the email that the customer provided to the partner |
 | `customer[date_of_birth]`         | string<br/>[yyyy-mm-dd]  | required| 1996-10-20 | Date of birth of the customer |
 | `customer[first_name]`| string<br/> [max. length: 60]  | required|  Max                           | Firstname of the customer | 
 | `customer[middle_name]` |string <br/>[max. length: 60] | optional | Diego | Middle name of the customer |
@@ -1220,7 +1220,7 @@ If no currency is specified, all associated MID’s limits infromation will be r
 |`Invalid_combination_of_parameters`                        |3299               |400              |Invalid combination of country, currency, bank account type or ID document type|
 
 Other errors can be communicated to the customer as “general technical error”. In general when one of these 
-errors occur the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
+errors occur the business partner should contact PaysafeCard immediately via integration@paysafecard.com if the account is not live.
 For live accounts, techsupport@paysafecard.com should be contacted.
 
 # Group Code books
@@ -1242,8 +1242,8 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 |Email|Email (used for PIX payments)|BRA|^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,77}$|test@test.com|
 |Phone|Phone (used for PIX payments)|BRA|^[0-9]{11}$|31971212883|
 |EVP|Random Key (used for PIX payments)|BRA|([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})|23e05112-0dfd-4c2b-b433-d6420967dbbe|
-|Checking*|Interbank account number|PER|^[0-9]{20}$|00211111111111111111|
-|Savings*|Interbank account number|PER|^[0-9]{20}$|00211111111111111111|
+|CHECKING*|Interbank account number|PER|^[0-9]{20}$|00211111111111111111|
+|SAVINGS*|Interbank account number|PER|^[0-9]{20}$|00211111111111111111|
 \* must start with one of 002, 003, 007, 009, 011, 018, 023, 035, 038, 049, 053, 054, 055, 056, 058, 059, 060, 800, 801, 802, 803, 805, 806, 808, 809, 811, 813. Both Checking and Savings for Peru use the CCI bank account format
 
 # Group Payout notification
@@ -1290,6 +1290,10 @@ You can supply one or more Bank IDs in the API request, restricting the customer
 
 Sending this parameter without "payment_instrument" does not limit the customer to SafetyPay.
 
+Logos for the banks can be found here:
+
+https://www.paysafecard.com/fileadmin/api/images/Banks_logo.zip
+
 
 |Payment Instrument Subtype | Country | Bank ID | Bank Name | Bank Provider Name
 | --- | --- | --- | --- | ---
@@ -1304,8 +1308,8 @@ Sending this parameter without "payment_instrument" does not limit the customer 
 | online | AR | 8658 | MACRO ARG | Khipu
 | online | AR | 8659 | BANCO NACION ARG | Khipu
 | online | AR | 8661 | SUPERVIELLE ARG | Khipu
-| online | BR | 8366 | Banco Itau Boleto | Banco Itau Boleto (also called "Itau Unibanco")
-| cash   | BR | 8366 | Banco Itau Boleto | Banco Itau Boleto (also called "Itau Unibanco")
+| <strike>online | <strike>BR | <strike>8366 | <strike>Banco Itau Boleto | <strike>Banco Itau Boleto (also called "Itau Unibanco")</strike> (disabled)
+| <strike>cash   | <strike>BR | <strike>8366 | <strike>Banco Itau Boleto | <strike>Banco Itau Boleto (also called "Itau Unibanco")</strike> (disabled)
 | online | BR | 4081 | Banco Itau Robot | Banco Itau
 | online | BR | 8183 | Banco do Brasil Robot | Banco do Brasil
 | online | BR | 8183 | Banco do Brasil SafetyPay | Banco do Brasil
@@ -1318,7 +1322,8 @@ Sending this parameter without "payment_instrument" does not limit the customer 
 | online | CL | 8296 | Banco BCI One Step | Banco BCI
 | cash   | CL | 8194 | Banco Estado | Banco Estado Recaudo Referenciado
 | online | CL | 8194 | Banco Estado | Banco Estado Recaudo Referenciado
-| online | CL | 8291 | Banco Estado One Step | Banco Estado Boton de Pago
+| <strike>online | <strike>CL | <strike>8291 | <strike>Banco Estado One Step | <strike>Banco Estado Boton de Pago</strike> (disabled - use 1120)
+| online | CL | 1120 | PI BANCO ESTADO ONUSE CHI CLP | PI BANCO ESTADO ONUSE CHI CLP
 | online | CL | 8488 | Khipu | Khipu
 | online | CL | 8493 | Khipu - BCI | Khipu
 | online | CL | 8492 | Khipu - Banco Estado | Khipu
@@ -1363,17 +1368,20 @@ Sending this parameter without "payment_instrument" does not limit the customer 
 | online | CO | 8276 | PSE - Nequi | Banco de Occidente COL
 | online | CO | 8397 | PSE - RappiPay COL | Banco de Occidente COL
 | online | CO | 8332 | PSE - Santander COL | Banco de Occidente COL
+| online | CO | 1101 | PSE - NU | Banco de Occidente COL
+| online | CO | 1107 | PI NEQUI-PUSH COL COP | Nequi
 | cash   | CO | 8323 | SuRed | Sured
 | online | CR | 1021 | Banco Nacional de Costa Rica | Banco Nacional de Costa Rica
 | cash   | CR | 1021 | Banco Nacional de Costa Rica | Banco Nacional de Costa Rica
 | cash   | CR | 8531 | Paycash Costa Rica | Paycash Costa Rica
 | cash   | EC | 8216 | Banco Guayaquil | Banco Guayaquil
 | online | EC | 8216 | Banco Guayaquil | Banco Guayaquil 
-| online | EC | <strike>8066 | <strike>Banco Pichincha ECU | <strike>Banco Pichincha ECU</strike> (temporarily disabled)
-| cash   | EC | <strike>8066 | <strike>Banco Pichincha ECU | <strike>Banco Pichincha ECU</strike> (temporarily disabled)
+| online | EC | 8066 | Banco Pichincha ECU | Banco Pichincha ECU 
+| cash   | EC | 8066 | Banco Pichincha ECU | Banco Pichincha ECU 
 | cash   | EC | 8458 | Facilito | Facilito
 | cash   | EC | 8401 | Red Activa | Red Activa
-| cash   | GT | 8404 | PuntoXpress GTM | Punto Xpress GTM
+| online | EC | 1069 | Deuna | Deuna
+| cash   | GT | <strike>8404 | <strike>PuntoXpress GTM | <strike>Punto Xpress GTM</strike> (temporarily disabled)
 | cash   | MX | 8425 | Afirme PayCash | Paycash  
 | online | MX | 8425 | Afirme PayCash | Paycash  
 | cash   | MX | 1020 | BBVA Bancomer | BBVA Bancomer
@@ -1389,7 +1397,7 @@ Sending this parameter without "payment_instrument" does not limit the customer 
 | online | MX | 8395 | Santander MEX WS | Banco Santander
 | online | MX | 1007 | Scotiabank Mexico | Scotiabank Mexico
 | cash   | MX | 1007 | Scotiabank Mexico | Scotiabank Mexico
-| cash   | PA | 8188 | Western Union Panama | Western Union Panama
+| cash   | PA | <strike>8188 | <strike>Western Union Panama | <strike>Western Union Panama</strike> (temporarily disabled)
 | cash   | PE | 8443 | Agente Niubiz | Niubiz
 | cash   | PE | 8321 | Agentes Kasnet | Western Union
 | online | PE | 1001 | BBVA Continental | BBVA Continental
@@ -1417,14 +1425,26 @@ Sending this parameter without "payment_instrument" does not limit the customer 
 | cash   | PE | 8440 | Tambo+ | Tambo 
 | cash   | PE | 8320 | Western Union | Western Union
 | cash   | PE | 8320 | Western Union | Western Union
-| cash   | SV | 8300 | Punto Xpress SLV | Punto Xpress SLV
+| cash   | SV | <strike>8300 | <strike>Punto Xpress SLV | <strike>Punto Xpress SLV</strike> (temporarily disabled)
 
 ####Bank ID Updates:
+
+#####2025-01-02
+Added "PSE - NU" 1011 (CO)
+
+Added "PI BANCO ESTADO ONUSE CHI CLP" 1120 (CL)
+
+Deactivated "Banco Estado One Step" 8291 (CL)
+
+#####2024-09-05
+Added "Deuna" 1069 (EC)
+
 #####2024-06-03
 Replacing "PIX" 8439 (BR) with "PIX" 8619 (BR)
 
 #####2024-05-14
 Temporarily deactivated "Banco Pichincha ECU" 8066 (EC)
+> Reenabled in June 2024
 
 #####2024-01-17
 Temporarily deactivated "HSBC Mexico" 1052 (MX)
@@ -1434,6 +1454,7 @@ Added "ITAU Debin" 8614 (AR) / "Pago Facil"  8606 (AR)
 
 #####2023-09-05
 Removed "SPEI MX" 8191 (MX)
+
 Added "SPEI STP" 8526 (MX)
 
 #####2023-04-17
@@ -1470,14 +1491,14 @@ Removed "Banrisul" 1022 (BR)
 + `notification_url`: https://notification.com/{payment_id} (required)- Notification URL we will contact after the authorization has been successfully completed. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
 + customer (object) 
     + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons. Mandatory to line up with the id during payout later.
-    + min_age: 18 (optional) - Valid for my paysafecard payments. For additional information about my paysafecard, please see the section "my paysafecard". Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered my paysafecard account to make the payment. 
-    + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
+    + min_age: 18 (optional) - Valid for PaysafeCard account payments. For additional information about PaysafeCard account, please see the section "PaysafeCard account". Restricts payments to PaysafeCard account customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered PaysafeCard account to make the payment. 
+    + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's PaysafeCard account. Depending on the country, PaysafeCard accounts are offered with SIMPLE and/or FULL customer identification.
     + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country. Mandatory for SafetyPay payouts for this customer.
 + customer_takeover_data (object)
     + account_registration_country: MX (string, optional) - The registration country of the payer's account with the partner. Mandatory for SafetyPay payouts to this customer later.
     + account_KYC_level: FULL (string, optional) - The KYC level of the payer's account with the partner. Mandatory for SafetyPay payouts to this customer later.
     + account_registration_date: 2017-05-15 (string, optional) - The registration date of the payer's account with the partner. Mandatory for SafetyPay payouts to this customer later.
-+ submerchant_id: 1 (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. max. 8 digits in alpha numeric code
++ submerchant_id: 1 (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with PaysafeCard needed - not agreed values lead to a failed payment. max. 8 digits in alpha numeric code
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
 
 ## PaymentResponse (TypedObject)
@@ -1502,16 +1523,16 @@ Removed "Banrisul" 1022 (BR)
 ## CustomerResponseFull (object)
 + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (string) - The customer Id provided.
 + ip: 81.20.128.34 (string) - The customer IP address.
-+ psc_id: 779456189809 (number) The customer paysafecard identifier.
++ psc_id: 779456189809 (number) The customer PaysafeCard identifier.
 + first_name: SuAeRHtjkNJSoraWHZAERgaRdA (string) - Test The customer first name. 
 + Last_name: VgObhlCPEXNexGsXqSuIWhzDtt (string) - The customer last name.
 + date_of_birth: 1986-06-28 (string) - The customer date of birth.
-+ account_created: 2001-01-22 (string) - The customer my paysafecard account creation date.
++ account_created: 2001-01-22 (string) - The customer PaysafeCard account creation date.
 
 ## PayoutCustomer (object) - In general
 + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation
 + email: psc.mypins+9000001500_xZteDVTw@gmail.com (required) - the customer identifier
-+ psc_id: 779456189809 (number, optional) - my paysafecard account ID
++ psc_id: 779456189809 (number, optional) - PaysafeCard account ID
 + date_of_birth: `1986-06-28` (required)
 + first_name: SuAeRHtjkNJSoraWHZAERgaRdA (required)
 + last_name: VgObhlCPEXNexGsXqSuIWhzDtt (required)
