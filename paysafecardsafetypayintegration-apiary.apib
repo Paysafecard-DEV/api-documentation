@@ -209,6 +209,10 @@ Following are mandatory and optional attributes that merchant must capture and p
 - The business partner has one MID (for each currency, each MID has its own payout limit - the amount that still can
         be paid out by the merchant), information about the financial condition of a MID can be retrieved real-time via [getPayoutState](#retrieve_limits). Automatically all associated MID’s will be returned.
 - As soon as a MID limit is reached, payout on this MID is not possible for this time-period.
+
+## Getting a list of payout banks
+
+- The business partner has the opportunity to check prior to executing a payout which banks are available for a country via [getPayoutBanks](#get_banks) (for SOPG) or [retrieveBanks](#get_banks_rest) (for REST). Automatically all available banks for the selected country will be returned.
     
 
 ## Settlement
@@ -894,6 +898,12 @@ Payout API allows you to:
   * Example : 5000,00
  + dailypayoutBalance – the total amount that still can be paid out on this MID today (in MID currency) MID Double value if the dailypayoutlimit is configured
   * Example : 0,00
+  
+#### getPayoutBanks Parameters
+ + countryCode - The country the partner wants to receive a list for
+  * Example : pe
+  
+
 
 ### Validating a payout
 Upon successful execution of this request, the status of the SafetyPay is set to VALIDATION_SUCCESSFUL
@@ -1107,6 +1117,37 @@ Used to retrieve limits information for a specific `currency`. All associated MI
 </ns1:getPayoutStateResponse>
 ```
 
+<a name="get_banks"></a>
+### getBanks
+Used to retrieve a list of banks for a specific `country`
+
+#### getPayoutBanks
++ Request:
+
+ ```
+<urn:getPayoutBanks>
+         <urn:username>psc_udo_test</urn:username>
+         <urn:password>5a6sdf858cads</urn:password>
+         <urn:countryCode>pe</urn:countryCode>
+      </urn:getPayoutBanks>
+```
+
+ + Response: 
+```
+<ns1:getPayoutBanksResponse>
+            <ns1:getPayoutBanksReturn>
+                <ns1:resultCode>0</ns1:resultCode>
+                <ns1:errorCode>0</ns1:errorCode>
+                <ns1:errorCodeDescription></ns1:errorCodeDescription>
+                <ns1:result>FOUND_SUPPORTED_BANKS</ns1:result>
+                <ns1:banks>
+                    <ns1:bankIdCode>0002</ns1:bankIdCode>
+                    <ns1:bankName>Banco de Credito del Peru</ns1:bankName>
+                </ns1:banks>
+            </ns1:getPayoutBanksReturn>
+        </ns1:getPayoutBanksResponse>
+```
+
 ## REST
 ### Validating a payout [/payouts]
 | Parameter                     | Type [validation]    | Required | Example            | Description                          |
@@ -1205,6 +1246,28 @@ If no currency is specified, all associated MID’s limits infromation will be r
 + Response 200 (application/json)
 
     + Attributes (PayoutLimitResponseSP)
+    
+### Retrieve banks [/payouts/banks/{country_code}]
+
+Used to retrieve a list of banks for a specific `country`. The `country` must be provided according to ISO 3166 (2 letter ISO country code).
+If no country is specified the request will fail.
+
+<a name="get_banks_rest"></a>
+#### Retrieve banks [GET]
+
++ Parameters
+
+    + country_code: 'pe' (required) - 2 lowercase letter ISO country code
+    
++ Request (application/json)
+
+    + Headers
+    
+                Authorization: Basic cHNjX0JpT2U2ME9EM2hoNEdsbkhSWUdoTXdybm0ycC1PeTk=
+                
++ Response 200 (application/json)
+
+    + Attributes (RetrieveBanksResponse)
 
 # Group Payout Error Codes
 |Code                                    |Number (optional)  |HTTP Status      |Description          |
@@ -1295,142 +1358,142 @@ Logos for the banks can be found here:
 https://www.paysafecard.com/fileadmin/api/images/Banks_logo.zip
 
 
-|Payment Instrument Subtype | Country | Bank ID | Bank Name | Bank Provider Name
-| --- | --- | --- | --- | ---
-| online | AR | 8614 | ITAU Debin | ITAU Debin
-| cash   | AR | 8606 | Pago Facil | Pago Facil
-| online | AR | 1000 | MERCADO PAGO ARG | Khipu
-| online | AR | 1027 | HSBC ARG | Khipu
-| online | AR | 8654 | BBVA ARG | Khipu
-| online | AR | 8655 | BANCO CIUDAD ARG | Khipu
-| online | AR | 8656 | GALICIA ARG | Khipu
-| online | AR | 8657 | ICBC ARG | Khipu
-| online | AR | 8658 | MACRO ARG | Khipu
-| online | AR | 8659 | BANCO NACION ARG | Khipu
-| online | AR | 8661 | SUPERVIELLE ARG | Khipu
-| <strike>online | <strike>BR | <strike>8366 | <strike>Banco Itau Boleto | <strike>Banco Itau Boleto (also called "Itau Unibanco")</strike> (disabled)
-| <strike>cash   | <strike>BR | <strike>8366 | <strike>Banco Itau Boleto | <strike>Banco Itau Boleto (also called "Itau Unibanco")</strike> (disabled)
-| online | BR | 4081 | Banco Itau Robot | Banco Itau
-| online | BR | 8183 | Banco do Brasil Robot | Banco do Brasil
-| online | BR | 8183 | Banco do Brasil SafetyPay | Banco do Brasil
-| online | BR | 8326 | Bradesco PagFacil | Bradesco Pagfacil
-| cash   | BR | 8326 | Bradesco PagFacil | Bradesco Pagfacil
-| cash   | BR | 8176 | Caixa Econômica Federal | Caixa Econômica Federal
-| online | BR | <strike>8439 | <strike>PIX | <strike>Bradesco PIX</strike> (updating to 8619 below)
-| online | BR | 8619 | PIX | Bradesco PIX
-| online | BR | 8042 | Santander Brasil | Santander Brasil
-| online | CL | 8296 | Banco BCI One Step | Banco BCI
-| cash   | CL | 8194 | Banco Estado | Banco Estado Recaudo Referenciado
-| online | CL | 8194 | Banco Estado | Banco Estado Recaudo Referenciado
-| <strike>online | <strike>CL | <strike>8291 | <strike>Banco Estado One Step | <strike>Banco Estado Boton de Pago</strike> (disabled - use 1120)
-| online | CL | 1120 | PI BANCO ESTADO ONUSE CHI CLP | PI BANCO ESTADO ONUSE CHI CLP
-| online | CL | 8488 | Khipu | Khipu
-| online | CL | 8493 | Khipu - BCI | Khipu
-| online | CL | 8492 | Khipu - Banco Estado | Khipu
-| online | CL | 8490 | Khipu - Banco de Chile | Khipu
-| online | CL | 8494 | Khipu - Itau | Khipu
-| online | CL | 8491 | Khipu - Santander | Khipu
-| online | CL | 8416 | MachPay | Machpay BCI
-| online | CL | 8457 | Scotiabank Chile | Scotiabank Chile
-| cash   | CL | 8198 | Walmart Chile | Walmart Chile
-| cash   | CO | 8463 | Acciones y Valores | Acciones y Valores
-| cash   | CO | 8157 | Baloto | Payvalida
-| online | CO | 8503 | COOFINEP | Banco de Occidente COL
-| cash   | CO | 8224 | Efecty | Efecty
-| cash   | CO | 8231 | MovilRed Colombia | MovilRed Colombia
-| online | CO | 4100 | PSE - BANCOOMEVA | Banco de Occidente COL
-| online | CO | 1099 | PSE - BBVA Colombia | Banco de Occidente COL
-| online | CO | 8396 | PSE - Bancamía | Banco de Occidente COL
-| online | CO | 4089 | PSE - Banco AV Villas | Banco de Occidente COL
-| online | CO | 8185 | PSE - Banco Agrario | Banco de Occidente COL
-| online | CO | 4090 | PSE - Banco Caja Social | Banco de Occidente COL
-| online | CO | 4091 | PSE - Banco Colpatria | Banco de Occidente COL
-| online | CO | 8163 | PSE - Banco Cooperativo Coopcentral | Banco de Occidente COL
-| online | CO | 4093 | PSE - Banco Davivienda | Banco de Occidente COL
-| online | CO | 5000 | PSE - Banco Falabella | Banco de Occidente COL
-| online | CO | 4095 | PSE - Banco GNB Sudameris | Banco de Occidente COL
-| online | CO | 4096 | PSE - Banco Pichincha COL | Banco de Occidente COL
-| online | CO | 4097 | PSE - Banco Popular | Banco de Occidente COL
-| online | CO | 4098 | PSE - Banco ProCredit | Banco de Occidente COL
-| online | CO | 8389 | PSE - Banco Serfinanza | Banco de Occidente COL
-| online | CO | 4087 | PSE - Banco de Bogota | Banco de Occidente COL
-| online | CO | 4094 | PSE - Banco de Occidente | Banco de Occidente COL
-| online | CO | 4099 | PSE - Bancolombia | Banco de Occidente COL
-| online | CO | 4102 | PSE - Citibank Colombia | Banco de Occidente COL
-| online | CO | 8372 | PSE - Confiar Cooperativa Financiera | Banco de Occidente COL
-| online | CO | 8390 | PSE - Cooperativa Financiera de Antioquia | Banco de Occidente COL
-| online | CO | 8475 | PSE - DALE | Banco de Occidente COL
-| online | CO | 8371 | PSE - Daviplata | Banco de Occidente COL
-| online | CO | 8476 | PSE - GIROS Y FINANZAS | Banco de Occidente COL
-| online | CO | 8477 | PSE - IRIS | Banco de Occidente COL
-| online | CO | 4092 | PSE - Itau Corpbanca Colombia S.A. | Banco de Occidente COL
-| online | CO | 8474 | PSE - MOVII S.A. | Banco de Occidente COL
-| online | CO | 8276 | PSE - Nequi | Banco de Occidente COL
-| online | CO | 8397 | PSE - RappiPay COL | Banco de Occidente COL
-| online | CO | 8332 | PSE - Santander COL | Banco de Occidente COL
-| online | CO | 1101 | PSE - NU | Banco de Occidente COL
-| online | CO | 1107 | PI NEQUI-PUSH COL COP | Nequi
-| cash   | CO | 8323 | SuRed | Sured
-| online | CR | 1021 | Banco Nacional de Costa Rica | Banco Nacional de Costa Rica
-| cash   | CR | 1021 | Banco Nacional de Costa Rica | Banco Nacional de Costa Rica
-| cash   | CR | 8531 | Paycash Costa Rica | Paycash Costa Rica
-| cash   | EC | 8216 | Banco Guayaquil | Banco Guayaquil
-| online | EC | 8216 | Banco Guayaquil | Banco Guayaquil 
-| online | EC | 8066 | Banco Pichincha ECU | Banco Pichincha ECU 
-| cash   | EC | 8066 | Banco Pichincha ECU | Banco Pichincha ECU 
-| cash   | EC | 8458 | Facilito | Facilito
-| cash   | EC | 8401 | Red Activa | Red Activa
-| online | EC | 1069 | Deuna | Deuna
-| cash   | GT | <strike>8404 | <strike>PuntoXpress GTM | <strike>Punto Xpress GTM</strike> (temporarily disabled)
-| cash   | MX | 8425 | Afirme PayCash | Paycash  
-| online | MX | 8425 | Afirme PayCash | Paycash  
-| cash   | MX | 1020 | BBVA Bancomer | BBVA Bancomer
-| online | MX | 1020 | BBVA Bancomer | BBVA Bancomer
-| cash   | MX | 8186 | Banco Azteca | Banco Azteca
-| cash   | MX | 1026 | Banorte | Banorte
-| cash   | MX | <strike>1052 | <strike>HSBC Mexico | <strike>HSBC Mexico</strike> (temporarily disabled)
-| online | MX | <strike>1052 | <strike>HSBC Mexico | <strike>HSBC Mexico</strike> (temporarily disabled)
-| cash   | MX | 8178 | OpenPay | OpenPay
-| cash   | MX | 8419 | PayCash | Paycash  
-| online | MX | 8526 | SPEI STP | STP
-| cash   | MX | 8395 | Santander MEX WS | Banco Santander
-| online | MX | 8395 | Santander MEX WS | Banco Santander
-| online | MX | 1007 | Scotiabank Mexico | Scotiabank Mexico
-| cash   | MX | 1007 | Scotiabank Mexico | Scotiabank Mexico
-| cash   | PA | <strike>8188 | <strike>Western Union Panama | <strike>Western Union Panama</strike> (temporarily disabled)
-| cash   | PE | 8443 | Agente Niubiz | Niubiz
-| cash   | PE | 8321 | Agentes Kasnet | Western Union
-| online | PE | 1001 | BBVA Continental | BBVA Continental
-| cash   | PE | 1001 | BBVA Continental | BBVA Continental
-| online | PE | 8391 | BCP Cuotéalo | Banco de Crédito Cuotealo
-| online | PE | 8441 | Banco Pichincha PER | Pichincha PER
-| cash   | PE | 8441 | Banco Pichincha PER | Pichincha PER
-| cash   | PE | 1005 | Banco de Crédito | Banco de Crédito
-| online | PE | 1005 | Banco de Crédito | Banco de Crédito
-| online | PE | 8324 | Caja Arequipa | Caja Arequipa
-| cash   | PE | 8324 | Caja Arequipa | Caja Arequipa
-| cash   | PE | 8250 | Caja Huancayo | Caja Huancayo
-| online | PE | 8250 | Caja Huancayo | Caja Huancayo
-| online | PE | 1024 | Caja Tacna | Caja Tacna
-| cash   | PE | 1024 | Caja Tacna | Caja Tacna
-| online | PE | 1025 | Caja Trujillo | Caja Trujillo
-| cash   | PE | 1025 | Caja Trujillo | Caja Trujillo
-| cash   | PE | 8442 | Globokas - Kasnet | Globokas - Kasnet
-| cash   | PE | 1011 | Interbank | Interbank
-| online | PE | 1011 | Interbank | Interbank
-| online | PE | 8502 | PagoEfectivo QR | PagoEfectivo QR (can also be accepted via 8510 "PagoEfectivo" if the customer didn't pay with the QR code)
-| cash   | PE | 8444 | Red Digital | Red Digital
-| online | PE | 1006 | Scotiabank Peru | Scotiabank Peru
-| cash   | PE | 1006 | Scotiabank Peru | Scotiabank Peru
-| cash   | PE | 8440 | Tambo+ | Tambo 
-| cash   | PE | 8320 | Western Union | Western Union
-| cash   | PE | 8320 | Western Union | Western Union
-| cash   | SV | <strike>8300 | <strike>Punto Xpress SLV | <strike>Punto Xpress SLV</strike> (temporarily disabled)
+|Payment Instrument Subtype | Country | Bank ID | Bank Name | Bank Provider Name | Forex | Gambling | Crypto | 
+| --- | --- | --- | --- | --- | --- | --- | --- | ---
+| online | AR | 8614 | ITAU Debin | ITAU Debin | yes | yes |    | yes
+| cash   | AR | 8606 | Pago Facil | Pago Facil | yes | yes |  yes  | yes
+| online | AR | 1000 | MERCADO PAGO ARG | Khipu |||  | yes
+| online | AR | 1027 | HSBC ARG | Khipu |||  | yes
+| online | AR | 8654 | BBVA ARG | Khipu | yes | yes |  yes  | yes
+| online | AR | 8655 | BANCO CIUDAD ARG | Khipu | yes | yes |  yes  | yes
+| online | AR | 8656 | GALICIA ARG | Khipu | yes | yes |  yes  | yes
+| online | AR | 8657 | ICBC ARG | Khipu | yes | yes |  yes  | yes
+| online | AR | 8658 | MACRO ARG | Khipu |||  | yes
+| online | AR | 8659 | BANCO NACION ARG | Khipu | yes | yes |  yes  | yes
+| online | AR | 8661 | SUPERVIELLE ARG | Khipu |||  | yes
+| <strike>online | <strike>BR | <strike>8366 | <strike>Banco Itau Boleto | <strike>Banco Itau Boleto (also called "Itau Unibanco")</strike> (disabled) |||  | yes
+| <strike>cash   | <strike>BR | <strike>8366 | <strike>Banco Itau Boleto | <strike>Banco Itau Boleto (also called "Itau Unibanco")</strike> (disabled) |||  | yes
+| online | BR | 4081 | Banco Itau Robot | Banco Itau || yes |  | yes
+| online | BR | 8183 | Banco do Brasil Robot | Banco do Brasil |||  | yes
+| online | BR | 8183 | Banco do Brasil SafetyPay | Banco do Brasil |||  | yes
+| online | BR | 8326 | Bradesco PagFacil | Bradesco Pagfacil |||  | yes
+| cash   | BR | 8326 | Bradesco PagFacil | Bradesco Pagfacil |||  | yes
+| cash   | BR | 8176 | Caixa Econômica Federal | Caixa Econômica Federal |||  | yes
+| online | BR | <strike>8439 | <strike>PIX | <strike>Bradesco PIX</strike> (updating to 8619 below) | yes | yes |  yes  | yes
+| online | BR | 8619 | PIX | Bradesco PIX  |||  | yes
+| online | BR | 8042 | Santander Brasil | Santander Brasil |||  | yes
+| online | CL | 8296 | Banco BCI One Step | Banco BCI | yes | yes |  yes  | yes
+| cash   | CL | 8194 | Banco Estado | Banco Estado Recaudo Referenciado | yes | yes |  yes  | yes
+| online | CL | 8194 | Banco Estado | Banco Estado Recaudo Referenciado | yes | yes |  yes  | yes
+| <strike>online | <strike>CL | <strike>8291 | <strike>Banco Estado One Step | <strike>Banco Estado Boton de Pago</strike> (disabled - use 1120) |||  | yes
+| online | CL | 1120 | PI BANCO ESTADO ONUSE CHI CLP | PI BANCO ESTADO ONUSE CHI CLP  | yes ||  | yes
+| online | CL | 8488 | Khipu | Khipu |||  | yes
+| online | CL | 8493 | Khipu - BCI | Khipu |||  | yes
+| online | CL | 8492 | Khipu - Banco Estado | Khipu |||  | yes
+| online | CL | 8490 | Khipu - Banco de Chile | Khipu | yes | yes |  yes  | yes
+| online | CL | 8494 | Khipu - Itau | Khipu |||  | yes
+| online | CL | 8491 | Khipu - Santander | Khipu |||  | yes
+| online | CL | 8416 | MachPay | Machpay BCI | yes ||  | yes
+| online | CL | 8457 | Scotiabank Chile | Scotiabank Chile |||  | yes
+| cash   | CL | 8198 | Walmart Chile | Walmart Chile |||  | yes
+| cash   | CO | 8463 | Acciones y Valores | Acciones y Valores |||  | yes
+| cash   | CO | 8157 | Baloto | Payvalida | yes ||  | yes
+| online | CO | 8503 | COOFINEP | Banco de Occidente COL |||  | yes
+| cash   | CO | 8224 | Efecty | Efecty |||  | yes
+| cash   | CO | 8231 | MovilRed Colombia | MovilRed Colombia |||  | yes
+| online | CO | 4100 | PSE - BANCOOMEVA | Banco de Occidente COL |||  | yes
+| online | CO | 1099 | PSE - BBVA Colombia | Banco de Occidente COL |||  | yes
+| online | CO | 8396 | PSE - Bancamía | Banco de Occidente COL |||  | yes
+| online | CO | 4089 | PSE - Banco AV Villas | Banco de Occidente COL || |  | yes
+| online | CO | 8185 | PSE - Banco Agrario | Banco de Occidente COL |||  | yes
+| online | CO | 4090 | PSE - Banco Caja Social | Banco de Occidente COL |||  | yes
+| online | CO | 4091 | PSE - Banco Colpatria | Banco de Occidente COL |||  | yes
+| online | CO | 8163 | PSE - Banco Cooperativo Coopcentral | Banco de Occidente COL |||  | yes
+| online | CO | 4093 | PSE - Banco Davivienda | Banco de Occidente COL | yes ||  | yes
+| online | CO | 5000 | PSE - Banco Falabella | Banco de Occidente COL |||  | yes
+| online | CO | 4095 | PSE - Banco GNB Sudameris | Banco de Occidente COL |||  | yes
+| online | CO | 4096 | PSE - Banco Pichincha COL | Banco de Occidente COL |||  | yes
+| online | CO | 4097 | PSE - Banco Popular | Banco de Occidente COL |||  | yes
+| online | CO | 4098 | PSE - Banco ProCredit | Banco de Occidente COL |||  | yes
+| online | CO | 8389 | PSE - Banco Serfinanza | Banco de Occidente COL |||  | yes
+| online | CO | 4087 | PSE - Banco de Bogota | Banco de Occidente COL |||  | yes
+| online | CO | 4094 | PSE - Banco de Occidente | Banco de Occidente COL | yes ||  | yes
+| online | CO | 4099 | PSE - Bancolombia | Banco de Occidente COL |||  | yes
+| online | CO | 4102 | PSE - Citibank Colombia | Banco de Occidente COL | yes ||  | yes
+| online | CO | 8372 | PSE - Confiar Cooperativa Financiera | Banco de Occidente COL | yes ||  | yes
+| online | CO | 8390 | PSE - Cooperativa Financiera de Antioquia | Banco de Occidente COL |||  | yes
+| online | CO | 8475 | PSE - DALE | Banco de Occidente COL |||  | yes
+| online | CO | 8371 | PSE - Daviplata | Banco de Occidente COL |||  | yes
+| online | CO | 8476 | PSE - GIROS Y FINANZAS | Banco de Occidente COL | yes ||  | yes
+| online | CO | 8477 | PSE - IRIS | Banco de Occidente COL |||  | yes
+| online | CO | 4092 | PSE - Itau Corpbanca Colombia S.A. | Banco de Occidente COL |||  | yes
+| online | CO | 8474 | PSE - MOVII S.A. | Banco de Occidente COL |||  | yes
+| online | CO | 8276 | PSE - Nequi | Banco de Occidente COL |||  | yes
+| online | CO | 8397 | PSE - RappiPay COL | Banco de Occidente COL |||  | yes 
+| online | CO | 8332 | PSE - Santander COL | Banco de Occidente COL | yes ||  | yes
+| online | CO | 1101 | PSE - NU | Banco de Occidente COL |||  | yes
+| online | CO | 1107 | PI NEQUI-PUSH COL COP | Nequi |||  | yes
+| cash   | CO | 8323 | SuRed | Sured |||  | yes
+| online | CR | 1021 | Banco Nacional de Costa Rica | Banco Nacional de Costa Rica |||  | yes
+| cash   | CR | 1021 | Banco Nacional de Costa Rica | Banco Nacional de Costa Rica |||  | yes
+| cash   | CR | 8531 | Paycash Costa Rica | Paycash Costa Rica | yes ||  yes  | yes
+| cash   | EC | 8216 | Banco Guayaquil | Banco Guayaquil|||  | yes
+| online | EC | 8216 | Banco Guayaquil | Banco Guayaquil |||  | yes
+| online | EC | 8066 | Banco Pichincha ECU | Banco Pichincha ECU |||  | yes
+| cash   | EC | 8066 | Banco Pichincha ECU | Banco Pichincha ECU | yes ||  yes  | yes
+| cash   | EC | 8458 | Facilito | Facilito |||  | yes
+| cash   | EC | 8401 | Red Activa | Red Activa |||  | yes
+| online | EC | 1069 | Deuna | Deuna |||  | yes
+| cash   | GT | <strike>8404 | <strike>PuntoXpress GTM | <strike>Punto Xpress GTM</strike> (temporarily disabled) |||  | yes
+| cash   | MX | 8425 | Afirme PayCash | Paycash  |||  | yes
+| online | MX | 8425 | Afirme PayCash | Paycash   |||  | yes
+| cash   | MX | 1020 | BBVA Bancomer | BBVA Bancomer |||  | yes
+| online | MX | 1020 | BBVA Bancomer | BBVA Bancomer | yes ||  | yes
+| cash   | MX | 8186 | Banco Azteca | Banco Azteca |||  | yes
+| cash   | MX | 1026 | Banorte | Banorte | yes ||  | yes
+| cash   | MX | <strike>1052 | <strike>HSBC Mexico | <strike>HSBC Mexico</strike> (temporarily disabled) | yes ||  | yes
+| online | MX | <strike>1052 | <strike>HSBC Mexico | <strike>HSBC Mexico</strike> (temporarily disabled) |||  | yes
+| cash   | MX | 8178 | OpenPay | OpenPay |||  | ye
+| cash   | MX | 8419 | PayCash | Paycash | yes ||  | yes
+| online | MX | 8526 | SPEI STP | STP |||  | yes
+| cash   | MX | 8395 | Santander MEX WS | Banco Santander |||  | yes
+| online | MX | 8395 | Santander MEX WS | Banco Santander |||  | yes
+| online | MX | 1007 | Scotiabank Mexico | Scotiabank Mexico | yes ||  | yes
+| cash   | MX | 1007 | Scotiabank Mexico | Scotiabank Mexico | yes ||  | yes
+| cash   | PA | <strike>8188 | <strike>Western Union Panama | <strike>Western Union Panama</strike> (temporarily disabled) | yes ||  | yes
+| cash   | PE | 8443 | Agente Niubiz | Niubiz |||  | yes
+| cash   | PE | 8321 | Agentes Kasnet | Western Union |||  | yes
+| online | PE | 1001 | BBVA Continental | BBVA Continental |||  | yes
+| cash   | PE | 1001 | BBVA Continental | BBVA Continental |||  | yes
+| online | PE | 8391 | BCP Cuotéalo | Banco de Crédito Cuotealo | yes ||| yes
+| online | PE | 8441 | Banco Pichincha PER | Pichincha PER |tbd |tbd |tbd |yes
+| cash   | PE | 8441 | Banco Pichincha PER | Pichincha PER  |tbd |tbd |tbd |yes
+| cash   | PE | 1005 | Banco de Crédito | Banco de Crédito | yes | yes || yes
+| online | PE | 1005 | Banco de Crédito | Banco de Crédito | yes | yes || yes
+| online | PE | 8324 | Caja Arequipa | Caja Arequipa | yes | yes | yes | yes
+| cash   | PE | 8324 | Caja Arequipa | Caja Arequipa | yes | yes | yes | yes
+| cash   | PE | 8250 | Caja Huancayo | Caja Huancayo | yes | yes | yes | yes
+| online | PE | 8250 | Caja Huancayo | Caja Huancayo | yes | yes | yes | yes
+| online | PE | 1024 | Caja Tacna | Caja Tacna | yes | yes | yes | yes
+| cash   | PE | 1024 | Caja Tacna | Caja Tacna | yes | yes | yes | yes
+| online | PE | 1025 | Caja Trujillo | Caja Trujillo | yes | yes | yes | yes
+| cash   | PE | 1025 | Caja Trujillo | Caja Trujillo | yes | yes | yes | yes
+| cash   | PE | 8442 | Globokas - Kasnet | Globokas - Kasnet | yes | yes | yes | yes
+| cash   | PE | 1011 | Interbank | Interbank | yes | yes | yes | yes
+| online | PE | 1011 | Interbank | Interbank | yes | yes | yes | yes
+| online | PE | 8502 | PagoEfectivo QR | PagoEfectivo QR (can also be accepted via 8510 "PagoEfectivo" if the customer didn't pay with the QR code) | yes | yes | yes | yes
+| cash   | PE | 8444 | Red Digital | Red Digital | yes | yes | yes | tbd
+| online | PE | 1006 | Scotiabank Peru | Scotiabank Peru | yes | yes || yes
+| cash   | PE | 1006 | Scotiabank Peru | Scotiabank Peru | yes | yes || yes
+| cash   | PE | 8440 | Tambo+ | Tambo  |||| yes
+| cash   | PE | 8320 | Western Union | Western Union | yes || | yes
+| cash   | PE | 8320 | Western Union | Western Union | yes || | yes
+| cash   | SV | <strike>8300 | <strike>Punto Xpress SLV | <strike>Punto Xpress SLV</strike> (temporarily disabled) |||| yes
 
 ####Bank ID Updates:
 
 #####2025-01-02
-Added "PSE - NU" 1011 (CO)
+Added "PSE - NU" 1101 (CO)
 
 Added "PI BANCO ESTADO ONUSE CHI CLP" 1120 (CL)
 
@@ -1636,6 +1699,11 @@ Removed "Banrisul" 1022 (BR)
 + total_payout_amount: 297.12 (number)
 + total_payout_balance: `-249.20` (number)
 + mid: 1000067595
+
+## RetrieveBanksResponse (object)
++ bank_id_code: 0002 (string)
++ bank_name: Banco de Credito del Peru (string)
+
 
 ## PayoutLimitResponse (object)
 + currency: EUR - ISO 4217 (3 letter ISO currency code)
