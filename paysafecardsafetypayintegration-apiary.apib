@@ -152,8 +152,9 @@ More on the parameters you can find here:
 
 [Initiating a SafetyPay Payment - SOPG](#customerTakeoverData_SOPG)
 # SafetyPay Payouts integration
-This documentation explains how to start creating SafetyPay Payouts. SafetyPay Payout allows the transfer of funds to bank account holders in Peru, Mexico and Brazil. The Payout is executed by the business partner at the 
+This documentation explains how to start creating SafetyPay Payouts. SafetyPay Payout allows the transfer of funds to bank account holders in Peru, Mexico, Brazil and Chile. The Payout is executed by the business partner at the 
 demand of the customer.  This documentation is an add-on to the classic PaysafeCard integration:
+
 **REST API**:
 
 https://www.paysafecard.com/en/business/downloads/
@@ -188,22 +189,23 @@ To initiate the process of creating a SafetyPay payouts, the business partner mu
 ## Exchange of customer data
 Following are mandatory and optional attributes that merchant must capture and provide within the Payout request.
     
-|Attribute|Mexico|Brazil|Peru|
-|-|-|-|-|
-|First Name|Mandatory|Mandatory|Mandatory|
-|Middle Name|Optional|Optional|Optional|
-|Last Names|Mandatory|Mandatory|Mandatory|
-|Date of Birth|Mandatory|Mandatory|Mandatory|
-|Document ID Type|Mandatory|Mandatory|Mandatory|
-|Document IT Number|Mandatory|Mandatory|Mandatory|
-|Bank Name|N/A|N/A|N/A|
-|Bank Account Format|Mandatory|N/A|Mandatory|
-|Bank Account Number|Mandatory|N/A|Mandatory|
-|Disbursement Amount + Currency|Mandatory|Mandatory|Mandatory|
-|Mobile|Optional|N/A|N/A|
-|Email|Optional|Optional|Optional|
-|Country|Mandatory|Mandatory|Mandatory|
-|IP address|Optional|Optional|Optional|
+|Attribute|Mexico|Brazil|Peru|Chile|
+|-|-|-|-|-|
+|First Name|Mandatory|Mandatory|Mandatory|Mandatory|
+|Middle Name|Optional|Optional|Optional|Optional|
+|Last Names|Mandatory|Mandatory|Mandatory|Mandatory|
+|Date of Birth|Mandatory|Mandatory|Mandatory|Mandatory|
+|Document ID Type|Mandatory|Mandatory|Mandatory|Mandatory|
+|Document IT Number|Mandatory|Mandatory|Mandatory|Mandatory|
+|Bank ID Code|Optional|Optional|Optional|Mandatory|
+|Bank Name|N/A|N/A|N/A|N/A|
+|Bank Account Format|Mandatory|N/A|Mandatory|Mandatory|
+|Bank Account Number|Mandatory|N/A|Mandatory|Mandatory|
+|Disbursement Amount + Currency|Mandatory|Mandatory|Mandatory|Mandatory|
+|Mobile|Optional|N/A|N/A|N/A|
+|Email|Optional|Optional|Optional|Optional|
+|Country|Mandatory|Mandatory|Mandatory|Mandatory|
+|IP address|Optional|Optional|Optional|Optional|
 
 ## Getting the MID limits
 - The business partner has one MID (for each currency, each MID has its own payout limit - the amount that still can
@@ -213,7 +215,6 @@ Following are mandatory and optional attributes that merchant must capture and p
 ## Getting a list of payout banks
 
 - The business partner has the opportunity to check prior to executing a payout which banks are available for a country via [getPayoutBanks](#get_banks) (for SOPG) or [retrieveBanks](#get_banks_rest) (for REST). Automatically all available banks for the selected country will be returned.
-    
 
 ## Settlement
 - All payout transactions need to be paid by the business partner. The total monthly payout amount is automatically deducted (netted) from the monthly payment amount.
@@ -238,11 +239,13 @@ Offers the possibility to classify sub-merchants. Agreement with PaysafeCard nee
 |Country|Field Name|Min/Max|Amount|Currency|
 |-------|-------|-------|-------|-------|
 |MEX|payout_amount|Min|10.00|MXN|
-|MEX|payout_amount|Max|18000.00|MXN|
+|MEX|payout_amount|Max|18 000.00|MXN|
 |BRA|payout_amount|Min|5.00|BRL|
-|BRA|payout_amount|Max|5500.00|BRL|
+|BRA|payout_amount|Max|5 500.00|BRL|
 |PER|payout_amount|Min|5.00|PEN|
-|PER|payout_amount|Max|4000.00|PEN|
+|PER|payout_amount|Max|5 350.00|PEN|
+|CHL|payout_amount|Min|1 000.00|CLP|
+|CHL|payout_amount|Max|1 000 000.00|CLP|
 
 > Please note that the maxiumum payout limit is the equivalent of 1000 USD but we have made adjustments for the volatility of the currencies. Partners should keep to the current equivalent of 1000 USD.
 
@@ -258,9 +261,12 @@ Offers the possibility to classify sub-merchants. Agreement with PaysafeCard nee
     - Authorization of the payment server IP address in the production environment (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
     - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to Content-Type: application/xml
     - Character encoding needs to be in UTF-8.
-    - For all deposits passing the parameters `account_registration_date`, `account_KYC_level` and `account_registration_country` in `the customer_data_takeover`/customerDataTakeover object for this customer and initiating the payout with the same `id`/merchantClientId for them.^1^
+    - For all deposits passing the parameters `account_registration_date`, `account_KYC_level` and `account_registration_country` in `the customer_data_takeover`/customerDataTakeover object is necessary, and initiating the payout with the same `id`/merchantClientId for them.^1^ ^2^
     
 > ^1^ Customers with a completed successful deposit will not need to make a new one before receiving a payout but any further deposits will need to contain the parameters.
+
+> ^2^ Customers in Peru and for certain channels will not need to make a successful deposit before making a payout.
+
 
 # Group Initiating a SafetyPay Payment - REST
 
@@ -788,6 +794,11 @@ A JSON version of the payment notification with all the possible parameters, inc
 
 <a name="bank_ids"></a>
 
+# Group Transaction limits for SafetyPay
+
+- The minimum transaction amount for SafetyPay is 0.50 USD or regional equivalent.
+- The maximum transaction amount for SafetyPay is the regional equivalent of 1000 EUR.
+    - This can be increased if required - please contact your account manager for more information.
 
 # Group Payout API Calls
 Payout API allows you to:
@@ -830,7 +841,7 @@ Payout API allows you to:
   * max. length: 3 characters, all uppercase  
   * ISO Currency Code   
   * example: MXN
-+ merchantClientId - unique customer identified provided by the merchant. Must line up with the merchantClientId used during a previous deposit.
++ merchantClientId - unique customer identified provided by the merchant. Must line up with the merchantClientId used during a previous deposit if required.
   * max. length: 200 characters
 + clientIp (OPTIONAL) - IP address of the customer
 + countryCode - ISO 3166-1 alpha-2 country code 
@@ -869,6 +880,8 @@ Payout API allows you to:
 + bankAccount - contains sub-elements:
     * type - Type of the customer's bank account (example: CLABE) See section "Code books" for more information.
     * number - Bank account number (max length: 50 characters)
++ bankIdCode: ID of the bank as returned in response to getPayoutBanks request
+    * Mandatory for Chile
 + idDocument - contains sub-elements:
     * type - Type of customer's ID document (example: RFC). See section "Code books" for more information.
     * number - Customer's ID document number (max length: 50 characters)
@@ -959,6 +972,8 @@ Upon successful execution of this request, the status of the SafetyPay is set to
     </ns1:PayoutReturn>
 </ns1:payoutResponse>
 ```
+
+
 
 ### Capturing a pre validated payout 
 Upon successful execution of this request, the status of the SafetyPay Payout transitions to PENDING.
@@ -1164,6 +1179,7 @@ Used to retrieve a list of banks for a specific `country`
 | `customer[middle_name]` |string <br/>[max. length: 60] | optional | Diego | Middle name of the customer |
 | `customer[last_name]`| string<br/>[max. length: 60] | required |  Power                           | Lastname of the customer | 
 | `customer[phone_number]` | string <br/>[max. length: 20]| optional | Brazil: +5511984565666 <br/> Peru: +5117097831 <br/> Mexico:  +525516690627 | Phone number valid according to the ITU-T E.164 |
+| `bank_account_id` | string  | conditional | 672 |ID of the bank as returned in the response to retrieveBanks request. Mandatory only for Chile|
 | `customer[ip_address]` |string <br/> |optional | 123.456.123.456 | IP address of the customer |
 | `bank_account[type]` | string <br/>[max. length: 12] | required | CLABE |Type of the beneficiary bank account. See section "Code books" for more information |
 | `bank_account[number]` | string <br/>[max. length: 50] | required | 123456789034567896 |The number of the recipient's bank account. See section "Code books" for more information |
@@ -1295,6 +1311,9 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 |DNI|Documento Nacional de Identidad|PER|^[0-9]{8}$|44851534|
 |PAS|Pasaporte|PER|^[A-Za-z0-9]{7,12}$|8345627394AB|
 |CE|Carne de Identidad para Extranjeros|PER|^[A-Za-z0-9]{8,20}$|A847635253910|
+|CE|Carne de Identidad para Extranjeros|CHL|^[A-Za-z0-9]{9,20}$|A847635253910|
+|PAS|Pasaporte|CHL|^[A-Za-z0-9]{9,20}$|8345627394AB|
+
 
 
 <b>bankAccount.type</b>
@@ -1305,8 +1324,12 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 |Email|Email (used for PIX payments)|BRA|^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,77}$|test@test.com|
 |Phone|Phone (used for PIX payments)|BRA|^[0-9]{11}$|31971212883|
 |EVP|Random Key (used for PIX payments)|BRA|([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})|23e05112-0dfd-4c2b-b433-d6420967dbbe|
-|CHECKING*|Interbank account number|PER|^[0-9]{20}$|00211111111111111111|
-|SAVINGS*|Interbank account number|PER|^[0-9]{20}$|00211111111111111111|
+|Checking*|Interbank account number|PER|^[0-9]{20}$|00211111111111111111|
+|Savings*|Interbank account number|PER|^[0-9]{20}$|00211111111111111111|
+|Checking|Interbank account number|CHL|^[0-9]{7,20}$|81475561605643400000|
+|Savings|Interbank account number|CHL|^[0-9]{7,20}$|80475561605643400000|
+|Salary|Interbank account number|CHL|^[0-9]{7,20}$|82475561605643400000|
+
 \* must start with one of 002, 003, 007, 009, 011, 018, 023, 035, 038, 049, 053, 054, 055, 056, 058, 059, 060, 800, 801, 802, 803, 805, 806, 808, 809, 811, 813. Both Checking and Savings for Peru use the CCI bank account format
 
 # Group Payout notification
@@ -1395,7 +1418,7 @@ https://www.paysafecard.com/fileadmin/api/images/Banks_logo.zip
 | online | CL | 8491 | Khipu - Santander | Khipu |||  | yes
 | online | CL | 8416 | MachPay | Machpay BCI | yes ||  | yes
 | online | CL | 8457 | Scotiabank Chile | Scotiabank Chile |||  | yes
-| cash   | CL | 8198 | Walmart Chile | Walmart Chile |||  | yes
+| <strike>cash   | <strike>CL | <strike>8198 | <strike>Walmart Chile | <strike>Walmart Chile |||  | yes
 | cash   | CO | 8463 | Acciones y Valores | Acciones y Valores |||  | yes
 | cash   | CO | 8157 | Baloto | Payvalida | yes ||  | yes
 | online | CO | 8503 | COOFINEP | Banco de Occidente COL |||  | yes
@@ -1432,7 +1455,7 @@ https://www.paysafecard.com/fileadmin/api/images/Banks_logo.zip
 | online | CO | 8397 | PSE - RappiPay COL | Banco de Occidente COL |||  | yes 
 | online | CO | 8332 | PSE - Santander COL | Banco de Occidente COL | yes ||  | yes
 | online | CO | 1101 | PSE - NU | Banco de Occidente COL |||  | yes
-| online | CO | 1107 | PI NEQUI-PUSH COL COP | Nequi |||  | yes
+| online | CO | 1107 + 1105 | PI NEQUI-PUSH COL COP | Nequi (both IDs need to be used together) |||  | yes
 | cash   | CO | 8323 | SuRed | Sured |||  | yes
 | online | CR | 1021 | Banco Nacional de Costa Rica | Banco Nacional de Costa Rica |||  | yes
 | cash   | CR | 1021 | Banco Nacional de Costa Rica | Banco Nacional de Costa Rica |||  | yes
@@ -1444,6 +1467,8 @@ https://www.paysafecard.com/fileadmin/api/images/Banks_logo.zip
 | cash   | EC | 8458 | Facilito | Facilito |||  | yes
 | cash   | EC | 8401 | Red Activa | Red Activa |||  | yes
 | online | EC | 1069 | Deuna | Deuna |||  | yes
+| cash   | GT | 8527 | PayCash Guatemala | PayCash||yes| yes | yes
+| Online   | GT | 8527 | PayCash Guatemala | PayCash ||yes| yes | yes
 | cash   | GT | <strike>8404 | <strike>PuntoXpress GTM | <strike>Punto Xpress GTM</strike> (temporarily disabled) |||  | yes
 | cash   | MX | 8425 | Afirme PayCash | Paycash  |||  | yes
 | online | MX | 8425 | Afirme PayCash | Paycash   |||  | yes
@@ -1491,6 +1516,13 @@ https://www.paysafecard.com/fileadmin/api/images/Banks_logo.zip
 | cash   | SV | <strike>8300 | <strike>Punto Xpress SLV | <strike>Punto Xpress SLV</strike> (temporarily disabled) |||| yes
 
 ####Bank ID Updates:
+
+#####2025-06-02
+
+Deactivated "Walmart Chile" 8198 (CL)
+
+#####2025-01-02
+Added "PayCash Guatemala" 8527 (GT)
 
 #####2025-01-02
 Added "PSE - NU" 1101 (CO)
