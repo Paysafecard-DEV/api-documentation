@@ -1,12 +1,12 @@
 FORMAT: 1A
 HOST: https://apitest.paysafecard.com/v1
 
-# paysafecard PagoEfectivo integration
+# PaysafeCard PagoEfectivo integration
 
 PagoEfectivo is a market leader in the provision of eCash and open banking solutions in Latin America.
 This documentation explains how to start accepting <a href="https://www.youtube.com/watch?v=N1NJabZgUKQ">PagoEfectivo</a> payments. 
 
-It is an add-on to the classic paysafecard integration:
+It is an add-on to the classic PaysafeCard integration:
 
 
 **REST API**: 
@@ -20,71 +20,83 @@ https://www.paysafecard.com/fileadmin/api/paysafecardsopg.html
 
 ## Group Where to start?
 To initiate the process of accepting PagoEfectivo, the business partner must contact the account manager directly or at [*sales@paysafecard.com*]().
-Once the business process is finished, the feature will be activated from paysafecard side. The feature will be activated per MID (Merchant ID).
+Once the business process is finished, the feature will be activated from PaysafeCard side. The feature will be activated per MID (Merchant ID).
 
 There are also some technical integration changes necessary, which will be described in detail [here](#technical_changes).
-
-## Group Payment flow
-
-### On an existing paysafecard MID
-
-1. The customer selects paysafecard as the preferred payment method at the business partner checkout page
-2. The businesss partner initiates the payment with the correct amount, currency and other necessary parameters
-3. The customer is redirected to the paysafecard hosted payment panel
-4. The customer sees paysafecard and PagoEfectivo payment option on the payment panel
-5. The customer selects PagoEfectivo and is redirected to the PagoEfectivo payment page
-6. The customer receives a PagoEfectivo CIP code and pays for it with one of the available payment methods
-7. paysafecard sends a notification to the notification URL once the payment is complete
-8. The business partner captures the payment
-
-![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/pago_customer_flow.png)
-
-### On a new MID where only PagoEfectivo is activated
-1. The customer selects PagoEfectivo as the preferred payment method at the business partner checkout page
-2. The businesss partner initiates the payment with the correct amount, currency and other necessary parameters
-3. The customer is redirected to the PagoEfectivo hosted payment page
-4. The customer receives a PagoEfectivo CIP code and pays for it with one of the available payment methods
-5. paysafecard sends a notification to the notification URL once the payment is complete
-6. The business partner captures the payment
-
-
 
 # Group Technical changes
 <a name="technical_changes"></a>
 
-1. The logo must be changed accordingly at the checkout page 
+1. The logo must be changed accordingly at the checkout page
+    * The PagoEfectivo logo can be found here: https://www.paysafecard.com/fileadmin/api/images/logo-PagoEfectivo.svg
 
 2. (Optional) The payment must be created accordingly to the choice of the customer at the checkout page. The REST integration supports the usage of choosing the Payment Method during the Payment request. See section [Initiating a PagoEfectivo Payment - REST](#restrictions)
     
 3. (Optional) Integrating the payment notification payload in JSON 
     * The [JSON payment notification](#payment_notification) enables the business partner to distinguish which payment instrument was used for the transaction.
 
-## Group Payment process - Diagram
-![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/Diagram_Pago_pretty_20211115.jpg)
-## Group Payment process - REST
-1. The customer selects the payment method at the business partner checkout page: paysafecard and/or PagoEfectivo
+## Group Payment flows
+
+### On an existing PaysafeCard MID
+
+1. The customer selects PaysafeCard as the preferred payment method at the business partner checkout page
+2. The businesss partner initiates the payment with the correct amount, currency and other necessary parameters
+3. The customer is redirected to the PaysafeCard hosted payment panel
+4. The customer sees PaysafeCard and PagoEfectivo payment option on the payment panel
+5. The customer selects PagoEfectivo and is redirected to the PagoEfectivo payment page
+6. The customer receives a PagoEfectivo CIP code and pays for it with one of the available payment methods
+7. PaysafeCard sends a notification to the notification URL once the payment is complete
+8. The business partner captures the payment
+
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/pago_customer_flow.png)
+
+### On an existing PaysafeCard MID specifying payment instrument
+
+1. The customer selects Pagoefectivo as the preferred payment method at the business partner checkout page
+2. The businesss partner initiates the payment with "payment_instrument", correct amount, currency and other necessary parameters
+3. The customer is redirected to the PagoEfectivo payment page
+4. The customer receives a PagoEfectivo CIP code and pays for it with one of the available payment methods
+5. PaysafeCard sends a notification to the notification URL once the payment is complete
+6. The business partner captures the payment
+
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/pago_customer_flow_instrument_1.png)
+
+### On a new MID where only PagoEfectivo is activated
+1. The customer selects PagoEfectivo as the preferred payment method at the business partner checkout page
+2. The businesss partner initiates the payment with the correct amount, currency and other necessary parameters
+3. The customer is redirected to the PagoEfectivo hosted payment page
+4. The customer receives a PagoEfectivo CIP code and pays for it with one of the available payment methods
+5. PaysafeCard sends a notification to the notification URL once the payment is complete
+6. The business partner captures the payment
+
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/pago_customer_flow_instrument_1.png)
+
+# Group Payment Processes
+
+## Payment process on an existing PaysafeCard MID - REST
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard and/or PagoEfectivo
 
 1. [Initiate Payment](#initiate_payment): Send POST request `initiate Payment` 
     * 2.1. If the response gives back http20x, the business partner redirects the customer to the payment panel
     * 2.2. If the response gives back http40x or htp50x, show an error message to the customer
         * Inititate Payment error message: "*Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support.*"
 
-1. Redirection to the payment panel `auth_url`: The customer reaches the paysafecard payment panel or the PagoEfectivo panel
-    * 3.1. The customer selects PagoEfectivo on the paysafecard payment panel
+1. Redirection to the payment panel `auth_url`: The customer reaches the PaysafeCard payment panel or the PagoEfectivo panel
+    * 3.1. The customer selects PagoEfectivo on the PaysafeCard payment panel
     * 3.2. The customer is redirected to the PagoEfectivo hosted payment page
     
 1. The customer receives a CIP code
     * 4.1. The customer has to go to a Point of Collection or pay for the CIP code with one of the available payment options
     
-1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), paysafecard sends a notification to the `notification_url`
+1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), PaysafeCard sends a notification to the `notification_url`
 
 1. `notification_url` handling: Right after the payment notification delivery, the business partner performs the GET request `Retrieve payment details` to check the status of the transaction
     * 6.1. If the GET request `retrieve payment details` returns the status "AUTHORIZED", immediately perform the POST request `capture Payment` 
         * 6.2. If the response to `capture payment` is http20X and the status returned is "SUCCESS", the business partner makes a user account top up accordingly or deliver the goods
 
 
-## Group Payment Process - SOAP
-1. The customer selects the payment method at the business partner checkout page: paysafecard or PagoEfectivo
+## Payment Process on an existing PaysafeCard MID - SOAP
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard or PagoEfectivo
 
 1. [create Disposition](#createDisposition): the business partner makes the SOAP request `createDisposition` 
     * 2.1. If the result and error code is `0`, the business partner redirects the customer to the payment panel
@@ -92,21 +104,110 @@ There are also some technical integration changes necessary, which will be descr
 
         *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
 
-1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the paysafecard payment panel or the PagoEfectivo panel
-    * 3.1. The customer selects PagoEfectivo on the paysafecard payment panel
+1. Redirection to the payment panel with `getCustomerPanel`: The customer reaches the PaysafeCard payment panel or the PagoEfectivo panel
+    * 3.1. The customer selects PagoEfectivo on the PaysafeCard payment panel
     * 3.2. The customer is redirected to the PagoEfectivo hosted payment page
     
 1. The customer receives a CIP code
     * 4.1. The customer has to go to a Point of Collection or pay for the CIP code with one of the available payment options
   
-1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), paysafecard sends a notification to the `pn_url`
+1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), PaysafeCard sends a notification to the `pn_url`
 
 1. `pnUrl` handling: Right after the payment notification delivery, the business partner performs the request `getSerialNumbers` to check the status of the transaction
     * 6.1. If `getSerialNumbers`returns the status "S", immediately perform the `executeDebit` request
         * 6.2. If the response to `executeDebit` is result and error code is `0`, the business partner makes a user account top up accordingly or deliver the goods
 
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/Diagram_Pago_pretty_20211115.jpg)
+
+## Payment process on an existing PaysafeCard MID specifying payment instrument - REST
+1. The customer selects the payment method at the business partner checkout page: PagoEfectivo
+
+1. [Initiate Payment](#initiate_payment): Send POST request `initiate Payment` including `payment_instrument` parameter set to pagoefectivo
+    * 2.1. If the response gives back http20x, the business partner redirects the customer to the PagoEfectivo payment page
+    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer
+        * Inititate Payment error message: "*Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support.*"
+
+1. Redirection to the PagoEfectivo payment page `auth_url`: The customer reaches the PagoEfectivo payment page
+    
+1. The customer receives a CIP code
+    * 4.1. The customer has to go to a Point of Collection or pay for the CIP code with one of the available payment options
+    
+1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), PaysafeCard sends a notification to the `notification_url`
+
+1. `notification_url` handling: Right after the payment notification delivery, the business partner performs the GET request `Retrieve payment details` to check the status of the transaction
+    * 6.1. If the GET request `retrieve payment details` returns the status "AUTHORIZED", immediately perform the POST request `capture Payment` 
+        * 6.2. If the response to `capture payment` is http20X and the status returned is "SUCCESS", the business partner makes a user account top up accordingly or deliver the goods
 
 
+## Payment Process on an existing PaysafeCard MID specifying payment instrument - SOAP
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard or PagoEfectivo
+
+1. [create Disposition](#createDisposition): the business partner makes the SOAP request `createDisposition` including INSTRUMENT key with the value pagoefectivo under the dispositionRestrictions array, [see here](#createDisposition)<br>
+    * 2.1. If the result and error code is `0`, the business partner redirects the customer to the Pagoefectivo payment page
+    * 2.2. If the result or error code is not `0`, the business partners shows an error message to the customer:
+
+        *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
+
+1. Redirection to the PagoEfectivo payment page with `getCustomerPanel`: The customer reaches the PagoEfectivo payment page
+    
+1. The customer receives a CIP code
+    * 4.1. The customer has to go to a Point of Collection or pay for the CIP code with one of the available payment options
+  
+1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), PaysafeCard sends a notification to the `pn_url`
+
+1. `pnUrl` handling: Right after the payment notification delivery, the business partner performs the request `getSerialNumbers` to check the status of the transaction
+    * 6.1. If `getSerialNumbers`returns the status "S", immediately perform the `executeDebit` request
+        * 6.2. If the response to `executeDebit` is result and error code is `0`, the business partner makes a user account top up accordingly or deliver the goods
+
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/Diagram_Pago_pretty_20230823_02.jpg)
+
+## Payment process on a new MID where only pagoEfectivo is activated - REST
+1. The customer selects the payment method at the business partner checkout page: PagoEfectivo
+
+1. [Initiate Payment](#initiate_payment): Send POST request `initiate Payment` 
+    * 2.1. If the response gives back http20x, the business partner redirects the customer to the PagoEfectivo payment page
+    * 2.2. If the response gives back http40x or htp50x, show an error message to the customer
+        * Inititate Payment error message: "*Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (businessparter)support.*"
+
+1. Redirection to the PagoEfectivo payment page `auth_url`: The customer reaches the PagoEfectivo payment page
+    
+1. The customer receives a CIP code
+    * 4.1. The customer has to go to a Point of Collection or pay for the CIP code with one of the available payment options
+    
+1. Payment notification delivery: A card will be assigned once the customer completes the payment (transaction status "AUTHORIZED"), PaysafeCard sends a notification to the `notification_url`
+
+1. `notification_url` handling: Right after the payment notification delivery, the business partner performs the GET request `Retrieve payment details` to check the status of the transaction
+    * 6.1. If the GET request `retrieve payment details` returns the status "AUTHORIZED", immediately perform the POST request `capture Payment` 
+        * 6.2. If the response to `capture payment` is http20X and the status returned is "SUCCESS", the business partner makes a user account top up accordingly or deliver the goods
+
+
+## Payment process on a new MID where only pagoEfectivo is activated - SOAP
+1. The customer selects the payment method at the business partner checkout page: PaysafeCard or PagoEfectivo
+
+1. [create Disposition](#createDisposition): the business partner makes the SOAP request `createDisposition` 
+    * 2.1. If the result and error code is `0`, the business partner redirects the customer to the Pagoefectivo payment page
+    * 2.2. If the result or error code is not `0`, the business partners shows an error message to the customer:
+
+        *"Transaction could not be intitiated due to connection problems. If the problem persists, please contact our (business partner) support."*
+
+1. Redirection to the PagoEfectivo payment page with `getCustomerPanel`: The customer reaches the PagoEfectivo payment page
+    
+1. The customer receives a CIP code
+    * 4.1. The customer has to go to a Point of Collection or pay for the CIP code with one of the available payment options
+  
+1. Payment notification delivery: Since the card is assigned to the transaction (transaction status "S"), PaysafeCard sends a notification to the `pn_url`
+
+1. `pnUrl` handling: Right after the payment notification delivery, the business partner performs the request `getSerialNumbers` to check the status of the transaction
+    * 6.1. If `getSerialNumbers`returns the status "S", immediately perform the `executeDebit` request
+        * 6.2. If the response to `executeDebit` is result and error code is `0`, the business partner makes a user account top up accordingly or deliver the goods
+
+![Payment Flow](https://www.paysafecard.com/fileadmin/api/images/Diagram_Pago_pretty_20230823_02.jpg)
+
+# Group Transaction limits for PagoEfectivo
+
+- The minimum transaction amount for PagoEfectivo is 0.50 USD or regional equivalent.
+- The maximum transaction amount for PagoEfectivo is the regional equivalent of 1000 EUR.
+    - This can be increased if required - please contact your account manager for mor information.
 
 # Group Initiating a PagoEfectivo Payment - REST
 
@@ -223,6 +324,34 @@ Error code "2039" indicates that the value passed in `instrument` is not a valid
     </ns1:createDispositionReturn>
 </ns1:createDispositionResponse>
 ```
+# Group Customer Data Takeover
+Using the `customer_data_takeover` parameters in the payment creation, the merchant can pre-fill some data to improve the customer flow.
+- Adding the `email` field will skip the intermediate page where customer is asked to type the email.
+
+Below, you can find an example with both fields for REST:
+
+```
+{
+  "type": "PAYSAFECARD",
+  "amount": 10.00,
+  "currency": "USD",
+  "redirect": {
+    "success_url": "https://www.paysafecard.com/okURL",
+    "failure_url": "https://www.paysafecard.com/nokURL"
+  },
+  "notification_url": "https://www.paysafecard.com/pnUrl",
+  "customer": {
+    "id": "customer_id2"
+  },
+  "shop_id":"test123",
+    "restrictions": {
+    "payment_instrument": "pagoefectivo"
+  },
+  "customer_data_takeover": {
+    "email": "test@test.com"
+  }
+}
+```
 
 # Group JSON Payment notification
 <a name="payment_notification"></a>
@@ -247,6 +376,7 @@ A JSON version of the payment notification with all the possible parameters, inc
         },
     "payment_id": "pay_1100000000_XdyBD9FuEJVhpX3hctwJzCB8W1rEzqTo_USD",
     "payment_instrument": "pagoefectivo",
+    "payment_instrument_subtype": "cash",    
     "card_details": [
       {
         "serial": "1420271325",
@@ -273,6 +403,7 @@ A JSON version of the payment notification with all the possible parameters, inc
 | `id`                          | String                     | The unique customer identifier provided by the business partner. 
 | `payment_id`                  | String                     | The sub-merchant id. Also knows as reporting criteria. 
 | `payment_instrument`          | String                     | The payment method used. <br><br> Possible values: paysafecard or giftcard or pagoefectivo
+| `payment_instrument_subtype`  | String                     | The type of payment option. <br><br> Possible values: cash or online
 | `card_details`                | Array                      | Contains the details of the card used for the transaction (up to 10 iterations - max. number of cards that can be used in a single transaction) with the card information.
 | `serial`                      | String                     | The serial number that identifies the card.
 | `currency`                    | String                     | The currency code of the card in ISO 4217 3-digit format.
@@ -300,11 +431,11 @@ A JSON version of the payment notification with all the possible parameters, inc
 + `notification_url`: https://notification.com/{payment_id} (required)- Notification URL we will contact after the authorization has been successfully completed. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
 + customer (object) 
     + id: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
-    + min_age: 18 (optional) - Valid for my paysafecard payments. For additional information about my paysafecard, please see the section "my paysafecard". Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered my paysafecard account to make the payment. 
-    + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification. 
+    + min_age: 18 (optional) - Valid for PaysafeCard account payments. For additional information about  PaysafeCard account, please see the section "PaysafeCard account". Restricts payments to PaysafeCard account customers only, who are equal to or older than the specified age. Please note: This means that it is required that the customer has a registered PaysafeCard account to make the payment. 
+    + kyc_level: SIMPLE (optional) - Valid values SIMPLE or FULL. These values refer to the KYC level of the customer's PaysafeCard account. Depending on the country, PaysafeCard accounts are offered with SIMPLE and/or FULL customer identification. 
     + country_restriction: AT (optional) - ISO 3166-1 alpha-2 two-letter country code used to restrict payments to residents of a particular country.
 + restrictions (object)
     + payment_instrument: giftcard (optional) - The Payment instrument gives the possibility to initiate the payment for the specific option choosen at the checkout page. Possible values: "*paysafecard*" **or** "*giftcard*".
     + payment_instrument_subtype: openbuckscard (optional) -  If "giftcard" was used for the `payment_instrument`, the payment can be initiated for a specific Giftcard option by defining a subtype. Possible values: "*cvspharmacy*" **or** "*dollargeneral*" **or** "*openbuckscard*".
-+ submerchant_id: 1 (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment. max. 8 digits in alpha numeric code
++ submerchant_id: 1 (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with PaysafeCard needed - not agreed values lead to a failed payment. max. 8 digits in alpha numeric code
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
