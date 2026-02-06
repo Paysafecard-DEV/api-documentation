@@ -1,64 +1,95 @@
 FORMAT: 1A
 HOST: https://apitest.paysafecard.com/v1
 
-# Paysafecash Full Integration / Auto-capture - REST API
-[Paysafecash](https://www.paysafecash.com/en-gb/) is an alternative cash-based payment method that makes it possible to pay securely and easily with cash on the Internet.
-Using Paysafecash, products or services can be ordered online and then paid for with cash offline at the nearest payment point by scanning a QR/barcode. 
+# PaysafeCash Full Integration / Auto-capture - REST API
 
-More information can be found at https://www.paysafecash.com/business.
+[PaysafeCash](https://www.paysafecash.com/en-gb/) is an alternative cash-based payment method that makes it possible to pay securely and easily with cash on the Internet.
+Using PaysafeCash, products or services can be ordered online and then paid for with cash offline at the nearest payment point by scanning a QR/barcode. 
 
-<a href="https://www.youtube.com/watch?v=or2KOoMpzYk
-" target="_blank"><img src="http://img.youtube.com/vi/62Rl90BYu_0/0.jpg" 
-alt="Paysafecash" width="240" height="180" border="10" /></a>
+More information can be found at https://www.paysafecash.com/business
 
+---
 # Integration Process Overview
+---
 
-The following steps need to be completed in order to integrate Paysafecash in a webshop:
+The following steps need to be completed in order to integrate PaysafeCash in a webshop:
 
-+ **Test Data**: paysafecard provides the test data package. This contains an API key (for authentication), merchant account ID and a link to the downloads page.
-+ **Integration in the Test Environment**: The business partner integrates Paysafecash into their test environment. Detailed information about the payment flow and API calls are contained below in this documentation.
-+ **Integration Test**: As soon as the integration is completed in the test environment, the business partner must provide an URL and 2 test users to paysafecard. The paysafecard integration team will test the integration (technical payment flow and brand assurance).
-+ **Productive Data**: Once the integration test is successful, paysafecard provides the productive data (API key).
-+ **Switch to Production**: The business partner switches the Paysafecash integration to the production environment (change API endpoints and API key).
++ **Test Data**: PaysafeCash provides the test data package. This contains an API key (for authentication), merchant account ID and a link to the downloads page.
++ **Integration in the Test Environment**: The business partner integrates PaysafeCash into their test environment. Detailed information about the payment flow and API calls are contained below in this documentation.
++ **Integration Test**: As soon as the integration is completed in the test environment, the business partner must provide an URL and 2 test users to PaysafeCash. The PaysafeCash integration team will test the integration (technical payment flow and brand assurance).
++ **Productive Data**: Once the integration test is successful, PaysafeCash provides the productive data (API key).
++ **Switch to Production**: The business partner switches the PaysafeCash integration to the production environment (change API endpoints and API key).
 + **IP whitelisting**: The business partner must whitelist in the Merchant Service Center, the IPs used to connect to the production environment.
-+ **Productive and BA check**: The business partner provides an URL and 2 test users to paysafecard. The technical support team will then process a real money end-to-end test and check if the integration is done accordingly to the interface guidelines.
++ **Productive and BA check**: The business partner provides an URL and 2 test users to PaysafeCash. The technical support team will then process a real money end-to-end test and check if the integration is done accordingly to the interface guidelines.
 + **Go-Live**: As soon as the final check is completed successfully, the integration is finished and can be used for end customers.
 
-# Technical Integration
+<br></br>
+<br></br>
+
+---
+# Technical Integration 
+---
+
+This section outlines the technical setup required to integrate and process PaysafeCash transactions.
+
+<br></br>
+<br></br>
 
 ## Merchant Service Center
-The business partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to get the necessary data to connect to the Paysafecash system.
+---
+
+The business partner must be registered in the [Merchant Service Center](https://servicecenter.paysafecard.com/merchant-center/) to get the necessary data to connect to the PaysafeCash system.
 
 When using the MSC, the business partner complies with the provisions of the user manual for the MSC (downloadable from https://www.paysafecash.com/business/downloads).
 
+<br></br>
+<br></br>
+
 ## About the API
-The Paysafecash REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
+---
+
+The PaysafeCash REST API follows <a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">*RESTful*</a> design principles making it easy to understand and integrate the API.
 Representational State Transfer (REST) is a software architecture style, consisting of guidelines for creating scalable web services.
 
 RESTful systems typically communicate over the Hypertext Transfer Protocol with the same HTTP verbs (GET, POST, PUT, DELETE, etc.) used by web browsers to retrieve web pages and send data to remote servers.
 
 It also facilitates solid and universally accepted foundations like [*http basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication), [*http verbs*](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods), [*JSON*](http://en.wikipedia.org/wiki/JSON) and [*CORS*](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing).
 
+<br></br>
+<br></br>
+
 ## Versioning
+---
+
 Every time there is backwards-incompatible change to the API, a new major version will be released. This major version is part of the URL path.
 The current major version is *v1*. Unless informed by our technical support department that we are dropping support for a particular API version, you do not need to switch API versions.
 
+<br></br>
+<br></br>
+
 ## Establishing a connection
-A connection to the Paysafecash system is successful if the following prerequisites are fulfilled:
-- API key for request authentication provided by paysafecard.
+---
+
+A connection to the PaysafeCash system is successful if the following prerequisites are fulfilled:
+- API key for request authentication provided by PaysafeCash.
 - Authorization of the payment server IP address in the production environment (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
 - Character encoding needs to be in UTF-8
 
 Connect to our services only via respective FQDNs
-Do not cache DNS resolutions of paysafecard FQDNs in your infrastructure (Client servers, Resolvers etc.). The DNS resolutions should expire as soon as the TTL is reached.
+Do not cache DNS resolutions of PaysafeCash FQDNs in your infrastructure (Client servers, Resolvers etc.). The DNS resolutions should expire as soon as the TTL is reached.
 In case your application is based on Java, please check your TTL setup on JVM, the DNS caching behavior needs to be adjusted to:
 networkaddress.cache.ttl=60 (TTL 60 seconds). Please note that, this parameter needs to be persisted in the JVM security config
 If your application is based on any other framework that caches DNS resolution, please make sure to set the DNS TTL to no more than 60 seconds or rely on the TTL set by our DNS records
 
 Honoring DNS changes will make sure that you connect always to our active system.
 
+<br></br>
+<br></br>
+
 ## API key authentication
+---
+
 Every request to the API is authenticated using an API key.
 - The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
 - Set the key as the username. [*HTTP basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication)
@@ -71,8 +102,13 @@ Below is an example of how the API key is supposed to be set (please note that t
 Authorization: Basic cHNjXzYydXdPYkJnRkxn000XeXZwSlMtNE9weXRtUS1XN3Y=
 ```
 
+<br></br>
+<br></br>
+
 ## Test Environment and Endpoints
-Every new business partner needs to first integrate the Paysafecash API on the test environment.
+---
+
+Every new business partner needs to first integrate the PaysafeCash API on the test environment.
 Once the integration is finished, a UAT(User Acceptance Test) needs to be done in order to ensure a seemless integration flow.
 
 - The endpoint for the *test environment* is: https://apitest.paysafecard.com/v1/
@@ -82,52 +118,63 @@ Once the integration is finished, a UAT(User Acceptance Test) needs to be done i
 |---|---|
 | https://apitest.paysafecard.com/v1/   | 13.248.157.194 <br> 76.223.29.211  |
 
+
 - The endpoint for the *production environment* is: https://api.paysafecard.com/v1/
 
 | Hostname  | IP address  |
 |---|---|
 | https://api.paysafecard.com/v1/  | 75.2.1.208<br>99.83.185.216 |
 
+<br></br>
+<br></br>
+
 ## Interface Guidelines
-Paysafecash must be implemented accordingly to the interface guidelines (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
+---
+
+PaysafeCash must be implemented accordingly to the interface guidelines (downloadable from https://www.paysafecash.com/business/downloads) and the instructions in this technical integration document.
 
 <br></br>
 <br></br>
 
 ## Barcode application details
-Paysafecash customers are, by default, redirected to the hosted barcode application from paysafecard, where they login to get a barcode. With this barcode, they can complete the transaction at a point of sales. 
+---
+
+PaysafeCash customers are, by default, redirected to the hosted barcode application from PaysafeCash, where they login to get a barcode. With this barcode, they can complete the transaction at a point of sales. 
 Please make sure that the hosted payment page size is correctly set in your webshop.
 
 ### Integration on desktop devices
-The Paysafecash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
+The PaysafeCash barcode application should be displayed as a redirect in the same window, on a new browser tab or a new browser window.
 Always allow vertical scrolling or dynamic sizing.
 
 ### Integration on mobile devices
-Paysafecash barcode application is optimised automatically for mobile devices.
+PaysafeCash barcode application is optimised automatically for mobile devices.
 
 <br></br>
 <br></br>
 
+---
 # Payment flow
+---
+
 In this section, the payment flow is shown.
 
-![transaction_flow_bappl](https://www.paysafecash.com/fileadmin/5_API/transaction_flow_lvl3.PNG "Paysafecash Payment Flow")
+![transaction_flow_bappl](https://www.paysafecash.com/fileadmin/5_API/transaction_flow_lvl3.png "PaysafeCash Payment Flow")
 
-- The customer selects Paysafecash as the preferred payment option in your webshop.
+- The customer selects PaysafeCash as the preferred payment option in your webshop.
 
 - The business partner initiates the payment with the correct amount, currency and other parameters.
 
-- The business partner redirects the customer to Paysafecash's hosted barcode application.
+- The business partner redirects the customer to PaysafeCash's hosted barcode application.
 
-- The customer has 30 minutes to login with its Paysafecash username/password and generate a barcode. The barcode will only be valid for this specific transaction. 
+- The customer has 30 minutes to login with its PaysafeCash username/password and generate a barcode. The barcode will only be valid for this specific transaction. 
     
-    The barcode can be viewed in various ways (e.g. online, Paysafecash app, download, e-mail, SMS or iOS / Android passbook file).
+    The barcode can be viewed in various ways (e.g. online, PaysafeCash app, download, e-mail, SMS or iOS / Android passbook file).
 
 - The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount. A predefined time frame ("Transaction Timeout”) will be available for the payment completion. 
 
     The duration of this time frame is by default 72 hours, unless specified otherwise by the business partner.
 
-- Once the payment is done at the POS, the money will be assigned to the transaction and paysafecard captures the payment on behalf of the business partner.
+- Once the payment is done at the POS, the money will be assigned to the transaction and PaysafeCash captures the payment on behalf of the business partner.
 
 - A webhook notification request is sent to the business partner. 
 
@@ -137,11 +184,17 @@ In this section, the payment flow is shown.
 
 **Important:** Captured payments are irreversible.
 
-# Group Payment Process
-<a name="payment_process"></a>
-This section describes in detail the technical process of a Paysafecash payment.
+<br></br>
+<br></br>
 
-1. The customer selects the Paysafecash payment method.
+---
+# Payment Process
+---
+<a name="payment_process"></a>
+
+This section describes in detail the technical process of a PaysafeCash payment.
+
+1. The customer selects the PaysafeCash payment method.
 
 1. Initiate Payment: Send POST request `initiate payment`
     * 2.1. If the response gives back http20x, redirect the customer to the barcode application (status of the transaction is "INITIATED").
@@ -151,7 +204,7 @@ This section describes in detail the technical process of a Paysafecash payment.
         
 1. Redirection to the barcode application `auth_url`: The customer reaches the barcode application and logs in with its account (status of the transaction is "REDIRECTED").
 
-1. Login (by the customer): The customer logs in with its Paysafecash account details to retrieve the barcode
+1. Login (by the customer): The customer logs in with its PaysafeCash account details to retrieve the barcode
     * 4.1. If the customer cancels the transaction on the barcode application (status of the transaction is "CANCELED_CUSTOMER"), show the following error message on the `failure_url`:
         
         *"Transaction aborted by the user."*
@@ -171,7 +224,7 @@ This section describes in detail the technical process of a Paysafecash payment.
         
 1. The customer brings the barcode to a payment point, has it scanned and pays for the transaction amount.
 
-1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, paysafecard captures the payment on behalf of the business partner (transaction status "SUCCESS") and the webhook notification is sent.
+1. Webhook notification delivery: Since the transaction is paid and the amount assigned to the transaction, PaysafeCash captures the payment on behalf of the business partner (transaction status "SUCCESS") and the webhook notification is sent.
 
 1. The business partner verifies the webhook notification as described [here](#webhook_notification).
 
@@ -179,10 +232,21 @@ This section describes in detail the technical process of a Paysafecash payment.
 
 **Important:** Captured payments are irreversible.
 
-# Group Payment Information
+<br></br>
+<br></br>
+
+---
+# Additional Payment Information
+---
+
 The following section provides additional information about the payment process.
 
+<br></br>
+<br></br>
+
 ## Payment status
+---
+
 |Value              |Description    |
 |---                |---                                                                 |
 |`INITIATED`        |The initial state of a payment after it has been successfully created.|
@@ -192,7 +256,12 @@ The following section provides additional information about the payment process.
 |`CANCELED_CUSTOMER`|The customer has cancelled the payment.|
 |`EXPIRED`          |The customer has not logged in the barcode application for 30 minutes after the transaction has been created or the customer has not paid the transaction in the predefined time frame (default 72 hours).
 
+<br></br>
+<br></br>
+
 ## HTTP status codes
+---
+
 | Code | Short Description     | Description |
 | ---  | ---                   | ---         |
 | 200  | OK                    | Everything is OK.|
@@ -200,7 +269,7 @@ The following section provides additional information about the payment process.
 | 400  | Bad Request           | Missing parameter.|
 | 401  | Unauthorized          | Invalid or expired API key.|
 | 404  | Not Found             | Not found. This is also returned when you try to retrieve a payment that does not exist.|
-| 500  | Internal Server Error | This indicates a general technical error on paysafecard's end.|
+| 500  | Internal Server Error | This indicates a general technical error on PaysafeCash's end.|
 | 501  | Not Implemented       | Version feature not implemented.|
 | 502  | Bad Gateway           | Invalid response from upstream system.|
 | 503  | Service Unavailable   | Server overloaded.|
@@ -220,11 +289,14 @@ The following section provides additional information about the payment process.
    
 ```
 
-<br><br/>
+<br></br>
+<br></br>
 
 ## customer id
+---
+
 <a name="customer_id"></a>
-Also known as "Merchant Client ID", the customer id is an important parameter for the integration of Paysafecash.
+Also known as "Merchant Client ID", the customer id is an important parameter for the integration of PaysafeCash.
 
 The customer id identifies the Customer on our business partners side. 
 
@@ -233,8 +305,9 @@ The most optimal customer id is a completely random value. A value that uniquely
 This value should be the same for all transactions of the customer.
 
 Here are Guidelines for possible customer ids: 
-<br><br/>
-<br><br/>
+
+<br></br>
+
 **Valid Values:**
 |Value |Type 
 |--- |---
@@ -244,7 +317,7 @@ Here are Guidelines for possible customer ids:
 `3192481752123`| Random Customer Identifier
 `CustomerID1`| Customer Identifier free of personal information
 
-<br><br/>
+
 **Invalid Values:**
 + `test@123.com`
 + `Username_1`
@@ -258,151 +331,38 @@ Please note that sending any form of the invalid values will not be accepted.
 
 If you intend to process payments on multiple brands, please inquire about the possibilities of separating multiple entities for your account.
 
-# Group Payment API Requests
-
-## Initiating a payment [/payments]
-Every Paysafecash payment begins with an `initiate payment` request.
-
-<br></br>
-
-Upon successful execution of this request, the status of the payment is `INITIATED`.
-
 <br></br>
 <br></br>
-**Note:** Using the optional HEADER-Parameter `Correlation-ID`, the busines partner can set a part of the parameter `id` on its own.
 
-- Max. length: 41 characters
-- Allowed characters: "a-z, A-Z, 0-9,-,_"
-- The value passed in this parameter must always be unique
+## Variable Transaction Timeout
+---
 
-### initiate payment [POST]
-```
-POST /payments/
-```
+<a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to a payment point and pay for the transaction. 
+This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
 
-If the integration type in use is **"Barcode Application Integration"**, the next step is to redirect the customer to the `auth_url`, which is returned as part of the response.
+The default time frame is 72 hours and the customer will see in the barcode application how much time is left to pay with the barcode. 
+<br><br>
+There is the possibility to set this timeout per transaction. The timeout can be specified in the `initiate payment` request using the parameter `expiration_time_minutes`.
 
-As soon as the customer has clicked on “Back to [Merchant Name]” in the barcode application (status of the transaction is `REDIRECTED`) or authorized the payment at a payment point (status of the transaction is `AUTHORIZED`),
-the customer will be redirected to the `success_url` specified when creating the payment.
-
-+ Parameters
-    + `Correlation-ID`: `test_corr_001` (optional) - Using the optional HEADER-Parameter `Correlation-ID`, the business partner can set part of the parameter `id` on its own. <br></br><br></br> - Max. length: 41 characters <br></br><br></br> -  Allowed characters for the `Correlation-ID` are "a-z, A-Z, 0-9,-,_" <br></br><br></br>  - The value passed in this parameter must always be unique <br></br><br></br> 
-
-+ Request (application/json)
-
-    + Headers
-
-               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
-
-    + Attributes (PaymentRequest)
-    
-
-+ Response 201 (application/json)
-            
-        {
-        "object": "PAYMENT",
-        "id": "pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR",
-        "created": 1548677808372,
-        "updated": 1548677808372,
-        "amount": 9.99,
-        "currency": "EUR",
-        "status": "INITIATED",
-        "type": "PAYSAFECARD",
-        "redirect": {
-            "success_url": "https://www.paysafecard.com/success/pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR",
-            "failure_url": "https://www.paysafecard.com/failure/pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR",
-            "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR&amount=9.99&currency=EUR"
-        },
-        "customer": {
-            "id": "clientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
-        }
-        }
-
-
-## Retrieving payment details [/payments/{id}]
-
-Upon successful `success_url` redirection, the business partner must call `retrieve payment details` to verfiy the status of the payment
-and display the correct message to the customer, as shown in the [Payment Process](#payment_process) section.
+The allowed span for this parameter is between 5 and 20160 minutes. If no specific setting is used, the default setting is taken.
 
 <br></br>
+<br></br>
 
-Here, the transaction `id` is used to retrieve the details of that specific Paysafecash payment.
+---
+# Webhook notification
+---
 
-### retrieve payment details [GET]
-```
-GET /payments/{id}
-```
+<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate payment` request, as soon as the payment status changes. 
 
-**Note**: Retrieving the details of a payment can be done at any time and it can be used to update the status of a specific payment displayed to the customer.
+- If the payment is captured by PaysafeCash, a `PAYMENT_CAPTURED` webhook is sent, 
+- if the payment expires or is actively cancelled by the customer, a `PAYMENT_EXPIRED` webhoook is sent.
 
-+ Parameters
-    + id (required, string, `pay_1090001806_2BRbMFPRWXiIAYl5MzrRCFvk31E4n68j_EUR`) ... Payment `id`.
-    + `Correlation-ID`: `test_corr_001` (optional) - If the optional HEADER-Parameter `Correlation-ID` was used during the `initiate payment` request, the same value can be used to retrieve the Paysafecash payment details instead of the `id`. <br></br>
-
-+ Request (application/json)
-
-    + Headers
-
-               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
-               
-
-+ Response 200 (application/json)
-
- + Attributes (PaymentResponse)
-
-# Group Payment API response objects
-
-|Parameter|Description|Cases|
-|---|---|---|
-|`object`|Identifies the object. For a payment, the value returned is PAYMENT.|Always|
-|`id`|Unique identifier for a payment.|Always|
-|`created`|Unix timestamp specifying when this object was created.|Always|
-|`updated`|Unix timestamp specifying when this object was last updated.|Always|
-|`amount`|The payment amount.|Always|
-|`currency`|Currency of this payment.|Always|
-|`status`|The current status of this payment.|Always|
-|`status_before_expiration`|Holds the status of the payment before it transitioned to `EXPIRED`. This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.|Optional. Only returned when the payment is in status `EXPIRED`.|
-|`type`|Always set to PAYSAFECARD.|Always|
-|`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". It should redirect to Homepage/Shopping basket.|Always|
-|`redirect[failure_url]`|URL to redirect after the customer cancels the transaction.|Always|
-|`webhook_url`|URL to be used by paysafecard to notify upon authorization has been successfully completed.|Always|
-|`customer[id]`| ID provided by you, which identifies the customer. See more information [here](#customer_id).|Always|
-|`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to the barcode application.|
-|`card_details[serial]`|The serial number of the card that has been used to authorize the payment.|After cards have been assigned.|
-|`card_details[currency]`|The currency of the card.|After cards have been assigned.|
-|`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
-|`card_details[type]`|The type of card.|After cards have been assigned.|
-|`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
-
-# Group Payment Error Codes
-
-|Code                           |Number (optional)  |HTTP Status    |Description          |
-|---                                                                        |---                |---            |---                  |
-|`general_technical_error`                                                  |10007              |500            |General technical error.|
-|`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
-|`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
-|`invalid_currency`                                                         |142                |400            |The supplied currency is not supported|
-|`duplicate_transaction_id`                                                 |2001               |400            |Transaction already exists.|
-|`transaction_not_found`                                                    |2002               |404            |Transaction not found|
-|`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
-|`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
-|`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
-|`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
-|`feature_disabled`                                                         |3172               |400            |Feature not active disabled|
-|`general_error`                                                            |3017               |400            |It is mandatory to send an MCID.|
-|`general_error`                                                            |3019               |400            |MCID contains invalid values.|
-Other errors can be communicated to the customer as “general technical error”. 
-
-In general when one of these errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
-
-For live accounts, techsupport@paysafecard.com should be contacted.
-
-# Group Webhook notification
-<a name="webhook_notification"></a> The *webhook notification* is an HTTP `POST` request sent to the business partner endpoint provided in the `initiate payment` request, as soon as a payment is captured by paysafecard (status "SUCCESS"), if the payment expires or is actively cancelled by the customer (status "PAYMENT_EXPIRED").
+Additionally, when a barcode payment is declined due to risk screening of the KYC/KYB Reliance data submitted via API, a `PAYMENT_DECLINED` webhook is emitted.
 
 The business partner payment server must respond with *HTTP 200* and the authenticity of the webhook notification must be verified, as well as process the payment matching the details in the body of the message.
 <br><br>
-During the onboarding, the paysafecard team will provide a public key to the business partner which can be used to verifiy the authenticity of the webhook notification.
+During the onboarding, the PaysafeCash team will provide a public key to the business partner which can be used to verifiy the authenticity of the webhook notification.
 <br><br>
 In case of technical errors (e.g. socket timeout) or application errors, the webhook notification is resubmitted at a regular interval of 1 minute until one of the following criteria is fulfilled:
 
@@ -414,70 +374,12 @@ In case of technical errors (e.g. socket timeout) or application errors, the web
 |---|
 |  18.197.120.90 <br>18.158.237.76 <br>3.64.155.76 <br>3.76.4.148 <br>3.127.123.143 <br>176.34.172.250 <br>54.228.173.185 <br>52.48.213.182 <br>18.200.202.144 |
 
+<br></br>
+<br></br>
 
-# Group Additional webhook notification for money handover
-If requested, Paysafe can activate an additional webhook notification which is sent as soon as the customer paid at the store.
+## How to verifiy the webhook notification
+---
 
-This webhook notification uses the `eventType` "MONEY_HANDOVER".
-
-<b>Important</b>: this is not yet a confirmation that the transaction was successful, but you can update the transaction status to "processing" or "pending" on your end.
-
-We expect you to credit the customer only when you receive the webhook notification with the event type "PAYMENT_CAPTURED".
-
-- This notification uses the same IP addresses as the normal webhook notification.
-- It uses the same type of verification - see the chapter below.
-- This notification needs to be enabled on our side, so you need to request it from paysafecard.
-- The notification will be sent between 0-30 seconds after the customer paid.
-- It will be sent to the same URL as the normal webhook notification - the one specified in the payment request.
-- The transaction status will <b>NOT</b> be updated, so you cannot confirm this with a `retrievePayment` request.
-- In case the notification fails to get delivered, we attempt up to 5 retries.
-    - This means you could receive a "MONEY_HANDOVER" notification after the transaction was already successful. In these cases, please confirm the transaction status with a `retrievePayment`.
-<!-- - It does not make any retry attempts in case the initial notification fails. -->
-
-
-HTTP body
-```http
-    {
-      "timestamp": 1686560013991,
-      "eventType": "MONEY_HANDOVER",
-      "version": "2",
-      "data": {
-        "mid": "1000000433",
-        "mtid": "mdirectload_1686560012113_hq13zzbV7z_EUR"
-      }
-    }
-```
-# Group Additional webhook notification for money returned at POS
-
-If requested, Paysafe can also activate one more additional webhook notification which is sent as soon as a successful payment is cancelled at the point of sale and the funds are returned.
-
-This webhook notification uses the `eventType` "MONEY_RETURNED".
-
-<b>Important</b>: this is a confirmation that the funds have been returned to the customer at the point of sale and any credit you have done on your side needs to be reversed. The transaction status needs to be updated to "cancelled" on your end.
-
-- This notification uses the same IP addresses as the normal webhook notification.
-- It uses the same type of verification - see the chapter below.
-- This notification needs to be enabled on our side, so you need to request it from paysafecard.
-- The notification will be sent between 0-360 seconds after the customer received the funds back.
-- It will be sent to the same URL as the normal webhook notification - the one specified in the payment request.
-- The transaction status will <b>NOT</b> be updated, so you cannot confirm this with a `retrievePayment` request.
-- In case the notification fails to get delivered, we attempt up to 5 retries.
-This means you could receive a "MONEY_RETURNED" notification after receiving a "MONEY_HANDOVER" one or a "PAYMENT_CAPTURED" one. This will indicate an incomplete payment and the partner will need to treat the payment as unsuccessful.
-<!-- - It does not make any retry attempts in case the initial notification fails. -->
-
-HTTP body
-```http
-    {
-      "timestamp": 1706199208146,
-      "eventType": "MONEY_RETURNED",
-      "version": "2",
-      "data":
-
-{         "mid": "1000000545",         "mtid": "pay_1000000545_iSL7n3nsLl8t396SJQTAvcjD3rKoIti9_EUR"       }
-    }
-```
-
-# Group How to verifiy the webhook notification
 The webhook notification is signed with "rsa-sha256" and the signature can be found in the HTTP "Authorization" header.
 
 <br><br>
@@ -488,72 +390,9 @@ Authorization: keyId="2",algorithm="rsa-sha256",signature="OFPVO1uqac0U18LlEedwf
 ```
 |Parameter                  |Description    |
 |---                        |---                                                                 |
-|`keyId`                    |The signature key version id. It currently has the value "2" except if communicated otherwise by the paysafecard integration team.    |
-|`algorithm`                |The algorithm used for the signature. A Paysafecash webhook notification will always be signed with "rsa-sha256".|
+|`keyId`                    |The signature key version id. It currently has the value "2" except if communicated otherwise by the PaysafeCash integration team.    |
+|`algorithm`                |The algorithm used for the signature. A PaysafeCash webhook notification will always be signed with "rsa-sha256".|
 |`signature`                |The signature of the webhook notification.|
-
-<br><br>
-HTTP body
-```http
-{
-    "timestamp":1539920400647,
-    "eventType":"PAYMENT_CAPTURED",
-    "version":"2",
-    "data": {
-        "mid":"1000000312",
-        "mtid":"pay_1000000312_kvQwaSARVDlZm2yxRVNaCYZObI5Xcd40_EUR"
-    }
-}
-```
-
-|Parameter                  |Description    |
-|---                        |---                                                                 |
-|`timestamp`                |The Unix timestamp of the payment.    |
-|`eventType`                |The event that triggered the webhook notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
-|`version`                  |The signature key version.|
-|`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
-|`mtid`                     |The payment ID.|
-
-We also have the option to enable additional parameters which identify the location where the barcode was paid for.
-If you wish to receive this information, please make sure you also accept additional parameters in the webhook notification, and contact us.
-
-|Parameter                  |Description    |
-|---                        |---                                                                 |
-|`point_of_sale`            | Array of the parameters below     |
-|`store_number`             | Distributor ID & external Shop ID     |
-|`title`                    | Store name     |
-|`street_and_no`            | Address     |
-|`zipcode`                  | ZIP code     |
-|`city`                     | City     |
-|`countrycode`              | Country Code (ISO2)     |
-|`lat`                      | Coordinate X    |
-|`lng`                      | Coordinate Y    |
-
-Example of a webhook body / payload with the additional data:
-
-```
-{
-  "timestamp": 1652669343852,
-  "eventType": "PAYMENT_CAPTURED",
-  "version": "2",
-  "data": {
-    "mid": "1000000312",
-    "mtid": "pay_1000000312_Sch1WLDKoMlTxwe2xrKHr9LIxTLWQW2g_EUR",
-    "point_of_sale": {
-      "countrycode": "BG",
-      "store_number": "35513746_Test_POSDMWN",
-      "title": "test posdmwn feature",
-      "street_and_no": "centre",
-      "zipcode": "1700",
-      "city": "Sofia",
-      "lat": 23.324155,
-      "lng": 42.697562
-    }
-  }
-}
-
-
-```
 
 
 <br><br>
@@ -567,7 +406,7 @@ rsa_decrypt(base64decode(signature), merchantPublicKey) == sha256(body)
 ```
 
 <br><br>
-###Using the *[openssl dgst](https://www.openssl.org/docs/man1.0.2/man1/dgst.html)* function to verify the signature
+### Using the *[openssl dgst](https://www.openssl.org/docs/man1.0.2/man1/dgst.html)* function to verify the signature
 
 The digest functions can be used to verify digital signatures using message digests. The three steps below ilustrate how this can be done:
 
@@ -596,23 +435,252 @@ The digest functions can be used to verify digital signatures using message dige
     |`-signature signature_debase64.txt`                            |The actual signature to verify in plain text, obtained in step 2.  |
     |`plaintext_payload.txt`                                        |The body of the request in plain text.  |
 
-# Group Variable Transaction Timeout
+<br></br>
+<br></br>
 
-<a name="variable_trx_timeout"></a> Upon the creation of the barcode, the customer is given a time frame to go to a payment point and pay for the transaction. 
-This time frame is limited between the transaction creation and (if no payment happens) the expiration of the transaction. 
+## PAYMENT_CAPTURED Webhook
+---
 
-The default time frame is 72 hours and the customer will see in the barcode application how much time is left to pay with the barcode. 
+This webhook is triggered after the payment has been successfully captured.
+Its purpose is to notify you that the transaction has been completed and no further payment actions are required, allowing you to proceed with order fulfillment.
+
 <br><br>
-There is the possibility to set this timeout per transaction. The timeout can be specified in the `initiate payment` request using the parameter `expiration_time_minutes`.
+HTTP body
+```http
+{
+    "timestamp":1539920400647,
+    "eventType":"PAYMENT_CAPTURED",
+    "version":"2",
+    "data": {
+        "mid":"1000000312",
+        "mtid":"pay_1000000312_kvQwaSARVDlZm2yxRVNaCYZObI5Xcd40_EUR"
+        "cashtie_reference":"2918727923"
+    }
+}
+```
 
-The allowed span for this parameter is between 5 and 20160 minutes. If no specific setting is used, the default setting is taken.
+|Parameter                  |Description    |
+|---                        |---                                                                 |
+|`timestamp`                |The Unix timestamp of the payment.    |
+|`eventType`                |The event that triggered the webhook notification. There are only two event types: "PAYMENT_CAPTURED" or "PAYMENT_EXPIRED" |
+|`version`                  |The signature key version.|
+|`mid`                      |The Merchant ID and/or Sub-merchant ID provided for the allocation of the payment. |
+|`mtid`                     |The payment ID.|
+|`cashtie_reference`        |A settlement ID sent by our processing partner InComm.^1^ |
+> Needs to be enabled by Paysafe on request of the business partner and only available for INC processing.
 
-# Group Customer Data Takeover
+### Point of Sale details
+
+We can include Point of Sale (POS) information for the location where the barcode payment was completed in the `PAYMENT_CAPTURED` webhook payload. This information is available only if it has been enabled on our side.
+If you want to receive POS information, please contact our Integration team to request enablement.
+
+See below an example of such webhook. Under `point_of_sale` array, you can see the provided POS information.
+
+HTTP body
+```http
+{
+"timestamp":1768908000326,
+"eventType":"PAYMENT_CAPTURED",
+"version":"1",
+"data":{
+    "mid":"1020015105",
+    "mtid":"pay_1020015105_PSk1-bmHY5JS0Kb_GBP",
+    "point_of_sale":{
+        "countrycode":"GB",
+        "store_number":"7009550_000000000051649",
+        "title":"cheam village news",
+        "street_and_no":"35 station way",
+        "zipcode":"SM3 8SD",
+        "city":"Sutton Surrey",
+        "lat":51.35677,
+        "lng":-0.21603
+        }
+    }
+}
+```
+
+|Parameter                  |Description    |
+|---                        |---                                                                 |
+|`point_of_sale`            | Array of the parameters below     |
+|`store_number`             | Distributor ID & external Shop ID     |
+|`title`                    | Store name     |
+|`street_and_no`            | Address     |
+|`zipcode`                  | ZIP code     |
+|`city`                     | City     |
+|`countrycode`              | Country Code (ISO2)     |
+|`lat`                      | Coordinate X    |
+|`lng`                      | Coordinate Y    |
+
+<br></br>
+<br></br>
+
+## PAYMENT_EXPIRED Webhook
+---
+
+This webhook notification is sent when the end customer cancels the payment via the barcode panel, or when the allowed timeframe for completing the barcode payment has expired.
+
+```
+{
+"timestamp":1770216970736,
+"eventType":"PAYMENT_EXPIRED",
+"version":"1",
+"data":
+    {
+    "mid":"1020015105",
+    "mtid":"pay_1020015105_PSkhui-Z0YQS5JF_GBP"
+    }
+}
+```
+
+<br></br>
+<br></br>
+
+## PAYMENT_DECLINED Webhook
+---
+
+When a barcode payment is declined as a result of risk checks, a dedicated webhook notification is sent to the partner.
+
+HTTP body
+```http
+{
+"timestamp":1768855677806,
+"eventType":"PAYMENT_DECLINED",
+"version":"1",
+"data":{
+"mid":"1020015105",
+"mtid":"pay_1020015105_PSrU0cChm1zdcTK_GBP",
+"decline_reason":{
+"reason_code":"Screening decline"
+      }
+   }
+}
+```
+
+<br></br>
+<br></br>
+
+
+## MONEY_HANDOVER Webhook
+---
+
+If requested, Paysafe can activate an additional webhook notification which is sent as soon as the customer paid at the store.
+
+This webhook notification uses the `eventType` "MONEY_HANDOVER".
+
+<b>Important</b>: this is not yet a confirmation that the transaction was successful, but you can update the transaction status to "processing" or "pending" on your end.
+
+We expect you to credit the customer only when you receive the webhook notification with the event type "PAYMENT_CAPTURED".
+
+- This notification uses the same IP addresses as the normal webhook notification.
+- It uses the same type of verification - see the chapter below.
+- This notification needs to be enabled on our side, so you need to request it from PaysafeCash.
+- The notification will be sent between 0-30 seconds after the customer paid.
+- It will be sent to the same URL as the normal webhook notification - the one specified in the payment request.
+- The transaction status will <b>NOT</b> be updated, so you cannot confirm this with a `retrievePayment` request.
+- In case the notification fails to get delivered, we attempt up to 5 retries.
+    - This means you could receive a "MONEY_HANDOVER" notification after the transaction was already successful. In these cases, please confirm the transaction status with a `retrievePayment`.
+<!-- - It does not make any retry attempts in case the initial notification fails. -->
+
+
+HTTP body
+```http
+    {
+      "timestamp": 1686560013991,
+      "eventType": "MONEY_HANDOVER",
+      "version": "2",
+      "data": {
+        "mid": "1000000433",
+        "mtid": "mdirectload_1686560012113_hq13zzbV7z_EUR"
+      }
+    }
+```
+
+<br></br>
+<br></br>
+
+
+## MONEY_RETURNED Webhook
+---
+
+If requested, Paysafe can also activate one more additional webhook notification which is sent as soon as a successful payment is cancelled at the point of sale and the funds are returned.
+
+This webhook notification uses the `eventType` "MONEY_RETURNED".
+
+<b>Important</b>: this is a confirmation that the funds have been returned to the customer at the point of sale and any credit you have done on your side needs to be reversed. The transaction status should be updated after you have received a different webhook event or preferably after checked with a GET call.
+
+- This notification uses the same IP addresses as the normal webhook notification.
+- It uses the same type of verification - see the chapter below.
+- This notification needs to be enabled on our side, so you need to request it from PaysafeCash.
+- The notification will be sent between 0-360 seconds after the customer received the funds back.
+- It will be sent to the same URL as the normal webhook notification - the one specified in the payment request.
+- The transaction status will <b>NOT</b> be updated, so you cannot confirm this with a `retrievePayment` request.
+- In case the notification fails to get delivered, we attempt up to 5 retries.
+This means you could receive a "MONEY_RETURNED" notification after receiving a "MONEY_HANDOVER" one or a "PAYMENT_CAPTURED" one. This will indicate an incomplete payment and the partner will need to recheck the payment status via GET call or wait for other webhook events.
+<!-- - It does not make any retry attempts in case the initial notification fails. -->
+
+HTTP body
+```http
+    {
+      "timestamp": 1706199208146,
+      "eventType": "MONEY_RETURNED",
+      "version": "2",
+      "data": {
+        "mid": "1000000545",
+        "mtid": "pay_1000000545_iSL7n3nsLl8t396SJQTAvcjD3rKoIti9_EUR"
+      }
+    }
+```
+
+<br></br>
+<br></br>
+
+---
+# Additional Features
+---
+
+This section describes the additional features that can be added to the core PaysafeCash transaction implementation.
+
+<br></br>
+<br></br>
+
+## PaysafeCash Refund
+
+The refund feature provides the business partners the possibility to fully or partially refund a previously paid transaction back into the
+customer‘s PaysafeCard account.
+
+A refund will always be issued in the currency of the original payment transaction.
+
+Refunding a payment is possible up to 45 days after the initial payment.
+
+- Prerequisites
+    - The business partner needs to have the merchant refund REST functions implemented on the website or back-end system.
+    - The business partner needs to be fully integrated and refund needs to be enabled at PaysafeCash’s side.
+    - The customer needs to be registered with PaysafeCard in order to receive a refund.
+    - A refund transaction always refers to a previous underlying payment, because of this reason it is required that a
+        payment has been processed before the refund can be processed.
+
+- Settlement
+
+    All successfull refunds will be deducted from the payments (netting) on the montly invoice that PaysafeCash
+sends to the business partners.
+
+- Credit Limit
+
+    You cannot refund a higher amount than the amount you had in payments in one billing cycle. 
+    
+    To prevent failed refunds at the beginning of a billing cycle, it is possible to assign an additional Credit Limit to your account. The duration of the billing cycle is defined in the contract.
+
+<br></br>
+<br></br>
+
+## Customer Takeover Data
+---
+
 To make the user experience as flawless as possible, a new feature is introduced.
 
-Using the "Customer Data Takeover" feature, the business partner sends customer data, full name and Date of birth to paysafecard in the `initiate payment` call, so the registration form in the barcode application is prefilled. 
+Using the "Customer Takeover Data" feature, the business partner sends customer data, full name and Date of birth to PaysafeCash in the `initiate payment` call, so the registration form in the barcode application is prefilled. 
 
-**Customer consent page** If this feature is used the business partner is obligated to request the consent from the customer before the data are sent to paysafecard. 
+**Customer consent page** If this feature is used the business partner is obligated to request the consent from the customer before the data are sent to PaysafeCash. 
 
 + The customer has to confirm actively via a checkbox or similar consent mechanism.
 
@@ -621,7 +689,7 @@ Using the "Customer Data Takeover" feature, the business partner sends customer 
 + The consent page of must contain a clear wording to request the customers consent and make clear that the data are sent to Paysafe.
 ```
 Example:
-For registration at Paysafecash, <MERCHANT NAME> will share the following personal data with Paysafe: 
+For registration at PaysafeCash, <MERCHANT NAME> will share the following personal data with Paysafe: 
 > Name
 > Address
 > Phone-number
@@ -629,7 +697,7 @@ For registration at Paysafecash, <MERCHANT NAME> will share the following person
 > Date of birth
 ```
 
-**Important** paysafecard does not store this data. It is solely used to make the customer registration easier. The data is only accessible if the transaction is in an open status and it is dropped afterwards.
+**Important** PaysafeCash does not store this data. It is solely used to make the customer registration easier. The data is only accessible if the transaction is in an open status and it is dropped afterwards.
 
 + If a middle name is to be sent during the data exchange, the business partner must combine the customer middle name with the `first_name` parameter.
 
@@ -653,51 +721,903 @@ For registration at Paysafecash, <MERCHANT NAME> will share the following person
 }
 ```
 
-# Group Refund Information
-The refund feature provides the business partners the possibility to fully or partially refund a previously paid transaction back into the
-customer‘s my paysafecard account.
+<br></br>
+<br></br>
 
-A refund will always be issued in the currency of the original payment transaction.
+## KYC reliance
+---
 
-Refunding a payment is possible up to 45 days after the initial payment.
+If you have already verified the customer, we can process this KYC data via API request and make additional risk checks on our end during the transaction creation.
 
-- Prerequisites
-    - The business partner needs to have the merchant refund REST functions implemented on the website or back-end system.
-    - The business partner needs to be fully integrated and refund needs to be enabled at paysafecard’s side.
-    - The customer needs to be registered with my paysafecard in order to receive a refund.
-    - A refund transaction always refers to a previous underlying payment, because of this reason it is required that a
-        payment has been processed before the refund can be processed.
+To use this feature, the Customer Takeover Data  parameters (see above) and additional KYC reliance parameters are mandatory - please see the `initiate payment` API call for details. The additional parameters elevant to KYC reliance feature need to be sent in the "customer_takeover_data" -> "document" object.
 
-- Settlement
+The additional parameters include the document ID, document type, document date of issuance and expiry, document issuing authority and tax ID.
 
-    All successfull refunds will be deducted from the payments (netting) on the montly invoice that paysafecard
-sends to the business partners.
+- If the checks on our end fail, we will return the error code 3161 ("action_not_allowed").
+- Since the Customer Data Takeover is mandatory for this feature, we will return the error code 3150 ("missing_mandatory_parameter") in case one of the parameters is missing.
+- If the KYC data is invalid, we will return the error code 10028 ("invalid_request_parameter")
+- If the customer reached their limit, we will return the error code 33005 ("merchant_client_limit_reached")
 
-- Credit Limit
+Customer data takeover & KYC/KYB Reliance parameters:
+| Parameter | Required |Data Type & Length | Example |
+| --- | --- | --- | --- |
+| first_name | Mandatory | string - max 80 characters | Max |
+| last_name | Mandatory | string - max 80 characters | Mustermann |
+| date_of_birth | Mandatory | string - max  6 digits **(ISO8601 -> YYYY-MM-DD)** | 1990-12-31 |
+| address1 | Mandatory | string - max  105 characters | Musterstrasse 2 |
+| postcode | Mandatory | string - max  10 characters | 1234 |
+| city | Mandatory | string - max  80 characters |  Vienna |
+| country_iso2 | Mandatory | string - max  2 characters **(ISO 3166-1 alpha 2)** | AT |
+| phone_number | Mandatory | string - max  19 digits | +43676123456789 |
+| email | Mandatory | string - max  80 characters | example@test.at |
+||
+| document | Mandatory | Array(object) | - | 
+| document: id_number | Mandatory | string - max  80 digits | 8010369012345 |
+| document: type | Mandatory | string - enum - max  15 characters | **Valid values**: PASSPORT, ID_CARD, RESIDENCE_CARD, DRIVING_LICENSE |
+| document: issuing_authority | Mandatory if available | string - max  80 characters | Passport Service Paris |
+| document: date_of_issauance | Mandatory if available | string - max  6 digits **(ISO8601 -> YYYY-MM-DD)**  | 2010-12-31 |
+| document: date_of_expiry | Mandatory | string - max  6 digits **(ISO8601 -> YYYY-MM-DD)** | 2030-12-31 |
+||
+| tax_id | Mandatory only in Italy | string - max  40 characters | 1NTEST01SGxo9HZ |
+| place_of_birth | Optional | string - max  80 characters | Versaille |
+| kyc_level | Mandatory | string - max  3 characters | FULL |
+| kyc_reliance_type | Mandatory | string - max  21 characters | **Valid values**: KYC_RELIANCE, OPTIONAL_KYC_RELIANCE, KYB_RELIANCE, KYB_SME_RELIANCE |
+| ip_address | Optional | string - max  45 characters | 127.0.0.1 |
+||
+| geo_information | Optional | Array(object) | - |
+| geo_information: lat | Optional | string - max  8 characters | 48.42111 |
+| geo_information: lng | Optional | string - max  8 characters | 16.21466 |
+||
+| mcc | Mandatory for **kyc_reliance_type=KYB_RELIANCE**| string - max  4 characters  | 7995 |
 
-    You cannot refund a higher amount than the amount you had in payments in one billing cycle. 
+<br></br>
+<br></br>
+
+### Geofencing
+
+As part of our KYC Reliance enhancements, we’ve added geofencing for barcode payments. You can restrict redemption to a configurable radius around the barcode’s generation geolocation and within a specified timeframe. 
+An optional webhook can notify you whenever a payment is rejected for violating the radius or timeframe conditions.
+
+<br></br>
+<br></br>
+
+## KYB reliance - Sole Trader
+---
+
+KYB reliance is a special version of KYC reliance where instead of verifying a customer, you are verifying the business.
+
+To use this feature, all parameters from the KYC reliance solution are mandatory (and the `kyc_reliance_type` parameter needs to be set to `KYB_RELIANCE`), and you will have to supply an additional parameter - the merchant category code `mcc`.
+
+The `mcc` parameter needs to be in the list below, otherwise the transaction will be declined. Please contact us if you have any questions regarding the mcc codes.
+
+| mcc | name |
+| --- | --- |
+| 0742 | Veterinary Services |
+| 0763 | Agricultural Cooperatives |
+| 0780 | Horticultural and Landscaping Services |
+| 1520 | General Contractors - Residential and Commercial |
+| 1711 | Air Conditioning, Heating, and Plumbing Contractors |
+| 1731 | Electrical Contractors |
+| 1740 | Insulation, Masonry, Plastering, Stonework, and Tile Setting Contractors |
+| 1750 | Carpentry Contractors |
+| 1761 | Roofing and Siding, Sheet Metal Work Contractors |
+| 1771 | Concrete Work Contractors |
+| 1799 | Contractors, Special Trade Contractors-not elsewhere classified |
+| 2741 | Miscellaneous Publishing and Printing |
+| 2791 | Typesetting, Plate Making, and Related Services |
+| 2842 | Sanitation, Polishing and Specialty Cleaning Preparation |
+| 3357 | Hertz |
+| 3359 | Payless car rental |
+| 3364 | AGENCY RENT-A-CAR |
+| 3370 | Rent-a-wreck |
+| 3385 | Tropical rent-a-car |
+| 3389 | Avis rent-a-car |
+| 3390 | Dollar rent-a-car |
+| 3393 | National car rental |
+| 3395 | Thrifty car rental |
+| 4111 | Transportation - Suburban and Local Commuter Passenger, Including Ferries |
+| 4112 | Passenger Railways |
+| 4119 | Ambulance Services |
+| 4121 | Limousines and Taxicabs |
+| 4131 | Bus Lines |
+| 4214 | Motor Freight Carriers,Trucking-Local/Long Distance, Moving and Storage Companies, Local Delivery |
+| 4215 | Courier Services - Air & Ground, Freight Forwarders |
+| 4225 | Public Warehousing-Farm Products, Refrigerated Goods, Household Goods Storage |
+| 4457 | Boat Leases and Boat Rentals |
+| 4468 | Marinas, Marine Service, and Supplies |
+| 4722 | Travel Agencies and Tour Operators |
+| 4784 | Bridge and Road Fees, Tolls  |
+| 4789 | Transportation Services-Not Elsewhere Classified |
+| 4812 | Telecommunication Equipment Including Telephone Sales |
+| 4813 | Key-Entry Telecom Merchant providing single local and long-distance phone calls using a central access number in | a non-face-to-face enviroment using key entry
+| 4814 | Telecommunication Services including but not limited to prepaid phone services and recurring phone services |
+| 4816 | Computer Network/Information Services |
+| 4821 | Telegraph Services |
+| 4899 | Cable, Satellite, and Other Pay Television and Radio Services |
+| 4900 | Utilities - Electric, Gas, Heating Oil, Sanitary, Water |
+| 5013 | Motor Vehicle Supplies and New Parts |
+| 5021 | Office and Commercial Furniture |
+| 5039 | Construction Materials Not Elsewhere Classified |
+| 5044 | Office, Photographic, Photocopy, and Microfilm Equipment |
+| 5045 | Computers, Computer Peripheral Equipment, Software |
+| 5046 | Commercial Equipment (Not Elsewhere Classified) |
+| 5047 | Dental/Laboratory/Medical/Ophthalmic Hospital Equipment and Supplies |
+| 5065 | Electrical Parts and Equipment |
+| 5072 | Hardware Equipment and Supplies |
+| 5074 | Plumbing and Heating Equipment |
+| 5111 | Stationery, Office Supplies, Printing and Writing Paper |
+| 5131 | Piece Goods, Notions, and Other Dry Goods |
+| 5137 | Mens, Womens, and Childrens Uniforms and Commercial Clothing |
+| 5139 | Commercial Footwear |
+| 5192 | Books, Periodicals, and Newspapers |
+| 5193 | Florists Supplies, Nursery Stock, and Flowers |
+| 5198 | Paints, Varnishes, and Supplies |
+| 5199 | Nondurable Goods Not Elsewhere Classified |
+| 5200 | Home Supply Warehouse stores |
+| 5211 | Building Materials, Lumber Stores |
+| 5231 | Glass, Paint, Wallpaper Stores |
+| 5251 | Hardware Stores |
+| 5261 | Lawn and Garden Supply Stores |
+| 5271 | Mobile Home Dealers |
+| 5300 | Wholesale Clubs |
+| 5309 | Duty Free Stores |
+| 5310 | Discount Stores |
+| 5311 | DEPARTMENT STORES |
+| 5331 | Variety Stores |
+| 5411 | Grocery Stores and Supermarkets |
+| 5422 | Freezer, Locker Meat Provisioners |
+| 5441 | Candy, Nut, and Confectionery Stores |
+| 5451 | Dairy Product Stores |
+| 5462 | Bakeries |
+| 5499 | Miscellaneous Food Stores - Convenience Stores, Markets, Specialty Stores, and Vending Machines |
+| 5511 | Automobile and Truck Dealers - Sales, Service, Repairs, Parts and Leasing |
+| 5521 | Automobile and Truck Dealers - (Used Only) - Sales |
+| 5532 | Automotive Tire Stores |
+| 5533 | Automotive Parts and Accessories Stores |
+| 5541 | Service Stations (with or without Ancillary Services) |
+| 5551 | Boat Dealers |
+| 5561 | Camper Dealers, Recreational and Utility Trailers |
+| 5571 | Motocycle Shops and Dealers |
+| 5592 | Motor Home Dealers |
+| 5598 | Snowmobile Dealers |
+| 5611 | Men's and Boy's Clothing and Furnishings Store |
+| 5621 | Women's Ready-To-Wear Stores |
+| 5631 | Women's Accessory and Specialty Shops |
+| 5641 | Children's and Infants' Wear Stores |
+| 5651 | Family Clothing Stores |
+| 5655 | Sports and Riding Apparel Stores |
+| 5661 | Shoe Stores |
+| 5681 | Furriers and Fur Shops  |
+| 5691 | Men's and Women's Clothing Stores |
+| 5697 | Alterations, Mending, Seamstresses, Tailors |
+| 5698 | Wig and Toupee Shops |
+| 5712 | Equipment, Furniture and Home Furnishings Stores (except Appliances) |
+| 5713 | Floor Covering Stores |
+| 5714 | Drapery, Upholstery, and Window Coverings Stores |
+| 5718 | Fireplace, Fireplace Screens and Accessories Stores |
+| 5719 | Miscellaneous House Furnishing Specialty Shops |
+| 5722 | Household Appliance Stores |
+| 5732 | Electronics Stores |
+| 5733 | Music Stores - Musical Instruments, Pianos, and Sheet Music |
+| 5734 | Computer Software Stores |
+| 5735 | Record Stores |
+| 5811 | Caterers |
+| 5812 | Eating Places and Restaurants |
+| 5813 | Bars, Cocktail Lounges, Discotheques, Nightclubs, and Taverns - Drinking Places, (Alcoholic Beverages) |
+| 5814 | Fast Food Restaurants |
+| 5921 | Package Stores, Beer, Wine, Liquor |
+| 5931 | Second Hand Stores, Used Merchandise Stores |
+| 5932 | Antique Shops - Sales, Repairs, and Restoration Services |
+| 5935 | Salvage and Wrecking Yards |
+| 5940 | Bicycle Shops - Sales and Service |
+| 5942 | Book Stores |
+| 5943 | Office, School Supply, and Stationery Stores |
+| 5944 | Clock, Jewelry, Watch and Silverware Stores |
+| 5945 | Game, Toy, and Hobby Shops |
+| 5947 | Gift, Card, Novelty and Souvenir Shops |
+| 5948 | Leather Goods and Luggage Stores |
+| 5949 | Fabric, Needlework, Piece Goods, and Sewing Stores |
+| 5950 | Crystal and Glassware Stores  |
+| 5970 | Artist Supply Stores, Craft Shops |
+| 5975 | Hearing Aids - Sales, Service, Supply Stores |
+| 5976 | Orthopedic Goods - Artificial Limb Stores |
+| 5977 | Cosmetic Stores |
+| 5978 | Typewriter Stores - Rentals, Sales, Service |
+| 5992 | Florists   |
+| 5993 | Cigar Stores and Stands |
+| 5994 | News Dealers and Newsstands |
+| 5996 | Swimming Pools - Sales and Supplies |
+| 5997 | Electric Razor Stores - Sales and Supplies |
+| 5998 | Tent & Awning Shops |
+| 6011 | Member Financial Institution-Automated Cash Disbursements |
+| 6300 | Insurance Sales, Underwriting, and Premiums |
+| 6513 | Real Estate Agents and Managers - Rentals |
+| 7012 | Timeshares |
+| 7032 | Sporting and Recreational Camps |
+| 7033 | Campgrounds and Trailer Parks |
+| 7210 | Cleaning, Garment, and Laundry Services |
+| 7211 | Laundry Services - Family and Commercial |
+| 7216 | Dry Cleaners |
+| 7217 | Carpet and Upholstery Cleaning |
+| 7221 | Photographic Studios |
+| 7230 | Barber and Beauty Shops |
+| 7251 | Hat Cleaning Shops, Shoe Repair Shops, Shoe Shine Parlors |
+| 7261 | Funeral Service and Crematories |
+| 7276 | Tax Preparation Service |
+| 7277 | Debt, Marriage, Personal - Counseling Service |
+| 7296 | Clothing Rental - Costumes, Uniforms and Formal Wear |
+| 7297 | Massage Parlors |
+| 7298 | Health and Beauty Spas |
+| 7311 | Advertising Services |
+| 7321 | Consumer Credit Reporting Agencies  |
+| 7333 | Commercial Art, Graphics, Photography |
+| 7338 | Quick Copy, Reproduction, and Blueprinting Services |
+| 7339 | Stenographic and Secretarial Support Services  |
+| 7342 | Exterminating and Disinfecting Services |
+| 7349 | Cleaning and Maintenance, Janitorial Services |
+| 7361 | Employment Agencies and Temporary Help Services |
+| 7372 | Computer Programming, Integrated Systems Design and Data Processing Services |
+| 7375 | Information Retrieval Services |
+| 7379 | Computer Maintenance, Repair and Services (Not Elsewhere Classified) |
+| 7394 | Equipment Rental and Leasing Services, Furniture Rental, Tool Rental |
+| 7395 | Photo Developing, Photofinishing Laboratories  |
+| 7512 | Automobile Rental Agency - Not Elsewhere Classified |
+| 7513 | Truck Rental |
+| 7519 | Motor Home and Recreational Vehicle Rental |
+| 7523 | Automobile Parking Lots and Garages |
+| 7531 | Automotive Body Repair Shops |
+| 7534 | Tire Retreading and Repair Shops |
+| 7535 | Automotive Paint Shops |
+| 7538 | Automotive Service Shops |
+| 7542 | Car Washes |
+| 7549 | Towing Services |
+| 7622 | Electronic Repair Shops |
+| 7623 | Air Conditioning and Refrigeration Repair Shops |
+| 7629 | Appliance Repair Shops, Electrical and Small |
+| 7631 | Clock, Jewelry, and Watch Repair Shops |
+| 7641 | Furniture - Reupholstery and Repair, Refinishing |
+| 7692 | Welding Repair  |
+| 7699 | Miscellaneous Repair Shops and Related Services |
+| 7829 | Motion Picture and Video Tape Production and Distribution |
+| 7832 | Motion Picture Theaters |
+| 7911 | Dance Halls, Schools, and Studios |
+| 7922 | Ticket Agencies and Theatrical Producers (Except Motion Pictures) |
+| 7929 | Bands, Orchestras, and Miscellaneous Entertainers (Not Elsewhere Classified) |
+| 7932 | Pool and Billiard Establishments  |
+| 7933 | Bowling Alleys |
+| 7941 | Athletic Fields, Commercial Sports, Professional Sports Clubs, Sports Promoters |
+| 7991 | Tourist Attractions and Exhibits |
+| 7992 | Golf Courses, Public |
+| 7993 | Video Amusement Games Supplies  |
+| 7994 | VIDEO GAME ARCADES-ESTABLISHMENTS |
+| 7996 | Amusement Parks, Carnivals, Circuses, Fortune Tellers |
+| 7997 | Clubs-Country Clubs, Membership (Athletic, Recreation, Sports), Private Golf Courses |
+| 7998 | Aquariums, Dolphinariums, Zoos and Seaquariums |
+| 7999 | Recreation Services (Not Elsewhere Classified) |
+| 8011 | Doctors (Not Elsewhere Classified) |
+| 8021 | Dentists, Orthodontists |
+| 8031 | Osteopathic Physicians |
+| 8041 | Chiropractors |
+| 8042 | Optometrists, Ophthalmologists |
+| 8043 | Opticians, Optical Goods, and Eyeglasses |
+| 8049 | Chiropodists, Podiatrists |
+| 8050 | Nursing and Personal Care Facilities |
+| 8071 | Medical and Dental Laboratories |
+| 8099 | Health Practitioners, Medical Services-Not Elsewhere Classified |
+| 8111 | Attorneys, Legal Services |
+| 8211 | Elementary and Secondary Schools |
+| 8220 | Colleges, Universities, Professional Schools, and Junior Colleges |
+| 8241 | Schools, Correspondence  |
+| 8244 | Schools, Business, Secretarial |
+| 8249 | Schools, Trade and Vocational |
+| 8299 | Schools And Educational Services-Not Elsewhere Classified |
+| 8351 | Child Care Services |
+| 8641 | Associations - Civic, Social, and Fraternal |
+| 8675 | Automobile Associations  |
+| 8734 | Testing Laboratories (Non-Medical) |
+| 8911 | Architectural, Engineering, and Surveying Services |
+| 8931 | Accounting, Auditing, and Bookkeeping Services |
+| 9211 | Court Costs Including Alimony and Child Support  |
+| 9223 | Bail and Bond Payments |
+| 9402 | Postal Services - Government Only |
+
+- For example: the `mcc` 7995 is used for "Gambling Transactions Betting (Sportsbook, fantasy, social gaming; when regulated and not covered by other MCCs)"
+
+<br></br>
+<br></br>
+
+## KYB reliance - SME/full-fledged
+---
+
+The KYB SME (full‑fledged) solution extends the existing KYB Reliance framework by introducing additional capabilities specifically designed for Small and Medium Enterprise (SME) onboarding, risk assessment, and transaction monitoring.
+This layer enables platforms and payment providers to **register business entities**, **associate transactions with businesses**, and **apply KYB‑specific compliance and risk controls** at the business level.
+
+### Key Capabilities
+
+
+- KYB SME provides a [**Business Details API**](#business_details_api) that allows external clients to register and manage SME / business entities, including their ownership and control structure, business model, and MCC. This API is the foundation for all **SME‑specific KYB processing**.
+
+- Each business is assigned a **unique business identifier** that is propagated into payment flows, enabling transactions to be linked to a specific business for KYB and compliance purposes.
+
+- KYB SME performs **business‑level risk checks** on the legal entity and associated persons to support regulatory KYB requirements.
+
+- KYB‑specific limits are applied **per business** and enforced during barcode creation.
+
+- Business updates are subject to **state‑based restrictions**, preventing changes to locked or restricted businesses.
+
+The Business Details API is used to create and manage SME / business entity information required for KYB processing.
+
+### Endpoint
+
+This feature introduces a new endpoint that supports both **POST** and **PUT** requests. The POST method is used to register a new business, while the PUT method is used to update an existing registered business.
+```
+- Endpoint: /kyb/businessDetails
+```
+
+Submitting a **POST** request creates a new business entity.
+
+- The business ID must not already exist for the merchant sending the request.
+- Used during initial SME onboarding.
+
+
+Submitting a **PUT** request updates an existing business entity.
+
+- The business ID must already exist for the merchant sending the request.
+- Updates are subject to KYB state and safety rules (e.g. locked businesses).
+
+If a business is in a locked state (for example, due to sanctions screening or other risk findings), any update requests for that business will be rejected with the error code 
+**action_not_allowed** and HTTP status 400 Bad Request.  
+
+The request payload is identical for both **POST** and **PUT** operations. [**Here**](#business_details_api) you can find examples of the possible requests.
+
+### Initiating a Payment
+
+Merchants can now associate payments with a registered business by providing the business ID in the core Initiate Payment request. 
+
+This is done by including the business object in the request payload, as illustrated below, where id refers to the merchant’s business identifier previously registered via the Business Details API.
+
+```
+  "business":
+    {
+      "id": "BID123456"
+    }
+```
+
+You can find an example of such request [**here**](#initiate_payment_kyb_sme)
+
+### KYB SME Limits
+
+As part of the KYB SME feature, a new dedicated KYB‑specific limit is introduced and enforced during barcode creation. In this case, when creating a barcode, the system checks the total amount already 
+deposited for the business ID within the applicable period. If the new transaction would cause the total to exceed the KYB limit, barcode creation is blocked and a “limit exceeded” 
+error is returned.
+
+KYB SME limits apply per business ID and define the maximum aggregate deposit amount that can be processed within a given timeframe. 
+
+Limits are configured per merchant/submerchant and are scoped by currency, and time period (daily, weekly, monthly, or yearly).
+
+These limits are applicable only to PaysafeCash transactions and ensure that deposit activity for each registered business remains within the defined KYB thresholds.
+
+| Feature | Limit Applied |
+|---|---|
+| Regular KYC Reliance | Customer Limit Applied |
+| KYB SME | KYB SME Limit Applied |
+
+### Risk Checks
+
+The system performs asynchronous SANCTION and PEP risk checks on the legal entity and its associated persons (such as UBOs, directors, and representatives), 
+according to product configuration. 
+
+Any resulting decisions (e.g. lock or block) are governed by internal risk policies; merchants should rely on API error codes to identify and handle such cases.
+
+
+
+# Group Payment API Requests
+
+## Initiating a Payment [/payments]
+Every PaysafeCash payment begins with an `initiate payment` request.
+
+<br></br>
+
+Upon successful execution of this request, the status of the payment is `INITIATED`.
+
+<br></br>
+<br></br>
+**Note:** Using the optional HEADER-Parameter `Correlation-ID`, the busines partner can set a part of the parameter `id` on its own.
+
+- Max. length: 41 characters
+- Allowed characters: "a-z, A-Z, 0-9,-,_"
+- The value passed in this parameter must always be unique
+
+### Initiate Payment [POST]
+```
+POST /payments/
+```
+
+If the integration type in use is **"Barcode Application Integration"**, the next step is to redirect the customer to the `auth_url`, which is returned as part of the response.
+
+As soon as the customer has clicked on “Back to [Merchant Name]” in the barcode application (status of the transaction is `REDIRECTED`) or authorized the payment at a payment point (status of the transaction is `AUTHORIZED`),
+the customer will be redirected to the `success_url` specified when creating the payment.
+
++ Request (application/json)
+
+    + Headers
     
-    To prevent failed refunds at the beginning of a billing cycle, it is possible to assign an additional Credit Limit to your account. The duration of the billing cycle is defined in the contract.
+               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
+
+    + Attributes (PaymentRequest)
+    
+
++ Response 201 (application/json)
+            
+        {
+        "object": "PAYMENT",
+        "id": "pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR",
+        "created": 1548677808372,
+        "updated": 1548677808372,
+        "amount": 9.99,
+        "currency": "EUR",
+        "status": "INITIATED",
+        "type": "PAYSAFECARD",
+        "redirect": {
+            "success_url": "https://www.paysafecard.com/success/pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR",
+            "failure_url": "https://www.paysafecard.com/failure/pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR",
+            "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR&amount=9.99&currency=EUR"
+        },
+        "customer": {
+            "id": "BID123456"
+        }
+        }
+
+
+## Retrieving payment details [/payments/{id}]
+
+Upon successful `success_url` redirection, the business partner must call `retrieve payment details` to verfiy the status of the payment
+and display the correct message to the customer, as shown in the [Payment Process](#payment_process) section.
+
+<br></br>
+
+Here, the transaction `id` is used to retrieve the details of that specific PaysafeCash payment.
+
+### Retrieve Payment Details [GET]
+```
+GET /payments/{id}
+```
+
+**Note**: Retrieving the details of a payment can be done at any time and it can be used to update the status of a specific payment displayed to the customer.
+
++ Parameters
+    + id (required, string, `pay_1090001806_2BRbMFPRWXiIAYl5MzrRCFvk31E4n68j_EUR`) ... Payment `id`.
+
++ Request (application/json)
+
+    + Headers
+
+               Authorization: Basic cHNjX05vMkl4TGFmSUdFQmRNNHpibFV5TWY1V3pBamFSbmk=
+               
+
++ Response 200 (application/json)
+
+ + Attributes (PaymentResponse)
+
+
+## Initiating a Payment for Business/KYB SME Customers [/payments1]
+<a name="initiate_payment_kyb_sme"></a>
+
+This call is used to Initiate a Payment for a business. In this case, it is mandatory to provide the business ID in the business object.
+
+### Initiate Payment [POST]
+```
+POST /payments/
+```
+    
++ Request 
+
+    + Headers
+
+               Authorization: Basic cHNjXzFlbG5uNW5aRFJldmMzeHhpQ1RVeVVUdG5yaEJEZWE=
+               Content-Type: application/json
+
+    + Attributes(PaymentRequestKYBSME)
+
++ Response 201 (application/json)
+            
+        {
+            "object": "PAYMENT",
+            "id": "pay_9000001500_ShKlqS7dEDx8D3hO0BHyiZiCS9tMukeG_EUR",
+            "created": 1770296588126,
+            "updated": 1770296588126,
+            "currency": "EUR",
+            "status": "INITIATED",
+            "type": "PAYSAFECARD",
+            "redirect": {
+                "success_url": "https://ok.com/pay_9000001500_ShKlqS7dEDx8D3hO0BHyiZiCS9tMukeG_EUR",
+                "failure_url": "https://nok.com/pay_9000001500_ShKlqS7dEDx8D3hO0BHyiZiCS9tMukeG_EUR",
+                "auth_url": "https://customer.test.at.paysafecard.com/rest/payment/panel?mid=9000001500&mtid=pay_9000001500_ShKlqS7dEDx8D3hO0BHyiZiCS9tMukeG_EUR&amount=9.99&currency=EUR&customerHash=6570fa525aba42549540d176353530b0"
+            },
+            "customer": {
+                "id": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation"
+                },
+            "amount": 9.99,
+            "submerchant_id": "1"
+        }
+
+# Group Payment Request Parameters
+
+| Parameter | Required |Data Type & Length | Example |
+| --- | --- | --- | --- |
+| type | Mandatory | string | Type of the product, must be set to PAYSAFECARD |
+| amount | Mandatory | number | Payment amount. Precission must be 2 decimals. i.e. 9.99 |
+| currency | Mandatory | string | ISO 4217 (3 letter ISO currency code). i.e. EUR |
+||
+| redirect | Mandatory | Array(object) | URLs to redirect after successful completion or cancellation of the transaction. See next to entries. |
+| redirect:success_url | Mandatory | string | Customer redirected after successful completion of the transaction. i.e. https://ok.com |
+| redirect:failure_url | Mandatory | string | Customer redirected after cancelling transaction on barcode panel. i.e. https://nok.com |
+||
+| webhook_url | Mandatory | string | URL to be used by PaysafeCash to notify upon authorization has been successfully completed. i.e. https://notification.com |
+||
+| customer | Mandatory | Array(Object) | Details and/or restriction for the customer are provided in this object |
+| customer:id | Mandatory | string | Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons. i.e. customer1|
+||
+| submerchant_id | Optional | string | Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with PaysafeCash needed - not agreed values lead to a failed payment. i.e. submerchant_1 |
+| shop_id | Optional | string | Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well. i.e. shop_ABC |
+| expiration_time_minutes | Optional | string | The time frame the customer is given to go to a payment point and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout). i.e. 15 |
+
+
+# Group Payment API response objects
+
+|Parameter|Description|Cases|
+|---|---|---|
+|`object`|Identifies the object. For a payment, the value returned is PAYMENT.|Always|
+|`id`|Unique identifier for a payment.|Always|
+|`created`|Unix timestamp specifying when this object was created.|Always|
+|`updated`|Unix timestamp specifying when this object was last updated.|Always|
+|`amount`|The payment amount.|Always|
+|`currency`|Currency of this payment.|Always|
+|`status`|The current status of this payment.|Always|
+|`status_before_expiration`|Holds the status of the payment before it transitioned to `EXPIRED`. This is useful to distinguish cases where a successfully authorized payment has not been captured from cases where a customer did not authorize the payment at all.|Optional. Only returned when the payment is in status `EXPIRED`.|
+|`type`|Always set to PAYSAFECARD.|Always|
+|`redirect[success_url]`|URL to redirect if customer clicks on "Back to Shop". It should redirect to Homepage/Shopping basket.|Always|
+|`redirect[failure_url]`|URL to redirect after the customer cancels the transaction.|Always|
+|`webhook_url`|URL to be used by PaysafeCash to notify upon authorization has been successfully completed.|Always|
+|`customer[id]`| ID provided by you, which identifies the customer. See more information [here](#customer_id).|Always|
+|`customer[ip]`|IPv4 address of the customer.|After customer has been re-directed to the barcode application.|
+|`card_details[serial]`|The serial number of the card that has been used to authorize the payment.|After cards have been assigned.|
+|`card_details[currency]`|The currency of the card.|After cards have been assigned.|
+|`card_details[amount]`|The amount that has been deducted from the card for this payment.|After cards have been assigned.|
+|`card_details[type]`|The type of card.|After cards have been assigned.|
+|`card_details[country]`|The country where this card was issued.|After cards have been assigned.|
+
+# Group Payment Error Codes
+
+|Code                           |Number (optional)  |HTTP Status    |Description          |
+|---                                                                        |---                |---            |---                  |
+|`general_technical_error`                                                  |10007              |500            |General technical error.|
+|`invalid_api_key`                                                          |10008              |401            |Authentication failed due to missing or invalid API key. Your key needs to be set to the HTTP auth username.|
+|`invalid_request_parameter`                                                |10028              |400            |One of the request parameters failed validation. The `message` and `param` fields contain more detailed information.|
+|`invalid_currency`                                                         |142                |400            |The supplied currency is not supported|
+|`duplicate_transaction_id`                                                 |2001               |400            |Transaction already exists.|
+|`transaction_not_found`                                                    |2002               |404            |Transaction not found|
+|`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
+|`Merchant with Id XXXXXXXXXX is not allowed to perform this debit any more`|3007               |400            |Debit attempt after expiry of dispo time window.|
+|`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
+|`disposition_expiration_time_minutes_invalid`                              |3037               |400            |The time set in the parameter "expiration_time_minutes" is not in the allowed span (between 5 and 20160 minutes).|
+|`feature_disabled`                                                         |3172               |400            |Feature not active disabled|
+|`general_error`                                                            |3017               |400            |It is mandatory to send an MCID.|
+|`general_error`                                                            |3019               |400            |MCID contains invalid values.|
+Other errors can be communicated to the customer as “general technical error”. 
+
+In general when one of these errors occur, the business partner should contact PaysafeCash immediately via integration@paysafecard.com if the account is not live.
+
+For live accounts, techsupport@paysafecard.com should be contacted.
+
+# Group Business Details API Requests
+<a name="business_details_api"></a>
+
+Below you can find examples of the API Calls to register and update a business.
+
+# Register a Business [/kyb/businessDetails]
+```
+POST kyb/businessDetails
+```
+
+Use this call to register a business for your merchant.
+
+# Register a Business [POST]
+
++ Request 
+
+    + Headers
+
+               Authorization: Basic cHNjXzFlbG5uNW5aRFJldmMzeHhpQ1RVeVVUdG5yaEJEZWE=
+               Content-Type: application/json
+               
+    + Body
+    
+            {
+                "name": "Test Company",
+                 "id": "BID1234567",
+                 "registered_number": "REG123456789",
+                 "address": "Company Street",
+                 "city": "Company City",
+                 "postcode": "12354",
+                 "country_iso2": "AT",
+                 "phone_number": "+1234567890",
+                 "email": "test@company.com",
+                 "mcc": "5551",
+                 "associates": [
+                     {
+                         "first_name": "First",
+                         "last_name": "Last",
+                         "date_of_birth": "1980-10-20",
+                         "address": "Street 24",
+                         "city": "City",
+                         "postcode": "12345",
+                         "country_iso2": "AT",
+                         "roles": [
+                                     "UBO",
+                                     "DIRECTOR",
+                                     "REPRESENTATIVE"
+                                     ]
+                     },
+                     {
+                         "first_name": "Another",
+                         "last_name": "Last",
+                         "date_of_birth": "1975-10-20",
+                         "address": "Street 24",
+                         "city": "City",
+                         "postcode": "12345",
+                            "country_iso2": "AT",
+                            "roles": [
+                                         "UBO"
+                                     ]
+                    }
+                ],
+                 "parent_companies": [
+                        {
+                         "name": "Test Parent Company",
+                         "registered_number": "REPPRNT123",
+                         "address": "Parent Address 123",
+                         "city": "Parent City",
+                         "postcode": "14789",
+                         "country_iso2": "AT",
+                         "phone_number": "+1234567890",
+                         "email": "test-parent@company.com",
+                         "associates": [
+                             {
+                                 "first_name": "First",
+                                 "last_name": "Last",
+                                 "date_of_birth": "1980-10-20",
+                                 "address": "Street 24",
+                                 "city": "City",
+                                 "postcode": "12345",
+                                 "country_iso2": "AT",
+                                 "roles": [
+                                             "UBO"
+                                         ]
+                             },
+                            {
+                                 "first_name": "Another",
+                                 "last_name": "Last",
+                                 "date_of_birth": "1975-10-20",
+                                 "address": "Street 24",
+                                 "city": "City",
+                                 "postcode": "12345",
+                                 "country_iso2": "AT",
+                                 "roles": [
+                                             "UBO"
+                                         ]
+                             }
+                         ]
+                     }
+                  ]
+                }
+
++ Response 200
+
+    + Body
+    
+            {
+            }
+
+
+# Update a Business [/kyb/businessDetails1]
+```
+PUT kyb/businessDetails
+```
+
+Use this call to update the details of an already registered business for your merchant.
+
+# Update a Business [PUT]
+
++ Request 
+
+    + Headers
+
+               Authorization: Basic cHNjXzFlbG5uNW5aRFJldmMzeHhpQ1RVeVVUdG5yaEJEZWE=
+               Content-Type: application/json
+               
+    + Body
+    
+            {
+                "name": "Test Company",
+                 "id": "BID1234567",
+                 "registered_number": "REG123456789",
+                 "address": "Company Street",
+                 "city": "Company City",
+                 "postcode": "12354",
+                 "country_iso2": "AT",
+                 "phone_number": "+1234567890",
+                 "email": "test@company.com",
+                 "mcc": "5551",
+                 "associates": [
+                     {
+                         "first_name": "First",
+                         "last_name": "Last",
+                         "date_of_birth": "1980-10-20",
+                         "address": "Street 24",
+                         "city": "City",
+                         "postcode": "12345",
+                         "country_iso2": "DE",
+                         "roles": [
+                                     "UBO",
+                                     "DIRECTOR",
+                                     "REPRESENTATIVE"
+                                     ]
+                     },
+                     {
+                         "first_name": "Another",
+                         "last_name": "Last",
+                         "date_of_birth": "1975-10-20",
+                         "address": "Street 24",
+                         "city": "City",
+                         "postcode": "12345",
+                            "country_iso2": "DE",
+                            "roles": [
+                                         "UBO"
+                                     ]
+                    }
+                ],
+                 "parent_companies": [
+                        {
+                         "name": "Test Parent Company",
+                         "registered_number": "REPPRNT123",
+                         "address": "Parent Address 123",
+                         "city": "Parent City",
+                         "postcode": "14789",
+                         "country_iso2": "AT",
+                         "phone_number": "+1234567890",
+                         "email": "test-parent@company.com",
+                         "associates": [
+                             {
+                                 "first_name": "First",
+                                 "last_name": "Last",
+                                 "date_of_birth": "1980-10-20",
+                                 "address": "Street 24",
+                                 "city": "City",
+                                 "postcode": "12345",
+                                 "country_iso2": "DE",
+                                 "roles": [
+                                             "UBO"
+                                         ]
+                             },
+                            {
+                                 "first_name": "Another",
+                                 "last_name": "Last",
+                                 "date_of_birth": "1975-10-20",
+                                 "address": "Street 24",
+                                 "city": "City",
+                                 "postcode": "12345",
+                                 "country_iso2": "DE",
+                                 "roles": [
+                                             "UBO"
+                                         ]
+                             }
+                         ]
+                     }
+                  ]
+                }
+
++ Response 200
+
+    + Body
+    
+            {
+            }
+            
+
+
+## Group Business Details Request Parameters
+
+| Parameter | Required |Data Type & Length | Example |
+| --- | --- | --- | --- |
+| name | Mandatory | string - max 60 characters | Test Company |
+| id | Mandatory | string - max 20 characters | BID123456 |
+| registered_number | Mandatory | string - max  50 characters | REG123456789 |
+| address | Mandatory | string - max  105 characters | Company Street |
+| city | Mandatory | string - max  60 characters | Company City |
+| postcode | Mandatory | string - max  10 characters | 12354 |
+| country_iso2 | Mandatory | string - 2 characters | AT |
+| phone_number | Mandatory | string - max  20 characters | +1234567890 |
+| email | Mandatory | string - max  255 characters | test@company.com |
+| mcc | Mandatory | string - max  10 characters | 5551 |
+||
+| associates | Mandatory |Array(Object)  | - |
+| associates:first_name | Mandatory | string - max  60 characters | First |
+| associates:last_name | Mandatory | string - max  60 characters | Last |
+| associates:date_of_birth | Mandatory | string - max 6 digits (ISO8601 -> YYYY-MM-DD) | 1980-10-20 |
+| associates:address | Mandatory | string - max  105 characters | Street 24 |
+| associates:city | Mandatory | string - max  60 characters | City |
+| associates:postcode | Mandatory | string - max  10 characters | 12345 |
+| associates:country_iso2 | Mandatory | string - 2 characters | AT |
+| associates:roles | Mandatory | Array(String) - Max count allowed per role, 3 UBOs, 4 DIRECTORs, 3 REPRESENTATIVEs | UBO and/or DIRECTOR and/or REPRESENTATIVE |
+||
+| parent_companies | Mandatory | Array(Object) | - |
+| parent_companies:name | Mandatory | string - max  60 characters | Test Parent Company |
+| parent_companies:registered_number | Mandatory | string - max  50 characters | REPPRNT123 |
+| parent_companies:address | Mandatory | string - max  105 characters | Parent Address 123 |
+| parent_companies:city | Mandatory | string - max  60 characters | Parent City |
+| parent_companies:postcode | Mandatory | string - max  10 characters | 14789 |
+| parent_companies:country_iso2 | Mandatory | string - 2 characters | AT |
+| parent_companies:phone_number | Mandatory | string - 20 characters | +1234567890 |
+| parent_companies:email | Mandatory | string - 255 characters | test-parent@company.com |
+| parent_companies:associates | - | Array(Object) | See associates array object above |
+
+
+## Group Business Details Error Codes
+
+| Parameter |Erro Code |  Message | Description|
+| --- | --- | --- | --- |
+| invalid_request_parameter | 10028 | message: must not be null, param: name | parameter name not included in the request|
+| invalid_request_parameter | 10028 | value exceeds maximum length of 2 characters | i.e. the provided value for country_iso2 is 3 or more characters long|
+| invalid_request_parameter | 10028 | Business with provided ID does not exist | Returned when trying to update a non-existing business for the merchant|
+| invalid_request_parameter | 10028 | Business with provided ID already exists | Returned when trying to register an already registered business for that merchant. id already exists|
+| action_not_allowed | 3161 | not allowed to perform action | Returned when trying to update a business that is in a locked state |
+
+**Error Codes examples**
+
+Parameter `name` not included in the Register Business request:
+
+```
+{
+    "code": "invalid_request_parameter",
+    "message": "must not be null",
+    "number": 10028,
+    "param": "name"
+}
+
+``` 
+
+
+Value for the parameter `country_iso2` has more than 2 characters:
+
+```
+{   "code":"invalid_request_parameter",
+    "message":"value exceeds maximum length of 2 characters",
+    "number":10028,
+    "param":"countryCode"
+}
+```
+
+
+Registered business locked:          
+
+```
+{
+    "code": "action_not_allowed",
+    "message": "not allowed to perform action",
+    "number": 3161
+}
+```
 
 # Group Refund API Request
 
-## Capturing a Refund [/payments/{id}/refunds]
+# Capturing a Refund [/payments/{id}/refunds]
 
 ```
 POST /payments/{id}/refunds
 ```
 
-| Parameter                     | Type [validation]    | Required | Example            | Description                          |
-| ---                           | ---     | ---      | ---                | ---                                  |
-| `type`                        | string<br/>[PAYSAFECARD]  | required | paysafecard        | Must be set to PAYSAFECARD.|
-| `capture`               | boolean<br/>[true,false] | required | true |For Paysafecash transactions, must always be set to 'true'|
-| `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon.|
-| `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
-| `customer[id]`           | string<br/> [may. length: 50 characters] | required | client123  | Needs to be the same customerID as the one used at the original transaction |
-| `customer[email]`           | string<br/> [valid email address] | optional<br/>one of email, phone_number, account_id | valid@email.com                            | Needs to be the email that the customer used to register for the Paysafecash account. |
-
-
-### Capturing a Refund [POST]
+# Capturing a Refund [POST]
 
 + Parameters
 
@@ -714,6 +1634,19 @@ POST /payments/{id}/refunds
 + Response 201 (application/json)
 
     + Attributes (RefundResponse)
+
+# Group Refund API Request Parameters' Description
+
+| Parameter                     | Type [validation]    | Required | Example            | Description                          |
+| ---                           | ---     | ---      | ---                | ---                                  |
+| `type`                        | string<br/>[PAYSAFECARD]  | required | PAYSAFECARD        | Must be set to PAYSAFECARD.|
+| `capture`               | boolean<br/>[true,false] | required | true |For PaysafeCash transactions, must always be set to 'true'|
+| `amount`                      | float or integer<br/>[max length: 11 digits before, optionally 2 digits after decimal point]   | required | 10.00            | The precision needs to be two digits after the colon.|
+| `currency`                    | string<br/> [max. length: 3, all uppercase]  | required | EUR             | ISO 4217 (3 letter ISO currency code) |
+| `customer[id]`           | string<br/> [may. length: 50 characters] | required | client123  | Needs to be the same customerID as the one used at the original transaction |
+| `customer[email]`           | string<br/> [valid email address] | optional<br/>one of email, phone_number, account_id | valid@email.com                            | Needs to be the email that the customer used to register for the PaysafeCash account. |
+
+
 
 # Group Refund Error Codes
 
@@ -739,7 +1672,7 @@ POST /payments/{id}/refunds
 |`MERCHANT_REFUND_CLIENT_ID_NOT_MATCHING`               |3181               |400              |Merchant Client Id not matching with original Payment.|
 |`NO_UNLOAD_MERCHANT_CONFIGURED`                        |3182               |400              |merchant client Id missing.|
 |`MERCHANT_REFUND_MISSING_TRANSACTION`                  |3184               |404              |No original Transaction found.|
-|`merchant_refund_customer_credentials_missing`         |3185               |404              |my paysafecard account not found on original transaction and no additional credentials provided.|
+|`merchant_refund_customer_credentials_missing`         |3185               |404              |PaysafeCard account not found on original transaction and no additional credentials provided.|
 |`customer_inactive`                                    |3193               |400              |Customer not active.|
 |`customer_yearly_payout_limit_reached`                 |3194               |400              |Customer yearly payout limit exceeded.|
 |`customer_details_mismatchd`                           |3195               |400              |Customer details from request don't match with database.|
@@ -749,9 +1682,16 @@ POST /payments/{id}/refunds
 
 Other errors can be communicated to the customer as “general technical error”.
 
-In general when one of these errors occur, the business partner should contact paysafecard immediately via integration@paysafecard.com if the account is not live.
+In general when one of these errors occur, the business partner should contact PaysafeCash immediately via integration@paysafecard.com if the account is not live.
 
 For live accounts, techsupport@paysafecard.com should be contacted.
+
+# Group PaysafeCash Cashout
+We offer a cashout function for PaysafeCash. If you are interested in PaysafeCash cashouts, please contact your account manager.
+
+You can find information about our cashout API here:
+
+https://www.paysafecash.com/fileadmin/5_API/paysafecash_cashout.html
 
 
 # Data Structures
@@ -763,10 +1703,10 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + amount: 9.99 (number, required) - Payment amount, precision must be 2 digits after the colon.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + redirect (Redirect, required) - URLs to redirect after successful or failed authorization. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
-+ `webhook_url`: https://notification.com/ (required)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
++ `webhook_url`: https://notification.com/ (required)- URL to be used by PaysafeCash to notify upon authorization has been successfully completed.
 + customer (object) 
     + `id`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
-+ submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with paysafecard needed - not agreed values lead to a failed payment.
++ submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with PaysafeCash needed - not agreed values lead to a failed payment.
 + shop_id: `shop1` (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
 + `expiration_time_minutes`: 4320 (optional) - The time frame the customer is given to go to a payment point and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
 + `customer_takeover_data` (object)
@@ -780,6 +1720,22 @@ For live accounts, techsupport@paysafecard.com should be contacted.
     + `phone_number`: `+43676123456789`
     + `email`: `example@test.at`
 
+## PaymentRequestKYBSME (TypedObject)
++ amount: 9.99 (number, required) - Payment amount, precision must be 2 digits after the colon.
++ currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
++ redirect (Redirect, required) - URLs to redirect after successful or failed authorization. The placeholder {payment_id} in the URL is replaced with the actual ID of this payment.
++ webhook_url: https://notification.com/ (required)- URL to be used by PaysafeCash to notify upon authorization has been successfully completed.
++ customer (object) 
+    + `id`: merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation (required) - Only the id is mandatory. It´s value uniquely identifies the customer and is provided by you. If any personal data e.g. customer´s user name, email address, is used here, it has to be encrypted or hashed for security reasons.  
++ business (object) 
+    + id: BID1234567 (required) -  It´s value uniquely identifies the business and is provided by you.
++ submerchant_id: 1 - ReportingCriterion (optional) - Also called ‘reporting criteria’, offers the possibility to classify sub-merchants. Agreement with PaysafeCash needed - not agreed values lead to a failed payment.
++ shop_id: shop1 (optional) - Identification of the shop which is the originator of the request. This is most likely used by payment service providers who act as a proxy for other payment methods as well.
++ expiration_time_minutes: 4320 (optional) - The time frame the customer is given to go to a payment point and pay for the transaction, in minutes. For further details, please see ["Variable Transaction Timeout"](#variable_trx_timeout).
++ customer_takeover_data (CustomerTakeoverDataKYBSME)
+
+
+
 ## PaymentResponse (TypedObject)
 + id: pay_1090001806_7k9XywR0fAbd9FADzAFBsVCabjUAPh96_EUR - The unique id of this payment
 + created: 1548677808372 (number)
@@ -788,7 +1744,7 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + currency: EUR (required) - ISO 4217 (3 letter ISO currency code).
 + status: SUCCESS
 + redirect (Redirect)
-+ `webhook_url`: https://notification.com/ (required)- URL to be used by paysafecard to notify upon authorization has been successfully completed.
++ `webhook_url`: https://notification.com/ (required)- URL to be used by PaysafeCash to notify upon authorization has been successfully completed.
 + customer (CustomerResponseFull)
 + card_details (array[CardDetails])
 
@@ -823,6 +1779,29 @@ For live accounts, techsupport@paysafecard.com should be contacted.
 + `country_iso2`: `AT`,
 + `phone_number`: `+43676123456789`,
 + `email`: `example@test.at`
+
+## CustomerTakeoverDataKYBSME (object)
++ first_name: Max
++ last_name: Mustermann
++ date_of_birth: `1990-12-31`
++ address1: Musterstrasse 2
++ postcode: 1234
++ city: Vienna
++ country_iso2: AT
++ phone_number: +43676123456789
++ email: example@test.at
++ kyc_level: FULL
++ ip_address: 10.0.0.5
++ tax_id: NdVrMkGyu7JSxa3
++ place_of_birth: Graz
++ document (object)
+    + id_number: 93602988126034410367298056885450070971864499231516928903527990634918136861315735
+    + type: PASSPORT
+    + issuing_authority: Passamt Wien
+    + date_of_issuance: `2010-12-31`
+    + date_of_expiry: `2030-12-31`
++ kyc_reliance_type: KYB_SME_RELIANCE
++ mcc: 5551
 
 ## BarcodeRequest (TypedObject)
 + currency: EUR (required) - The currency ISO code in which the barcode should be generated on. (ISO-4217)
