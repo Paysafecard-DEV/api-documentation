@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.paysafecard.com/v3/reports/
+HOST: https://api.paysafecard.com/v7/reports/
 
 # paysafecard Settlement Report API
 
@@ -7,13 +7,13 @@ HOST: https://api.paysafecard.com/v3/reports/
 This document describes the Settlement Report API for business partners of paysafecard.
 
 ## About the API
-The Settlement Report API can be accessed over HTTPS and informs about all successfully debited transactions (paysafecard and Paysafecash), payouts and refunds.
+The Settlement Report API can be accessed over HTTPS and informs about all successfully debited transactions (PaysafeCard and PaysafeCash), payouts and refunds.
 
 The data can be filtered by various criteria and the reports are shown as text-file in csv format (Comma-Separated Values).
 
 ## Versioning
 Every time there is backwards-incompatible change to the API, a new major version will be released. This major version is part of the URL path.
-The current major version is *v6*.
+The current major version is *v7*.
 
 You can find details on the version in our [change log](#change_log).
 
@@ -23,7 +23,7 @@ Unless informed by our technical support department that we are dropping support
 
 ## Prerequisites
 A connection to the API is successful if the following prerequisites are fulfilled:
-- API key for request authentification provided by paysafecard per request
+- API key for request authentification provided by PaysafeCard per request
 - Authorisation of the payment server IP address (if a 403 error is received when trying to access the service, it is likely that the IP address is not yet allowed to access).
 - Content-type: Please make sure that the content type in the HTTP header, when submitting requests, is set to **Content-Type: application/json**
 - Accept: Please make sure that the accept header, when submitting requests, is set to **Accept: text/csv**
@@ -31,7 +31,7 @@ A connection to the API is successful if the following prerequisites are fulfill
 - The internet connection (e.g. through firewall) must allow secured HTTP connections (HTTPS)
 
 Connect to our services only via respective FQDNs
-Do not cache DNS resolutions of paysafecard FQDNs in your infrastructure (Client servers, Resolvers etc.). The DNS resolutions should expire as soon as the TTL is reached.
+Do not cache DNS resolutions of PaysafeCard FQDNs in your infrastructure (Client servers, Resolvers etc.). The DNS resolutions should expire as soon as the TTL is reached.
 In case your application is based on Java, please check your TTL setup on JVM, the DNS caching behavior needs to be adjusted to:
 networkaddress.cache.ttl=60 (TTL 60 seconds). Please note that, this parameter needs to be persisted in the JVM security config
 If your application is based on any other framework that caches DNS resolution, please make sure to set the DNS TTL to no more than 60 seconds or rely on the TTL set by our DNS records
@@ -39,7 +39,7 @@ If your application is based on any other framework that caches DNS resolution, 
 Honoring DNS changes will make sure that you connect always to our active system.
 
 ## API key authentication
-Every request to the paysafecard API is authenticated using an API key.
+Every request to the PaysafeCard API is authenticated using an API key.
 - The value of the **API key needs to be base64 encoded** when transmitted in the HTTP header!
 - Set the key as the username. [*HTTP basic authentication*](http://en.wikipedia.org/wiki/Basic_access_authentication)
 - Your API key may only be used from your backend systems.
@@ -55,7 +55,7 @@ Accept: text/csv
 
 ## Endpoint
 
-- https://api.paysafecard.com/v3/reports/
+- https://api.paysafecard.com/v7/reports/
 
 ## Limits
 
@@ -63,10 +63,10 @@ Accept: text/csv
 - maximum allowed search with date filter: 12 months at once
 
 ## Reconciliation
-In the report, only successfully debited transactions (paysafecard and Paysafecash), payouts and refunds are listed. I.e. all transactions settled by paysafecard.
+In the report, only successfully debited transactions (PaysafeCard and PaysafeCash), payouts and refunds are listed. I.e. all transactions settled by PaysafeCard.
 This means that the data for the present day will only be available to be retrieved via the Settlement Report API, on the next day.  
 
-In order to reconcile the invoice sent by paysafecard with the report from this Settlement Report API, just use the stated invoice number from the invoice as a search filter.
+In order to reconcile the invoice sent by PaysafeCard with the report from this Settlement Report API, just use the stated invoice number from the invoice as a search filter.
 
 ## Settlement Report [/settlement?from={from}&to={to}&mid={mid}&submerchant_id={submerchant_id}&customer_id={customer_id}&invoice_number={invoice_number}&transaction_type={transaction_type}&include_header={include_header}&customer_psc_id={customer_psc_id}&transaction_id={transaction_id}]
 
@@ -82,11 +82,11 @@ In order to reconcile the invoice sent by paysafecard with the report from this 
     + `invoice_number`: INV1 (string, optional) -  The invoice number is the 10-digit number of a created invoice. With this parameter, specific transactions by using an invoice number can be retrieved. <br></br> The result will display all invoice related transactions. <br></br>
     + `transaction_type`: PAYMENT (string, optional) - Only transactions of the specified type are returned. Valid values are PAYMENT, REFUND, PAYOUT. <br></br> This parameter can be used multiple times in a request to include more than one transaction type in the result and defaults to PAYMENT. <br></br>
     + `include_header`: true (boolean, optional) - If the report should include a header with the csv field names. <br></br>
-    + `customer_psc_id`: 243900150947 (string, optional) - If a single my paysafecard customer needs to be searched, this parameter can be used. Only numeric values are possible. <br></br>
+    + `customer_psc_id`: 243900150947 (string, optional) - If a single my PaysafeCard customer needs to be searched, this parameter can be used. Only numeric values are possible. <br></br>
     + `transaction_id`: pay_1000000007_kUrTDMbIkxA6bC3PLV8r6n853IxdWs0x_EUR (string, optional) - A transaction unique identifier. If a single transaction needs to be searched, this parameter can be used. <br></br>
     + `payment_instrument`: safetypay (string, optional) - The payment method used. Valid values are PAYSAFECARD, PAYSAFECASH, GIFTCARD, PAGOEFECTIVO, SAFETYPAY.<br></br>
-    + `transaction_reference`: 6371683102457067 (string, optional) - Last 16 digits of Paysafecash barcode. <br></br>
-    + `barcode_number`: 799366433670006371683102457067 (string, optional) - Full Paysafecash barcode. <br></br>
+    + `transaction_reference`: 6371683102457067 (string, optional) - Last 16 digits of PaysafeCash barcode. <br></br>
+    + `barcode_number`: 799366433670006371683102457067 (string, optional) - Full PaysafeCash barcode. <br></br>
 
 + Request
 
@@ -116,7 +116,7 @@ You can filter the results by adding request parameters. For example, you can sh
 | `invoice_number`              | Invoice number        | String   |
 | `transaction_type`            | `v3` Payment, Payout, Refund | String   |
 | `include_header`              | Should the CSV include the header line | Boolean   |
-| `customer_psc_id`             | `v3` customer my paysafecard ID | String   |
+| `customer_psc_id`             | `v3` customer PaysafeCard account ID | String   |
 | `transaction_id`              | `v3` Transaction ID (MTID) | String   |
 | `payment_instrument`          | `v6` Payment instrument (paysafecard, safetypay, pagoefectivo, giftcard) | String   |
 | `transaction_reference`        | `v7` Identification of the transaction, representing the last 16 digits of the barcode number. | String |
@@ -131,7 +131,7 @@ You can filter the results by adding request parameters. For example, you can sh
 | `MID`                         | The Merchant ID is the unique alphanumeric merchant identifier and defines the transaction currency. If a mid was not specified during the API request, all transactions for all MIDs assigned to the API key in use will be shown.|default value of 10-digits |
 | `TransactionID`               | The Transaction ID is the transaction unique identifier. If there are any refunds related to the original payment, they will also be displayed in the results.|For transactions using the REST API, the following schemes apply: payment: pay\_MID\_corID\_CUR<br> payout: out\_MID\_corID\_CUR<br> refund: ref\_MID\_corID\_CUR |
 | `DebitNr`                     | Parameter no longer in use. Default value always 1. |1 |
-| `ReportingCriteria`           | The Reporting Criteria (or submerchant Id) is an optional parameter that offers the possibility to classify transactions and differentiate between several web shops of one contracting business partner. |arbitrary - the setup of RCs must be agreed with paysafecard |
+| `ReportingCriteria`           | The Reporting Criteria (or submerchant Id) is an optional parameter that offers the possibility to classify transactions and differentiate between several web shops of one contracting business partner. |arbitrary - the setup of RCs must be agreed with PaysafeCard |
 | `MerchantClientID`            | The Merchant Client ID (or customer Id) is the end customer unique identifier. All transactions done by the same customer must have the same Merchant Client ID. This parameter is provided by the business partner at the start of each transaction. |arbitrary - Uniqueness mandatory|
 | `Currency`                    | This is the Currency in which the transaction was started. |ISO 4217|
 | `GrossAmount`                 | The Gross Amount is the full amount of the transaction. |digit representation - Ending on two decimal places|
@@ -139,43 +139,46 @@ You can filter the results by adding request parameters. For example, you can sh
 | `TotalFeeAmount`              | `v6` Replaces FeeAmount. |. followed by decimal places, default value: .00000|
 | `PercentageFeeAmount`         | `v6` Part of the TotalFeeAmount that was calculated as percentage of the amount. |. followed by decimal places, default value: .00000|
 | `FixedFeeAmount`              | `v6` Part of the TotalFeeAmount that was calculated as fixed fee. |. followed by decimal places, default value: .00000|
-| `PercentageOfTax`             | The Tax stands for the value charged only to EU business partners that have a contract with paysafecard and do not have a valid VAT number. |. followed by decimal places, default value:.000 |
-| `DebitAmount`                 | The Debit Amount is the amount that was debited from the customer’s paysafecard PIN or account. |digit representation - Ending on two decimal places |
-| `ExchangeRate`                | The Exchange Rate parameter will be filled with a value different than 1, in the case where the business partner currency and the paysafecard PIN currency are not the same, and a conversion is needed.|depending on conversion - digit representation with decimal places |
+| `PercentageOfTax`             | The Tax stands for the value charged only to EU business partners that have a contract with PaysafeCard and do not have a valid VAT number. |. followed by decimal places, default value:.000 |
+| `DebitAmount`                 | The Debit Amount is the amount that was debited from the customer’s PaysafeCard PIN or account. |digit representation - Ending on two decimal places |
+| `ExchangeRate`                | The Exchange Rate parameter will be filled with a value different than 1, in the case where the partner currency is different than EUR and will represent the exchange rate between the former and latter.|depending on conversion - digit representation with decimal places |
 | `InvoiceNumber`               | The Invoice Number is the 10-digit number of a created invoice. The parameter values will be empty if the invoice has not yet been created.|digit representation |
 | `VoucherNumber`               | The Voucher Number is the number that is given to all transactions of one day, per country. |digit representation |
 | `DebitTimestamp`              | The Debit Timestamp is the time when the transaction was closed. |yyyy-mm-dd hh:mm:ss.ms|
 | `InitialAmount`               | The Initial Amount is the amount in which the transaction was created. |digit representation - Ending on two decimal places|
 | `DispositionAmount`           | The Disposition Amount is the amount that has not been debited yet from the transaction. Parameter no longer in use |n/a - default value: .00 |
-| `NetAmount`                   | The Net Amount is the transaction amount after paysafecard fees have been deducted. |digit representation - Ending on five decimal places.|
+| `NetAmount`                   | The Net Amount is the transaction amount after PaysafeCard fees have been deducted. |digit representation - Ending on five decimal places.|
 | `CreationTimestamp`           | The Creation Timestamp Disposition is the time when the transaction was created.|yyyy-mm-dd hh:mm:ss.ms|
 | `ShopID`                      | The Shop ID is the parameter that identifies the web shop from which the transaction was created. This is an optional parameter and it is sent by the business partner when creating the transaction.|digit representation |
-| `ClientIpCountry`             | The Country IP is the country code where the paysafecard PIN was used. Note: This information is derived from our systems and although carefully provided, we do not assume any liability on the correctness of the data shared for country.|2-digit ISO 3166-1 |
-| `CardOrigin`                  | The PIN Origin is the country code where the paysafecard PIN was sold.| 2-digit ISO 3166-1|
-| `BusinessType`                | The Transaction Type stands for the specific transaction type: Payment (I), Paysafecash (L), Payout (P) or Refund (R).|one letter representation |
-| `CustomerPscId`               | `v2` The Customer PSC ID is the my paysafecard ID of the customer. In the reports this field has a value only if the customer has used a my paysafecard account for the transaction. If the customer used a paysafecard PIN, the field values will be empty.|unique - Only my paysafecard transactions|
+| `ClientIpCountry`             | The Country IP is the country code where the PaysafeCard PIN was used. Note: This information is derived from our systems and although carefully provided, we do not assume any liability on the correctness of the data shared for country.|2-digit ISO 3166-1 |
+| `CardOrigin`                  | The PIN Origin is the country code where the PaysafeCard PIN was sold.| 2-digit ISO 3166-1|
+| `BusinessType`                | The Transaction Type stands for the specific transaction type: Payment (I), PaysafeCash (L), Payout (P) or Refund (R).|one letter representation |
+| `CustomerPscId`               | `v2` The Customer PSC ID is the PaysafeCard account ID of the customer. In the reports this field has a value only if the customer has used a PaysafeCard account for the transaction. If the customer used a PaysafeCard PIN, the field values will be empty.|unique - Only PaysafeCard account transactions|
 | `OriginalTransactionID`       | `v2` The Original transaction id field is filled only when the transaction type is a Refund (R), and it represents the Transaction ID (TID) of the original payment.|see Transaction ID - Only transactions of type Refund(R)|
 | `DistributorReferenceId`      | `v4` The Distributor Reference Id shows the transaction id of the Partner system. <br> In the US this is the equivalent to the "Cashtie_Reference_Number". |digit representation - 74694276301
-| `MerchantReferenceId`         | `v4` Used for Openbucks reference IDs. | string
+| `MerchantReferenceId`         | `v4` Used for correlation ID or Openbucks reference IDs. | string |
 | `PaymentInstrument`           | `v5` The payment method used. |"paysafecard", "Paysafecash", "giftcard", "pagoefectivo", "safetypay"|
 | `PaymentInstrumentSubtype`    | `v5` Only filled if "giftcard" or "safetypay" was used. | "cvspharmacy","dollargeneral","circlek","openbuckscard","online","cash"|
 | `BankID`                      | `v6` Only filled if the transaction was made with SafetyPay. | 4 digit code. See <a href="https://www.paysafecard.com/fileadmin/api/paysafecardsafetypay.html#/reference/bank-ids">our bank ID list</a>|
-| `retailerFriendlyName` | `v7` Retailer brand name, serving as public alias reference for the payment points at the particular retailer | String - 7 Eleven | 
-| `retailerLocationNumber` | `v7` Location number of the address of the payment point | String - 19835 | 
-| `retailerAddress1` | `v7` Address of the payment point | String - 16A Main street | 
-| `retailerAddress2` | `v7` Additional address information for the payment point | String - Downtown | 
-| `retailerCity` | `v7` City of the payment point | String - Fresno | 
-| `retailerCounty` | `v7` County of the payment point | String - Fresno | 
-| `retailerState` | `v7` State of the payment point | String - CA | 
-| `retailerZipCode` | `v7` ZIP code of the payment point | String - 93727-3508 | 
-| `retailerCountry` | `v7` Country of the payment point | String - USA | 
-| `totalPaymentAmount` | `v7` The amount that the end-user paid at the payment point, including POS surcharge fee (if any) | String - 67.50 | 
-| `convenienceFee` | `v7` POS surcharge fee, convenience fee calculated on top to the disposition amount | BigDecimal - 2.50 | 
-| `billerRemittanceTotal` | `v7` The amount that is settled to the merchant/aggregator/integrator | BigDecimal - 64.35 | 
-| `invoiceDate` | `v7` Date of issuance of the invoice that is settled | Date - 2023/05/29 | 
-| `billerId` | `v7` Identification of the merchant/aggregator/integrator | String - 1100003062 | 
-| `billerName` | `v7` Name of the merchant/aggregator/integrator  | String - Skrill USA Inc Wallet | 
-| `paymentNumber` | `v7` Identification of the settlement transfer | String - 2357534 | 
+| `retailerFriendlyName` | `v7` `US PaysafeCash` Retailer brand name, serving as public alias reference for the payment points at the particular retailer | String - 7 Eleven | 
+| `retailerLocationNumber` | `v7` `US PaysafeCash` Location number of the address of the payment point | String - 19835 | 
+| `retailerAddress1` | `v7` `US PaysafeCash` Address of the payment point | String - 16A Main street | 
+| `retailerAddress2` | `v7` `US PaysafeCash` Additional address information for the payment point | String - Downtown | 
+| `retailerCity` | `v7` `US PaysafeCash` City of the payment point | String - Fresno | 
+| `retailerCounty` | `v7` `US PaysafeCash` County of the payment point | String - Fresno | 
+| `retailerState` | `v7` `US PaysafeCash` State of the payment point | String - CA | 
+| `retailerZipCode` | `v7` `US PaysafeCash` ZIP code of the payment point | String - 93727-3508 | 
+| `retailerCountry` | `v7` `US PaysafeCash` Country of the payment point | String - USA | 
+| `totalPaymentAmount` | `v7` `US PaysafeCash` The amount that the end-user paid at the payment point, including POS surcharge fee (if any) | String - 67.50 | 
+| `convenienceFee` | `v7` `US PaysafeCash` POS surcharge fee, convenience fee calculated on top to the disposition amount | BigDecimal - 2.50 | 
+| `billerRemittanceTotal` | `v7` `US PaysafeCash` The amount that is settled to the merchant/aggregator/integrator | BigDecimal - 64.35 | 
+| `invoiceDate` | `v7` `US PaysafeCash` Date of issuance of the invoice that is settled | Date - 2023/05/29 | 
+| `billerId` | `v7` `US PaysafeCash` Identification of the merchant/aggregator/integrator | String - 1100003062 | 
+| `billerName` | `v7` `US PaysafeCash` Name of the merchant/aggregator/integrator  | String - Skrill USA Inc Wallet | 
+| `paymentNumber` | `v7` `US PaysafeCash` Identification of the settlement transfer | String - 2357534 | 
+| `paymentTime` | `v7` `US PaysafeCash` The time when the barcode was paid |yyyy-mm-dd hh:mm:ss.ms|
+| `transactionType` | `v7` `US PaysafeCash` Type of transaction |String - Payment|
+| `transactionRefernce` | `v7` `US PaysafeCash` Barcode number excluding EAN | Number - 639981000248297895|
 
 # Group Settlement Report with Partner Data
 <a name="report_with_partner_data"></a>
@@ -190,7 +193,7 @@ All parameter changes and the description are listed below:
 | `VoucherNumber`               | The Voucher Number does not apply in this case, thus it is filled with "9999999999". |digit representation - 9999999999
 | `NetAmount`                   | The Net Amount will not be calculated in a first phase, so the gross amount is displayed. |digit representation - Ending on five decimal places|
 | `DistributorReferenceId`      | The Distributor Reference Id shows the transaction id of the Partner system. <br> In the US this is the equivalent to the "Cashtie_Reference_Number". |digit representation - 74694276301
-| `MerchantReferenceId`         | Placeholder only - The Merchant Reference Id will be empty.
+| `MerchantReferenceId`         | This will show the correlation ID or the Openbucks reference ID.
 
 ## Settlement Report [/settlement?from={from}&to={to}&mid={mid}&submerchant_id={submerchant_id}&include_header={include_header}]
 
@@ -229,13 +232,124 @@ All parameter changes and the description are listed below:
 |`Merchant with Id XXXXXXXXXX is not active.`                               |3001               |400            |Merchant is not active.|
 |`submerchant_not_found`                                                    |3014               |400            |The `submerchant_id` specified by you has not been configured.|
 
-<a name="change_log"></a>
+
+# Group Open Balances
+
+Using our Open Balances endpoint, you can query historical balances.
+
+NOTE: For this request, you need to use "v1".
+
+The following request parameters are possible in the URL:
+
+| Parameter Name                | Info                  | Format  |
+|-------------------------------|-----------------------|---------|
+| `balance_date`                   | Day for the historical balance. (required) | yyyy-MM-dd
+| `mid`               | MID for the data. Can be multiple MIDs. If left empty, all MIDs for that API key will be shown. (optional) | 10 digits per MID (example multiple MIDs: `?mid=1000000433&mid=1000000931`)
+
+
+Response parameters:
+
+| Parameter Name                | Info                  | Format  |
+|-------------------------------|-----------------------|---------|
+| `mid`               | MID for the data. Can be multiple MIDs. If left empty, all MIDs for that API key will be shown. (optional) | 10 digits
+| `merchantName`                   | Name of the MID | string
+| `balanceAmount`                   | Amount of the balance | number with 2 digits after comma
+| `balanceCurrency`                   | Currency of the balance | string, 3 digits (example: EUR)
+| `balanceDate`                   | Day for the historical balance, Unix epoch milliseconds | number
+
+
+Request type:
+
+GET https://api.paysafecard.com/v1/reports/openbalances/?balance_date=yyyy-MM-dd&mid=1000000000
+Headers: Authorization
+
+Response body:
+```
+[
+    {
+        "mid": "1000000000",
+        "merchantName": "Merchantname",
+        "balanceAmount": -1029415.2,
+        "balanceCurrency": "EUR",
+        "balanceDate": 1780264800000
+    },
+    {
+        "mid": "1000000001",
+        "merchantName": "Merchantname",
+        "balanceAmount": -1029415.2,
+        "balanceCurrency": "EUR",
+        "balanceDate": 1780264800000
+    }    
+]
+```
+
+## Open Balances Report [/openbalances?balance_date={from}&mid={mid}]
+
+### Retrieve Open Balances Report [GET]
+
++ Parameter
+
+    + `balance_date`: `2026-05-06` (string, required) - The date of the open balances to be retrieved in the format `yyyy-mm-dd`. <br></br>
+    + `mid`: 1000000000 (array, optional) - The Merchant ID is the unique alphanumeric merchant identifier and defines the transaction currency. <br></br> If a MID is not specified, all transactions for all MIDs assigned to the API key in use will be retrieved.<br></br>
+
+
++ Request
+
+    + Headers
+            
+            Authorization: Basic cHNjX2NSc09keTI2eDI1MGhPLWp4V0VpeUt2YmhudWJsNHA=
+
+
++ Response 200 (text/csv)
+    
+        [
+            {
+                "mid": "1000000000",
+                "merchantName": "Merchantname",
+                "balanceAmount": -1029415.2,
+                "balanceCurrency": "EUR",
+                "balanceDate": 1780264800000
+            },
+            {
+                "mid": "1000000001",
+                "merchantName": "Merchantname",
+                "balanceAmount": -1029415.2,
+                "balanceCurrency": "EUR",
+                "balanceDate": 1780264800000
+            }
+        ]
+
+
+
 # Group Change Log
+<a name="change_log"></a>
+
+`2026.05.26`
+Added new open balances endpoint information.
+
+-----------------------------------------
+
+`2026.01.22`
+Added new report parameter "transactionType" & "transactionReference" for US PaysafeCash transactions (v7 only).
+
+-----------------------------------------
+
+`2025.03.18`
+Added new report parameter "paymentTime" for US PaysafeCash transactions (v7 only).
+
+-----------------------------------------
+
+`2024.08.05`
+Merchant reference ID is now populated by correlation ID as well.
+
+-----------------------------------------
 
 `2023.08.10`
 ### New major version - v7
-- Added new report parameters "retailerFriendlyName", "retailerLocationNumber", "retailerAddress1", "retailerAddress2", "retailerCity", "retailerCounty", "retailerState", "retailerZipCode", "retailerCountry", "totalPaymentAmount", "convenienceFee", "billerRemittanceTotal", "invoiceDate", "billerId", "billerName" and "paymentNumber" for US Paysafecash transactions.
-- Added new request parameters (filters) "transaction_reference" and "barcode_number" to search for US Paysafecash transactions.
+- Added new report parameters "retailerFriendlyName", "retailerLocationNumber", "retailerAddress1", "retailerAddress2", "retailerCity", "retailerCounty", "retailerState", "retailerZipCode", "retailerCountry", "totalPaymentAmount", "convenienceFee", "billerRemittanceTotal", "invoiceDate", "billerId", "billerName" and "paymentNumber" for US PaysafeCash transactions.
+- Added new request parameters (filters) "transaction_reference" and "barcode_number" to search for US PaysafeCash transactions.
+
+-----------------------------------------
 
 `2022.04.05`
 ### New major version - v6
@@ -243,6 +357,7 @@ All parameter changes and the description are listed below:
 - Added new report parameters "PercentageFeeAmount" and "FixedFeeAmount" to identify how the fees are calculated
 - Added new report parameter "BankID" to further identify SafetyPay transactions
 
+-----------------------------------------
 
 `2021.08.10`
 Two parameters return 5 decimals instead of 2 decimals:
@@ -254,42 +369,43 @@ Two parameters return 5 decimals instead of 2 decimals:
   - NetAmount before the change: `15.98`
   - NetAmount after the change: `15.98123`
    
-
+-----------------------------------------
 `2021.01.26`
 
 ### New major version - v5
 - Added two new report header parameters ("PaymentInstrument" and "PaymentInstrumentSubtype") to identify giftcard payments
 - This version also contains report header parameters "DistributorReferenceId" and "MerchantReferenceId"(See section [Settlement Report with Partner Data](#report_with_partner_data))
-
+-----------------------------------------
 `2020.05.06`
 
 ### New major version - v4
 - Added two new report header parameters ("DistributorReferenceId" and "MerchantReferenceId") to support Partner data in the report
 - See section [Settlement Report with Partner Data](#report_with_partner_data) for a full explanation of the new parameters and an example request
-
+-----------------------------------------
 `2019.10.09`
-
-The search parameters below were replaced:
-- "merchant_client_id" is now "customer_id"
-- "reporting_criteria" is now "submerchant_id"
 
 ### New major version - v3
 - Renamed the report header parameter "PercentageOfCommission" to "FeeAmount"
 - "FeeAmount" now displays the fee amount value of a transaction
 
+The search parameters below were replaced:
+- "merchant_client_id" is now "customer_id"
+- "reporting_criteria" is now "submerchant_id"
+
+-----------------------------------------
 `2018-04-11`
 
 Added two new search parameters:
 - customer_psc_id
 - transaction_id
-
+-----------------------------------------
 `2017-06-13`
 
 Added two new options for the search parameter "transaction_type"
 - Valid values are now PAYMENT, REFUND, PAYOUT
+-----------------------------------------
+`2016-10-03`
 
 ### New major version - v2
-- Added two new report paramaters to accommodate refund and payout transactions: "CustomerPscId" and "OriginalTransactionID"
-
-`2016-10-03`
 - Increased the maximum allowed search for the date filter from 3 to 12 months
+- Added two new report paramaters to accommodate refund and payout transactions: "CustomerPscId" and "OriginalTransactionID"
